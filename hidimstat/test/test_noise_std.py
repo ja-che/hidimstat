@@ -26,3 +26,8 @@ def test_reid():
     expected = sigma
 
     assert_almost_equal(sigma_hat / expected, 1.0, places=0)
+
+    sigma_hat = reid(X, y, method='lasso', max_iter=1)
+    expected = sigma
+
+    assert_almost_equal(sigma_hat / expected, 1.0, places=0)
