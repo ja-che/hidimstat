@@ -5,7 +5,7 @@ Test the noise_std module
 import numpy as np
 from nose.tools import assert_almost_equal
 
-from noise_std import reid
+from hidimstat.noise_std import reid
 
 
 def test_reid():
