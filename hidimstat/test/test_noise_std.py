@@ -27,7 +27,7 @@ def test_reid():
 
     assert_almost_equal(sigma_hat / expected, 1.0, places=0)
 
-    sigma_hat = reid(X, y, method='lasso', max_iter=1)
+    sigma_hat = reid(X, y, method='lasso')
     expected = sigma
 
     assert_almost_equal(sigma_hat / expected, 1.0, places=0)
