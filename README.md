@@ -12,6 +12,16 @@ cd hidimstat
 python3 setup.py install
 ```
 
+## Dependencies
+
+```
+joblib
+numpy
+scipy
+scikit-learn
+```
+
+
 ## Documentation [Work In Progress]
 
 
