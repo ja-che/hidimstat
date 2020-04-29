@@ -30,7 +30,7 @@ def test_aggregate_quantiles():
     list_sf[15:, :] = 3e-3
 
     sf = aggregate_quantiles(list_sf)
-    expected = 0.04 * np.ones(n_features)
+    expected = 0.03 * np.ones(n_features)
 
     for i in np.arange(expected.size):
         assert_almost_equal(sf[i], expected[i], places=2)

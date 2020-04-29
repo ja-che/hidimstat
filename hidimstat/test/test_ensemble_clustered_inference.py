@@ -40,8 +40,9 @@ def test_ensemble_clustered_inference():
                                 connectivity=connectivity,
                                 linkage='ward')
 
-    sf, sf_corr = ensemble_clustered_inference(X_init, y, ward, n_clusters,
-                                               n_rand=n_rand)
+    sf, sf_corr, cdf, cdf_corr = \
+        ensemble_clustered_inference(X_init, y, ward, n_clusters,
+                                     n_rand=n_rand)
 
     expected = 0.5 * np.ones(n_features)
     expected[:n_support] = 0.0
