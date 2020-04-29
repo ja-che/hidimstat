@@ -91,3 +91,30 @@ def cdf_from_cb(cb_min, cb_max, confidence=0.95, distrib='Norm', eps=1e-14):
     cdf_corr = cdf_corr_from_cdf(cdf)
 
     return cdf, cdf_corr
+
+
+def sf_from_scale(beta, scale, eps=1e-14):
+    """Survival function values from the parameter and its scale if centered
+     under the null.
+
+    Parameters
+    -----------
+        beta : float
+            Value of the parameters
+        scale : float
+            Value of the standard deviation of the parameters
+        eps : float, optional
+            The machine-precision regularization in the computation of the
+            survival function value
+    """
+
+    n_features = beta.size
+
+    index_no_nan = tuple([scale != 0.0])
+
+    sf = np.zeros(n_features) + 0.5
+    sf[index_no_nan] = norm.sf(beta[index_no_nan], scale=scale[index_no_nan])
+    sf[sf > 1 - eps] = 1 - eps
+    sf_corr = sf_corr_from_sf(sf)
+
+    return sf, sf_corr
