@@ -118,3 +118,27 @@ def sf_from_scale(beta, scale, eps=1e-14):
     sf_corr = sf_corr_from_sf(sf)
 
     return sf, sf_corr
+
+
+def sf_from_pval_and_sign(pval, sign, eps=1e-14):
+
+    n_features = pval.size
+    sf = 0.5 * np.ones(n_features)
+
+    sf[sign > 0] = pval[sign > 0] / 2
+    sf[sign < 0] = 1 - pval[sign < 0] / 2
+    sf[sf > 1 - eps] = 1 - eps
+
+    return sf
+
+
+def cdf_from_pval_and_sign(pval, sign, eps=1e-14):
+
+    n_features = pval.size
+    cdf = 0.5 * np.ones(n_features)
+
+    cdf[sign > 0] = 1 - pval[sign > 0] / 2
+    cdf[sign < 0] = pval[sign < 0] / 2
+    cdf[cdf > 1 - eps] = 1 - eps
+
+    return cdf
