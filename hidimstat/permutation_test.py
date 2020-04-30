@@ -7,8 +7,8 @@ from sklearn.svm import LinearSVR
 from sklearn.model_selection import GridSearchCV
 from sklearn.pipeline import Pipeline
 
-from .stat_tools import cdf_from_pval_and_sign
-from .stat_tools import sf_from_pval_and_sign
+from hidimstat.stat_tools import cdf_from_pval_and_sign
+from hidimstat.stat_tools import sf_from_pval_and_sign
 
 
 def permutation_test_cv(X, y, method='SVR', n_permutations=1000, C=None,
