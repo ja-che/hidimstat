@@ -8,8 +8,7 @@ run the following from terminal
 
 ```
 git clone https://github.com/ja-che/hidimstat.git
-cd hidimstat
-python3 setup.py install
+python setup.py install
 ```
 
 ## Dependencies
