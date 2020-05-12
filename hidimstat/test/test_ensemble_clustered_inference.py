@@ -5,7 +5,7 @@ Test the ensemble_clustered_inference module
 import numpy as np
 from sklearn.cluster import FeatureAgglomeration
 from sklearn.feature_extraction import image
-from nose.tools import assert_almost_equal
+from numpy.testing import assert_almost_equal
 
 from hidimstat.scenario import scenario
 from hidimstat.ensemble_clustered_inference import ensemble_clustered_inference
@@ -48,7 +48,7 @@ def test_ensemble_clustered_inference():
     expected[:n_support] = 0.0
 
     for i in np.arange(n_support):
-        assert_almost_equal(sf_corr[i], expected[i], places=2)
+        assert_almost_equal(sf_corr[i], expected[i], decimal=2)
 
     for i in np.arange(n_support + margin_size, expected.size):
-        assert_almost_equal(sf_corr[i], expected[i], places=2)
+        assert_almost_equal(sf_corr[i], expected[i], decimal=2)

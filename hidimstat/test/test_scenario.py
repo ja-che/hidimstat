@@ -3,7 +3,7 @@ Test the scenario module
 """
 
 import numpy as np
-from nose.tools import assert_almost_equal, assert_equal
+from numpy.testing import assert_almost_equal, assert_equal
 
 from hidimstat.scenario import design_matrix_toeplitz_cov, scenario
 
@@ -20,7 +20,7 @@ def test_design_matrix_toeplitz_cov():
     for i in np.arange(n_features - 1):
         rho_hat += np.corrcoef(X[:, i], X[:, i + 1])[0, 1] / (n_features - 1)
 
-    assert_almost_equal(rho_hat, rho, places=1)
+    assert_almost_equal(rho_hat, rho, decimal=1)
 
 
 def test_scenario():

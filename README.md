@@ -9,6 +9,7 @@ run the following from terminal
 ```
 git clone https://github.com/ja-che/hidimstat.git
 python setup.py install
+# or pip install ./
 ```
 
 ## Dependencies
