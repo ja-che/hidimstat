@@ -3,7 +3,7 @@ Test the gaonkar module
 """
 
 import numpy as np
-from nose.tools import assert_almost_equal
+from numpy.testing import assert_almost_equal
 
 from hidimstat.scenario import scenario
 from hidimstat.stat_tools import sf_from_scale
@@ -39,4 +39,4 @@ def test_clustered_inference():
     expected[:n_support] = 0.0
 
     for i in np.arange(expected.size):
-        assert_almost_equal(sf_corr[i], expected[i], places=1)
+        assert_almost_equal(sf_corr[i], expected[i], decimal=1)

@@ -21,7 +21,7 @@ before_install:
 
 install:
   - conda install --yes python=$TRAVIS_PYTHON_VERSION pip numpy scipy scikit-learn joblib pytest coverage -yq
-  - pip install -U nose mne 
+  - pip install -U mne 
 script:
   - set -e  # exit at first failure otherwise test might fail but build still passes
   - if [ "$ONLY_PYTEST" = true ]; then
