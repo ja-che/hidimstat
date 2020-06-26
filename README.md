@@ -23,7 +23,6 @@ scikit-learn
 
 For running tests it is also needed to installed `pytest`.
 
-
 ## Documentation & Examples [Work In Progress]
 
 As of now in the `examples` folder there is a Python script to reproduce Figure
@@ -39,10 +38,22 @@ should take quite a long time to run.
 
 ## References
 
+For de-sparsified(or de-biased) Lasso and its ensembling version:
+
 * Chevalier, J. A., Salmon, J., & Thirion, B. (2018). __Statistical inference
   with ensemble of clustered desparsified lasso__. In _International Conference
   on Medical Image Computing and Computer-Assisted Intervention_
   (pp. 638-646). Springer, Cham.
+
+* Javanmard, A., & Montanari, A. (2014). __Confidence intervals and hypothesis
+  testing for high-dimensional regression__. _The Journal of Machine Learning
+  Research_, 15(1), 2869-2909.
+
+* Zhang, C. H., & Zhang, S. S. (2014). __Confidence intervals for low dimensional
+  parameters in high dimensional linear models__. _Journal of the Royal
+  Statistical Society: Series B: Statistical Methodology_, 217-242.
+
+For Knockoffs and its aggregation version:
 
 * T.-B. Nguyen, J.-A. Chevalier, B.Thirion, & S. Arlot. (2020). __Aggregation
   of Multiple Knockoffs__. In Proceedings of the 37th International Conference on
@@ -51,10 +62,6 @@ should take quite a long time to run.
 * Candes, E., Fan, Y., Janson, L., & Lv, J. (2018). __Panning for gold: Model-X
   knockoffs for high dimensional controlled variable selection__. _Journal of the
   Royal Statistical Society Series B_, 80(3), 551-577.
-
-* Zhang, C. H., & Zhang, S. S. (2014). __Confidence intervals for low dimensional
-  parameters in high dimensional linear models__. _Journal of the Royal
-  Statistical Society: Series B: Statistical Methodology_, 217-242.
 
 
 [TravisCI]: https://travis-ci.com/ja-che/hidimstat.svg?branch=master "travisCI status"
