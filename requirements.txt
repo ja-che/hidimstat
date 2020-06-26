@@ -1,4 +1,4 @@
-joblib
 numpy
+joblib
 scipy
 scikit-learn
