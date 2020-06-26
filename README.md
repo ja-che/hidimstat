@@ -54,9 +54,9 @@ Ensemble of Clustered desparsified Lasso (ECDL):
 
 Aggregation of multiple Knockoffs (AKO):
 
-* T.-B. Nguyen, J.-A. Chevalier, B.Thirion, & S. Arlot. (2020). __Aggregation
-  of Multiple Knockoffs__. In Proceedings of the 37th International Conference on
-  Machine Learning, Vienna, Austria, PMLR 119.
+* Nguyen T.-B., Chevalier J.-A., Thirion B., & Arlot S. (2020). __Aggregation
+  of Multiple Knockoffs__. In _Proceedings of the 37th International Conference on
+  Machine Learning_, Vienna, Austria, PMLR 119.
 
 If you use our packages, we would appreciate citations to the aforementioned papers.
 
