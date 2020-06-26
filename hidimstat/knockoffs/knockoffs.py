@@ -15,14 +15,9 @@ from .gaussian_knockoff import (_estimate_distribution,
 from .stat_coef_diff import _coef_diff_threshold, stat_coef_diff
 
 
-
-def model_x_knockoff(X, y, fdr=0.1, offset=1,
-                     method='equi',
-                     statistics='lasso_cv',
-                     shrink=False, centered=True,
-                     cov_estimator='ledoit_wolf',
-                     verbose=False,
-                     memory=None,
+def model_x_knockoff(X, y, fdr=0.1, offset=1, method='equi',
+                     statistics='lasso_cv', shrink=False, centered=True,
+                     cov_estimator='ledoit_wolf', verbose=False, memory=None,
                      n_jobs=1, seed=None):
     """Model-X Knockoff inference procedure to control False Discoveries Rate,
     based on Candes et. al. (2016)
