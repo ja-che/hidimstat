@@ -24,7 +24,7 @@ scikit-learn
 For running tests it is also needed to installed `pytest`.
 
 
-## Documentation _[Work In Progress]_
+## Documentation & Examples [Work In Progress]
 
 As of now in the `examples` folder there is a Python script to reproduce Figure
 1 in Nguyen et al. (2020) (see References below). __Warning__: this script
@@ -32,7 +32,9 @@ should take quite a long time to run.
 
 `python plot_fig_1_nguyen_et_al.py`
 
-![histo_ko_ako](./examples/figures/fig1_nguyen_et_al.png)
+<p align="center">
+  <img src="./examples/figures/fig1_nguyen_et_al.png"  alt="Histogram of FDP & Power for KO vs. AKO" width="500">
+</p>
 
 
 ## References
