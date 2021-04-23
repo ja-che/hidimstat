@@ -1,0 +1,9 @@
+joblib
+numpy
+numpydoc
+pandas
+pillow
+scikit-learn
+scipy
+sphinx-bootstrap-theme
+sphinx-gallery
