@@ -15,7 +15,7 @@ jobs:
         env:
           ALLOW: --allow-run-as-root
         with:
-          docs-folder: "docs/"
+          docs-folder: "doc/"
           pre-build-command: |
             apt-get update
             apt-get install -y git libopenmpi-dev openmpi-bin
@@ -25,7 +25,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: DocHTML
-          path: docs/_build/html/
+          path: doc/_build/html/
 
   deploy_docs:
     if: github.ref == 'refs/heads/main'
@@ -38,7 +38,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: DocHTML
-          path: docs/_build/html/
+          path: doc/_build/html/
       - name: Commit to documentation branch
         run: |
           git clone --no-checkout --depth 1 https://github.com/${{ github.repository_owner }}/hidimstat.git --branch gh-pages --single-branch gh-pages
