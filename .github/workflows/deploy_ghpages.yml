@@ -19,7 +19,7 @@ jobs:
           pre-build-command: |
             apt-get update
             apt-get install -y git libopenmpi-dev openmpi-bin
-            pip install -e .[doc]
+            pip install -r doc/doc-requirements.txt
             echo "localhost slots=50">hostfile
       - name:  Upload generated HTML as artifact
         uses: actions/upload-artifact@v2
