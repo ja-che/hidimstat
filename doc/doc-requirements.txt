@@ -1,6 +1,7 @@
 joblib
 numpy
 numpydoc
+matplotlib
 pandas
 pillow
 scikit-learn
