@@ -2,7 +2,7 @@ import numpy as np
 from joblib import Parallel, delayed
 
 from sklearn.base import clone
-from sklearn.utils import check_random_state, safe_indexing
+from sklearn.utils import check_random_state, _safe_indexing
 from sklearn.svm import LinearSVR
 from sklearn.model_selection import GridSearchCV
 from sklearn.pipeline import Pipeline
@@ -76,7 +76,7 @@ def _permutation_test_stat(estimator, X, y):
 
 def _shuffle(y, random_state):
     indices = random_state.permutation(len(y))
-    return safe_indexing(y, indices)
+    return _safe_indexing(y, indices)
 
 
 def _step_down_max_T(stat, permutation_stats):
