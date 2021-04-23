@@ -75,7 +75,7 @@ def plot(results, n_simu, fdr):
              range=[0.0, 1.0], bins=n_bins, color=color_teal)
     plt.tight_layout()
 
-    figname = f'histogram_ko_vs_ako_{n_simu}_simu.pdf'
+    figname = f'figures/histogram_ko_vs_ako.png'
     plt.savefig(figname)
     print(f'Save figure to {figname}')
 
@@ -90,7 +90,7 @@ def main():
     fdr = 0.05
     gamma = 0.3
     n_bootstraps = 25
-    n_simu = 100
+    n_simu = 10
     offset = 1
 
     results = Parallel(n_jobs=1)(
