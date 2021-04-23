@@ -10,7 +10,6 @@ run the following from terminal
 git clone https://github.com/ja-che/hidimstat.git
 cd hidimstat
 pip install -e .
-# or python setup.py install
 ```
 
 ## Dependencies
@@ -25,7 +24,7 @@ scikit-learn
 To run examples it is neccessary to install `matplotlib`, and to run tests it
 is also needed to install `pytest`.
 
-## Documentation & Examples [Work In Progress]
+## Documentation & Examples
 
 As of now in the `examples` folder there is a Python script to reproduce Figure
 1 in Nguyen et al. 2020 (see References below). __Warning__: this script
