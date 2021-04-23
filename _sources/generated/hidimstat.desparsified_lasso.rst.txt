@@ -1,0 +1,22 @@
+hidimstat.desparsified\_lasso
+=============================
+
+.. automodule:: hidimstat.desparsified_lasso
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      desparsified_lasso_confint
+   
+   
+
+   
+   
+   
+
+   
+   
+   
