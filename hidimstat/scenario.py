@@ -7,12 +7,12 @@ def design_matrix_toeplitz_cov(seed=0, n=100, p=500, rho=0.0):
 
     Parameters
     -----------
-        n : int
-            Number of samples
-        p : int
-            Number of features
-        rho: float
-            Level of correlation between neighboring features
+    n : int
+        Number of samples
+    p : int
+        Number of features
+    rho: float
+        Level of correlation between neighboring features
     """
 
     np.random.seed(seed)
@@ -35,30 +35,30 @@ def scenario(scenario='Toeplitz', seed=0, n_samples=100, n_features=500,
 
     Parameters
     -----------
-        scenario : string
-            Type of scenario generated
-        n_samples : int
-            Number of samples
-        n_features : int
-            Number of features
-        effect_small : float
-            Value of the low non zero coefficients of the weight vector
-        effect_medium : float
-            Value of the medium non zero coefficients of the weight vector
-        effect_large : float
-            Value of the high non zero coefficients of the weight vector
-        effect_s_nb : int
-            Number of coefficients with a low non zero value
-        effect_m_nb : int
-            Number of coefficients with a medium non zero value
-        effect_l_nb : int
-            Number of coefficients with a high non zero value
-        sigma: float
-            Standard deviation of the additive White Gaussian noise
-        rho: float
-            Level of correlation between neighboring features
-        shuffle : boolean
-            Shuffle the features (changing data structure) if True.
+    scenario : string
+        Type of scenario generated
+    n_samples : int
+        Number of samples
+    n_features : int
+        Number of features
+    effect_small : float
+        Value of the low non zero coefficients of the weight vector
+    effect_medium : float
+        Value of the medium non zero coefficients of the weight vector
+    effect_large : float
+        Value of the high non zero coefficients of the weight vector
+    effect_s_nb : int
+        Number of coefficients with a low non zero value
+    effect_m_nb : int
+        Number of coefficients with a medium non zero value
+    effect_l_nb : int
+        Number of coefficients with a high non zero value
+    sigma: float
+        Standard deviation of the additive White Gaussian noise
+    rho: float
+        Level of correlation between neighboring features
+    shuffle : boolean
+        Shuffle the features (changing data structure) if True.
     """
 
     if scenario == 'Toeplitz':

@@ -8,22 +8,22 @@ def reid(X, y, method="lars", tol=1e-4, max_iter=1e+3, n_jobs=1):
 
     Parameters
     -----------
-        X : ndarray or scipy.sparse matrix, (n_samples, n_features)
-            Data
-        y : ndarray, shape (n_samples,) or (n_samples, n_targets)
-            Target. Will be cast to X's dtype if necessary
-        method : string, optional
-            The method for the CV-lasso: "lars" or "lasso"
-        tol : float, optional
-            The tolerance for the optimization: if the updates are
-            smaller than ``tol``, the optimization code checks the
-            dual gap for optimality and continues until it is smaller
-            than ``tol``.
-        max_iter : int, optional
-            The maximum number of iterations
-        n_jobs : int or None, optional (default=1)
-            Number of CPUs to use during the cross validation.
-        """
+    X : ndarray or scipy.sparse matrix, (n_samples, n_features)
+        Data
+    y : ndarray, shape (n_samples,) or (n_samples, n_targets)
+        Target. Will be cast to X's dtype if necessary
+    method : string, optional
+        The method for the CV-lasso: "lars" or "lasso"
+    tol : float, optional
+        The tolerance for the optimization: if the updates are
+        smaller than ``tol``, the optimization code checks the
+        dual gap for optimality and continues until it is smaller
+        than ``tol``.
+    max_iter : int, optional
+        The maximum number of iterations
+    n_jobs : int or None, optional (default=1)
+        Number of CPUs to use during the cross validation.
+    """
 
     X = np.asarray(X)
     n_samples, n_features = X.shape
