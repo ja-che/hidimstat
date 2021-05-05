@@ -82,14 +82,14 @@ def plot(results, n_simu, fdr):
 
 def main():
     # Simulation paramaters
-    n, p = 500, 1000
+    n, p = 50, 200
     snr = 3.0
     rho = 0.5
     sparsity = 0.06
     offset = 1
     fdr = 0.05
     gamma = 0.3
-    n_bootstraps = 25
+    n_bootstraps = 10
     n_simu = 10
     offset = 1
 
