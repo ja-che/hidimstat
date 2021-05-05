@@ -1,9 +1,14 @@
 # Authors: Binh Nguyen <tuan-binh.nguyen@inria.fr>
-"""Example: reproducing Figure 1 -- histogram of KO vs AKO performance -- in
-Nguyen et al. (2020) Aggregation of Multiple Knockoffs
-<https://arxiv.org/abs/2002.09269>
+"""
+histogram of KO vs AKO performance
+==================================
 
-To reduce the script runtime it is desirable to increase n_jobs parameter
+Example: reproducing Figure 1 in::
+
+    Nguyen et al. (2020) Aggregation of Multiple Knockoffs
+    https://arxiv.org/abs/2002.09269
+
+To reduce the script runtime it is desirable to increase n_jobs parameter.
 """
 import matplotlib.pyplot as plt
 import numpy as np
@@ -82,14 +87,14 @@ def plot(results, n_simu, fdr):
 
 def main():
     # Simulation paramaters
-    n, p = 500, 1000
+    n, p = 50, 200
     snr = 3.0
     rho = 0.5
     sparsity = 0.06
     offset = 1
     fdr = 0.05
     gamma = 0.3
-    n_bootstraps = 25
+    n_bootstraps = 10
     n_simu = 10
     offset = 1
 

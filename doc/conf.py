@@ -61,8 +61,8 @@ templates_path = ['_templates']
 # The suffix(es) of source filenames.
 # You can specify multiple suffix as a list of string:
 #
-# source_suffix = ['.rst', '.md']
-source_suffix = '.rst'
+source_suffix = ['.rst', '.md']
+# source_suffix = '.rst'
 
 # The master toctree document.
 master_doc = 'index'
@@ -192,15 +192,29 @@ texinfo_documents = [
      'Miscellaneous'),
 ]
 
+# -- Intersphinx configuration -----------------------------------------------
+
+intersphinx_mapping = {
+    'python': ('https://docs.python.org/3', None),
+    'numpy': ('https://numpy.org/devdocs', None),
+    'scipy': ('https://scipy.github.io/devdocs', None),
+    'matplotlib': ('https://matplotlib.org', None),
+    'sklearn': ('https://scikit-learn.org/stable', None),
+    'numba': ('https://numba.pydata.org/numba-doc/latest', None),
+    'joblib': ('https://joblib.readthedocs.io/en/latest', None),
+    'pandas': ('https://pandas.pydata.org/pandas-docs/stable', None),
+    'seaborn': ('https://seaborn.pydata.org/', None),
+}
+
 sphinx_gallery_conf = {
     'doc_module': ('hidimstat',),
     'reference_url': dict(hidimstat=None),
     'examples_dirs': '../examples',
     'gallery_dirs': 'auto_examples',
-    'reference_url': {
-        'numpy': 'http://docs.scipy.org/doc/numpy-1.9.1',
-        'scipy': 'http://docs.scipy.org/doc/scipy-0.17.0/reference',
-    }
+    # 'reference_url': {
+    #     'numpy': 'http://docs.scipy.org/doc/numpy-1.9.1',
+    #     'scipy': 'http://docs.scipy.org/doc/scipy-0.17.0/reference',
+    # }
 }
 
 

@@ -2,10 +2,9 @@
 # Authors: Binh Nguyen <tuan-binh.nguyen@inria.fr>
 
 import numpy as np
-from sklearn.linear_model import (ElasticNetCV, LassoCV, LogisticRegressionCV,
-                                  RidgeCV)
-from sklearn.linear_model._coordinate_descent import _alpha_grid
-from sklearn.model_selection import GridSearchCV
+from sklearn.linear_model import (LassoCV, LogisticRegressionCV)
+# from sklearn.linear_model._coordinate_descent import _alpha_grid
+# from sklearn.model_selection import GridSearchCV
 
 
 def stat_coef_diff(X, X_tilde, y, method='lasso_cv', cv=5, n_jobs=1,
@@ -55,7 +54,7 @@ def stat_coef_diff(X, X_tilde, y, method='lasso_cv', cv=5, n_jobs=1,
     coef: 1D ndarray (n_features * 2, )
         coefficients of the estimation problem
     """
-    
+
     n_features = X.shape[1]
     X_ko = np.column_stack([X, X_tilde])
     lambda_max = np.max(np.dot(X_ko.T, y)) / (2 * n_features)
