@@ -1,0 +1,6 @@
+hidimstat.desparsified\_lasso\_confint
+======================================
+
+.. currentmodule:: hidimstat
+
+.. autofunction:: desparsified_lasso_confint

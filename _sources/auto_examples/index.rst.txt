@@ -17,12 +17,12 @@ Examples Gallery
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="To reduce the script runtime it is desirable to increase n_jobs parameter">
+    <div class="sphx-glr-thumbcontainer" tooltip="Example: reproducing Figure 1 in::">
 
 .. only:: html
 
  .. figure:: /auto_examples/images/thumb/sphx_glr_plot_fig_1_nguyen_et_al_thumb.png
-     :alt: Example: reproducing Figure 1 -- histogram of KO vs AKO performance -- in
+     :alt: histogram of KO vs AKO performance
 
      :ref:`sphx_glr_auto_examples_plot_fig_1_nguyen_et_al.py`
 

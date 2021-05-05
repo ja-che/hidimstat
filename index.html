@@ -93,42 +93,47 @@
       
   <div class="section" id="hidimstat-high-dimensional-statistical-inference-tool-for-python">
 <h1>HiDimStat: High-dimensional statistical inference tool for Python<a class="headerlink" href="#hidimstat-high-dimensional-statistical-inference-tool-for-python" title="Permalink to this headline">¶</a></h1>
-<p>[![build][TravisCI]][travis]  [![coverage][CodeCov]][cov]</p>
+<p><a class="reference external" href="https://codecov.io/gh/ja-che/hidimstat"><img alt="Build Status" src="https://travis-ci.com/ja-che/hidimstat.svg?branch=master" /></a> <a class="reference external" href="https://codecov.io/gh/ja-che/hidimstat"><img alt="codecov" src="https://codecov.io/gh/ja-che/hidimstat/branch/master/graph/badge.svg" /></a></p>
 <div class="section" id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
 <p>HiDimStat working only with Python 3, ideally Python 3.6+. For installation,
-run the following from terminal</p>
-<p><code class="docutils literal notranslate"><span class="pre">`bash</span>
-<span class="pre">git</span> <span class="pre">clone</span> <span class="pre">https://github.com/ja-che/hidimstat.git</span>
-<span class="pre">cd</span> <span class="pre">hidimstat</span>
-<span class="pre">pip</span> <span class="pre">install</span> <span class="pre">-e</span> <span class="pre">.</span>
-<span class="pre">#</span> <span class="pre">or</span> <span class="pre">python</span> <span class="pre">setup.py</span> <span class="pre">install</span>
-<span class="pre">`</span></code></p>
+run the following from terminal:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">ja</span><span class="o">-</span><span class="n">che</span><span class="o">/</span><span class="n">hidimstat</span><span class="o">.</span><span class="n">git</span>
+<span class="n">cd</span> <span class="n">hidimstat</span>
+<span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">e</span> <span class="o">.</span>
+<span class="c1"># or python setup.py install</span>
+</pre></div>
+</div>
 </div>
 <div class="section" id="dependencies">
 <h2>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this headline">¶</a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">`</span>
-<span class="pre">joblib</span>
-<span class="pre">numpy</span>
-<span class="pre">scipy</span>
-<span class="pre">scikit-learn</span>
-<span class="pre">`</span></code></p>
-<p>To run examples it is neccessary to install <cite>matplotlib</cite>, and to run tests it
-is also needed to install <cite>pytest</cite>.</p>
+<p>hidimstat depends on the following packages:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">joblib</span>
+<span class="n">numpy</span>
+<span class="n">scipy</span>
+<span class="n">scikit</span><span class="o">-</span><span class="n">learn</span>
+</pre></div>
+</div>
+<p>To run examples it is neccessary to install <code class="docutils literal notranslate"><span class="pre">`matplotlib</span></code>, and to run tests it
+is also needed to install <code class="docutils literal notranslate"><span class="pre">pytest</span></code>.</p>
 </div>
 <div class="section" id="documentation-examples">
 <h2>Documentation &amp; Examples<a class="headerlink" href="#documentation-examples" title="Permalink to this headline">¶</a></h2>
 <p>As of now in the <cite>examples</cite> folder there is a Python script to reproduce Figure
-1 in Nguyen et al. 2020 (see References below). __Warning__: this script
-should take quite a long time to run.</p>
-<p><code class="docutils literal notranslate"><span class="pre">`bash</span>
-<span class="pre">#</span> <span class="pre">Run</span> <span class="pre">this</span> <span class="pre">command</span> <span class="pre">in</span> <span class="pre">terminal</span>
-<span class="pre">python</span> <span class="pre">plot_fig_1_nguyen_et_al.py</span>
-<span class="pre">`</span></code></p>
+1 in Nguyen et al. 2020 (see References below).</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>this scrip should take quite a long time to run.</p>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Run this command in terminal</span>
+<span class="n">python</span> <span class="n">plot_fig_1_nguyen_et_al</span><span class="o">.</span><span class="n">py</span>
+</pre></div>
+</div>
 </div>
 <div class="section" id="references">
 <h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
-<p>Main references:</p>
+<div class="section" id="main-references">
+<h3>Main references<a class="headerlink" href="#main-references" title="Permalink to this headline">¶</a></h3>
 <p>Ensemble of Clustered desparsified Lasso (ECDL):</p>
 <ul class="simple">
 <li><p>Chevalier, J. A., Salmon, J., &amp; Thirion, B. (2018). Statistical inference
@@ -143,7 +148,9 @@ of Multiple Knockoffs. In Proceedings of the 37th International Conference on
 Machine Learning, Vienna, Austria, PMLR 119.</p></li>
 </ul>
 <p>If you use our packages, we would appreciate citations to the aforementioned papers.</p>
-<p>#### Other useful references:</p>
+</div>
+<div class="section" id="other-useful-references">
+<h3>Other useful references<a class="headerlink" href="#other-useful-references" title="Permalink to this headline">¶</a></h3>
 <p>For de-sparsified(or de-biased) Lasso:</p>
 <ul class="simple">
 <li><p>Javanmard, A., &amp; Montanari, A. (2014). Confidence intervals and hypothesis
@@ -162,10 +169,7 @@ via knockoffs. Annals of Statistics. 43 , no. 5,
 knockoffs for high dimensional controlled variable selection. Journal of the
 Royal Statistical Society Series B, 80(3), 551-577.</p></li>
 </ul>
-<p>[TravisCI]: <a class="reference external" href="https://travis-ci.com/ja-che/hidimstat.svg?branch=master">https://travis-ci.com/ja-che/hidimstat.svg?branch=master</a> “travisCI status”
-[travis]: <a class="reference external" href="https://travis-ci.com/ja-che/hidimstat">https://travis-ci.com/ja-che/hidimstat</a></p>
-<p>[CodeCov]: <a class="reference external" href="https://codecov.io/gh/ja-che/hidimstat/branch/master/graph/badge.svg">https://codecov.io/gh/ja-che/hidimstat/branch/master/graph/badge.svg</a> “CodeCov status”
-[cov]: <a class="reference external" href="https://codecov.io/gh/ja-che/hidimstat">https://codecov.io/gh/ja-che/hidimstat</a></p>
+</div>
 </div>
 <div class="section" id="build-the-documentation">
 <h2>Build the documentation<a class="headerlink" href="#build-the-documentation" title="Permalink to this headline">¶</a></h2>

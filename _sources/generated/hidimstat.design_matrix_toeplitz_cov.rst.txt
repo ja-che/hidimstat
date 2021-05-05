@@ -1,0 +1,6 @@
+hidimstat.design\_matrix\_toeplitz\_cov
+=======================================
+
+.. currentmodule:: hidimstat
+
+.. autofunction:: design_matrix_toeplitz_cov

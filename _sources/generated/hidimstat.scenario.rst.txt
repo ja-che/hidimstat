@@ -1,0 +1,6 @@
+hidimstat.scenario
+==================
+
+.. currentmodule:: hidimstat
+
+.. autofunction:: scenario

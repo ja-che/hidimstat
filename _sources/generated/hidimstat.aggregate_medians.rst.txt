@@ -1,0 +1,6 @@
+hidimstat.aggregate\_medians
+============================
+
+.. currentmodule:: hidimstat
+
+.. autofunction:: aggregate_medians

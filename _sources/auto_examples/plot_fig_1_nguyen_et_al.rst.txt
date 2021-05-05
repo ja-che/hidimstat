@@ -17,13 +17,18 @@
 
 .. _sphx_glr_auto_examples_plot_fig_1_nguyen_et_al.py:
 
-Example: reproducing Figure 1 -- histogram of KO vs AKO performance -- in
-Nguyen et al. (2020) Aggregation of Multiple Knockoffs
-<https://arxiv.org/abs/2002.09269>
 
-To reduce the script runtime it is desirable to increase n_jobs parameter
+histogram of KO vs AKO performance
+==================================
 
-.. GENERATED FROM PYTHON SOURCE LINES 8-110
+Example: reproducing Figure 1 in::
+
+    Nguyen et al. (2020) Aggregation of Multiple Knockoffs
+    https://arxiv.org/abs/2002.09269
+
+To reduce the script runtime it is desirable to increase n_jobs parameter.
+
+.. GENERATED FROM PYTHON SOURCE LINES 13-115
 
 
 
@@ -127,14 +132,14 @@ To reduce the script runtime it is desirable to increase n_jobs parameter
 
     def main():
         # Simulation paramaters
-        n, p = 500, 1000
+        n, p = 50, 200
         snr = 3.0
         rho = 0.5
         sparsity = 0.06
         offset = 1
         fdr = 0.05
         gamma = 0.3
-        n_bootstraps = 25
+        n_bootstraps = 10
         n_simu = 10
         offset = 1
 
@@ -156,7 +161,7 @@ To reduce the script runtime it is desirable to increase n_jobs parameter
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 9 minutes  41.029 seconds)
+   **Total running time of the script:** ( 0 minutes  32.003 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_fig_1_nguyen_et_al.py:

@@ -1,0 +1,6 @@
+hidimstat.gaonkar
+=================
+
+.. currentmodule:: hidimstat
+
+.. autofunction:: gaonkar
