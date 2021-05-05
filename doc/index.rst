@@ -5,52 +5,56 @@
 
 HiDimStat: High-dimensional statistical inference tool for Python
 =================================================================
-[![build][TravisCI]][travis]  [![coverage][CodeCov]][cov]
+|Build Status| |codecov|
 
 Installation
 ------------
 
 HiDimStat working only with Python 3, ideally Python 3.6+. For installation,
-run the following from terminal
+run the following from terminal::
 
-```bash
-git clone https://github.com/ja-che/hidimstat.git
-cd hidimstat
-pip install -e .
-# or python setup.py install
-```
+  git clone https://github.com/ja-che/hidimstat.git
+  cd hidimstat
+  pip install -e .
+  # or python setup.py install
+
 
 Dependencies
 ------------
 
-```
-joblib
-numpy
-scipy
-scikit-learn
-```
+hidimstat depends on the following packages::
 
-To run examples it is neccessary to install `matplotlib`, and to run tests it
-is also needed to install `pytest`.
+  joblib
+  numpy
+  scipy
+  scikit-learn
+
+
+To run examples it is neccessary to install ```matplotlib``, and to run tests it
+is also needed to install ``pytest``.
 
 
 Documentation & Examples
 ------------------------
 
 As of now in the `examples` folder there is a Python script to reproduce Figure
-1 in Nguyen et al. 2020 (see References below). __Warning__: this script
-should take quite a long time to run.
+1 in Nguyen et al. 2020 (see References below).
 
-```bash
-# Run this command in terminal
-python plot_fig_1_nguyen_et_al.py
-```
+.. warning::
+
+  this scrip should take quite a long time to run.
+
+.. code-block::
+
+  # Run this command in terminal
+  python plot_fig_1_nguyen_et_al.py
+
 
 References
 ----------
 
-Main references:
-
+Main references
+~~~~~~~~~~~~~~~
 
 Ensemble of Clustered desparsified Lasso (ECDL):
 
@@ -67,7 +71,8 @@ Aggregation of multiple Knockoffs (AKO):
 
 If you use our packages, we would appreciate citations to the aforementioned papers.
 
-#### Other useful references:
+Other useful references
+~~~~~~~~~~~~~~~~~~~~~~~
 
 For de-sparsified(or de-biased) Lasso:
 
@@ -89,13 +94,11 @@ For Knockoffs Inference:
   knockoffs for high dimensional controlled variable selection. Journal of the
   Royal Statistical Society Series B, 80(3), 551-577.
 
+.. |Build Status| image:: https://travis-ci.com/ja-che/hidimstat.svg?branch=master
+   :target: https://codecov.io/gh/ja-che/hidimstat
 
-[TravisCI]: https://travis-ci.com/ja-che/hidimstat.svg?branch=master "travisCI status"
-[travis]: https://travis-ci.com/ja-che/hidimstat
-
-[CodeCov]: https://codecov.io/gh/ja-che/hidimstat/branch/master/graph/badge.svg "CodeCov status"
-[cov]: https://codecov.io/gh/ja-che/hidimstat
-
+.. |codecov| image:: https://codecov.io/gh/ja-che/hidimstat/branch/master/graph/badge.svg
+   :target: https://codecov.io/gh/ja-che/hidimstat
 
 
 Build the documentation
@@ -103,7 +106,7 @@ Build the documentation
 
 To build the documentation you will need to run:
 
-::
+.. code-block::
 
     pip install -U sphinx_gallery sphinx_bootstrap_theme
     cd doc

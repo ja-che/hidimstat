@@ -1,9 +1,14 @@
 # Authors: Binh Nguyen <tuan-binh.nguyen@inria.fr>
-"""Example: reproducing Figure 1 -- histogram of KO vs AKO performance -- in
-Nguyen et al. (2020) Aggregation of Multiple Knockoffs
-<https://arxiv.org/abs/2002.09269>
+"""
+histogram of KO vs AKO performance
+==================================
 
-To reduce the script runtime it is desirable to increase n_jobs parameter
+Example: reproducing Figure 1 in::
+
+    Nguyen et al. (2020) Aggregation of Multiple Knockoffs
+    https://arxiv.org/abs/2002.09269
+
+To reduce the script runtime it is desirable to increase n_jobs parameter.
 """
 import matplotlib.pyplot as plt
 import numpy as np
