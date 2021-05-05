@@ -9,11 +9,6 @@ Estimators
 
 .. currentmodule:: hidimstat
 
-.. autosummary::
-   :toctree: generated/
-
-   desparsified_lasso
-   
 Functions
 =========
 
