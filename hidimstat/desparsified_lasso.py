@@ -47,25 +47,45 @@ def desparsified_lasso_confint(X, y, confidence=0.95, max_iter=5000,
 
     Parameters
     -----------
-        X : ndarray or scipy.sparse matrix, (n_samples, n_features)
-            Data
-        y : ndarray, shape (n_samples,) or (n_samples, n_targets)
-            Target. Will be cast to X's dtype if necessary
-        confidence : float, optional
-            Confidence level used to compute the confidence intervals.
-            Each value should be in the range [0, 1].
-        tol : float, optional
-            The tolerance for the optimization: if the updates are
-            smaller than ``tol``, the optimization code checks the
-            dual gap for optimality and continues until it is smaller
-            than ``tol``.
-        method : string, optional
-            The method for the nodewise lasso: "lasso" or "lasso_cv"
-        c : float, optional
-            Only used if method="lasso". Then alpha = c * alpha_max.
-        n_jobs : int or None, optional (default=1)
-            Number of CPUs to use during the cross validation.
-        """
+    X : ndarray or scipy.sparse matrix, (n_samples, n_features)
+        Data.
+
+    y : ndarray, shape (n_samples,) or (n_samples, n_targets)
+        Target. Will be cast to X's dtype if necessary.
+
+    confidence : float, optional
+        Confidence level used to compute the confidence intervals.
+        Each value should be in the range [0, 1].
+
+    max_iter : int, optional
+        The maximum number of iterations (subproblem definitions).
+
+    tol : float, optional
+        The tolerance for the optimization: if the updates are
+        smaller than ``tol``, the optimization code checks the
+        dual gap for optimality and continues until it is smaller
+        than ``tol``.
+
+    method : string, optional
+        The method for the nodewise lasso: "lasso" or "lasso_cv".
+
+    c : float, optional
+        Only used if method="lasso". Then alpha = c * alpha_max.
+
+    n_jobs : int or None, optional (default=1)
+        Number of CPUs to use during the cross validation.
+
+    Returns
+    -------
+    beta_hat : array, shape (n_features,)
+        Estimated parameter vector.
+
+    cb_min : array, shape (n_features)
+        Lower bound of the confidence intervals on the parameter vector.
+
+    cb_max : array, shape (n_features)
+        Upper bound of the confidence intervals on the parameter vector.
+    """
 
     X = np.asarray(X)
 
