@@ -47,3 +47,31 @@ def reid(X, y, method="lars", tol=1e-4, max_iter=1e+3, n_jobs=1):
     sigma_hat = np.sqrt((1. / (n_samples - support)) * norm(error) ** 2)
 
     return sigma_hat
+
+
+def empirical_snr(X, y, beta, epsilon=None):
+    """Compute the SNR for the linear model: y = X beta + epsilon
+
+    Parameters
+    -----------
+    X : ndarray or scipy.sparse matrix, (n_samples, n_features)
+        Data
+    y : ndarray, shape (n_samples,)
+        Target. Will be cast to X's dtype if necessary
+    beta : ndarray, shape (n_features,)
+        True parameter vector.
+    epsilon : ndarray, shape (n_samples,), opitonal (default=None)
+        True error vector.
+    """
+    X = np.asarray(X)
+
+    signal = np.dot(X, beta)
+
+    if epsilon is None:
+        epsilon = y - signal
+
+    sig_signal = np.linalg.norm(signal - np.mean(signal))
+    sig_noise = np.linalg.norm(epsilon - np.mean(epsilon))
+    snr_hat = (sig_signal / sig_noise) ** 2
+
+    return snr_hat
