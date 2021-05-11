@@ -22,7 +22,7 @@ Examples Gallery
 .. only:: html
 
  .. figure:: /auto_examples/images/thumb/sphx_glr_plot_fig_1_nguyen_et_al_thumb.png
-     :alt: histogram of KO vs AKO performance
+     :alt: Histogram of KO vs AKO performance
 
      :ref:`sphx_glr_auto_examples_plot_fig_1_nguyen_et_al.py`
 
@@ -35,6 +35,27 @@ Examples Gallery
    :hidden:
 
    /auto_examples/plot_fig_1_nguyen_et_al
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Support recovery on structured data (2D)">
+
+.. only:: html
+
+ .. figure:: /auto_examples/images/thumb/sphx_glr_plot_2D_example_thumb.png
+     :alt: Support recovery on structured data (2D)
+
+     :ref:`sphx_glr_auto_examples_plot_2D_example.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/plot_2D_example
 .. raw:: html
 
     <div class="sphx-glr-clear"></div>
