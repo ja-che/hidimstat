@@ -82,8 +82,8 @@ For Knockoffs Inference:
   Royal Statistical Society Series B_, 80(3), 551-577.
 
 
-[TravisCI]: https://travis-ci.com/ja-che/hidimstat.svg?branch=master "travisCI status"
+[TravisCI]: https://travis-ci.com/ja-che/hidimstat.svg?branch=main "travisCI status"
 [travis]: https://travis-ci.com/ja-che/hidimstat
 
-[CodeCov]: https://codecov.io/gh/ja-che/hidimstat/branch/master/graph/badge.svg "CodeCov status"
+[CodeCov]: https://codecov.io/gh/ja-che/hidimstat/branch/main/graph/badge.svg "CodeCov status"
 [cov]: https://codecov.io/gh/ja-che/hidimstat
