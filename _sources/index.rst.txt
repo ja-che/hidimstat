@@ -94,10 +94,10 @@ For Knockoffs Inference:
   knockoffs for high dimensional controlled variable selection. Journal of the
   Royal Statistical Society Series B, 80(3), 551-577.
 
-.. |Build Status| image:: https://travis-ci.com/ja-che/hidimstat.svg?branch=master
+.. |Build Status| image:: https://travis-ci.com/ja-che/hidimstat.svg?branch=main
    :target: https://codecov.io/gh/ja-che/hidimstat
 
-.. |codecov| image:: https://codecov.io/gh/ja-che/hidimstat/branch/master/graph/badge.svg
+.. |codecov| image:: https://codecov.io/gh/ja-che/hidimstat/branch/main/graph/badge.svg
    :target: https://codecov.io/gh/ja-che/hidimstat
 
 
