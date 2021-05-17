@@ -1,7 +1,7 @@
 # HiDimStat: High-dimensional statistical inference tool for Python
 [![build][TravisCI]][travis]  [![coverage][CodeCov]][cov]
 
-## Installation 
+## Installation
 
 HiDimStat working only with Python 3, ideally Python 3.6+. For installation,
 run the following from terminal
@@ -25,6 +25,8 @@ To run examples it is neccessary to install `matplotlib`, and to run tests it
 is also needed to install `pytest`.
 
 ## Documentation & Examples
+
+All the documentation of HiDimStat is available at https://ja-che.github.io/hidimstat/.
 
 As of now in the `examples` folder there is a Python script to reproduce Figure
 1 in Nguyen et al. 2020 (see References below). __Warning__: this script
