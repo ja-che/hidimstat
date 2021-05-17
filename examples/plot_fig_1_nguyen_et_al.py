@@ -1,6 +1,6 @@
 # Authors: Binh Nguyen <tuan-binh.nguyen@inria.fr>
 """
-histogram of KO vs AKO performance
+Histogram of KO vs AKO performance
 ==================================
 
 Example: reproducing Figure 1 in::
