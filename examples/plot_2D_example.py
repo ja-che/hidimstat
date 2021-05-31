@@ -22,7 +22,7 @@ from hidimstat.noise_std import empirical_snr
 
 def simulation_2D(n_samples, shape, roi_size, sigma, smooth_X, seed=0):
 
-    np.random.seed(seed)
+    rng = np.random.default_rng(seed)
     w = np.zeros(shape + (5,))
     w[0:roi_size, 0:roi_size, 0] = 1.0
     w[-roi_size:, -roi_size:, 1] = 1.0
@@ -30,7 +30,7 @@ def simulation_2D(n_samples, shape, roi_size, sigma, smooth_X, seed=0):
     w[-roi_size:, 0:roi_size, 3] = 1.0
     beta = w.sum(-1).ravel()
 
-    X_ = np.random.randn(n_samples, shape[0], shape[1])
+    X_ = rng.standard_normal((n_samples, shape[0], shape[1]))
     X_init = []
 
     for i in np.arange(n_samples):
@@ -94,10 +94,9 @@ def add_one_subplot(ax, map, title):
         ax.get_yaxis().set_visible(False)
 
 
-def plot(maps, titles):
+def plot(maps, titles, save_fig=False):
 
-    fig, axes = \
-        plt.subplots(3, 2, figsize=(4, 6))
+    fig, axes = plt.subplots(3, 2, figsize=(4, 6))
 
     for i in range(3):
         for j in range(2):
@@ -106,9 +105,10 @@ def plot(maps, titles):
 
     fig.tight_layout()
 
-    figname = f'figures/simu_2D.png'
-    plt.savefig(figname)
-    print(f'Save figure to {figname}')
+    if save_fig:
+        figname = f'figures/simu_2D.png'
+        plt.savefig(figname)
+        print(f'Save figure to {figname}')
 
     plt.show()
 
