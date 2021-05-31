@@ -3290,7 +3290,6 @@ Support recovery on structured data (2D)
       return array(a, dtype, copy=False, order=order)
     /usr/local/lib/python3.8/site-packages/numpy/core/_asarray.py:102: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
       return array(a, dtype, copy=False, order=order)
-    Save figure to figures/simu_2D.png
 
 
 
@@ -3319,7 +3318,7 @@ Support recovery on structured data (2D)
 
     def simulation_2D(n_samples, shape, roi_size, sigma, smooth_X, seed=0):
 
-        np.random.seed(seed)
+        rng = np.random.default_rng(seed)
         w = np.zeros(shape + (5,))
         w[0:roi_size, 0:roi_size, 0] = 1.0
         w[-roi_size:, -roi_size:, 1] = 1.0
@@ -3327,7 +3326,7 @@ Support recovery on structured data (2D)
         w[-roi_size:, 0:roi_size, 3] = 1.0
         beta = w.sum(-1).ravel()
 
-        X_ = np.random.randn(n_samples, shape[0], shape[1])
+        X_ = rng.standard_normal((n_samples, shape[0], shape[1]))
         X_init = []
 
         for i in np.arange(n_samples):
@@ -3391,10 +3390,9 @@ Support recovery on structured data (2D)
             ax.get_yaxis().set_visible(False)
 
 
-    def plot(maps, titles):
+    def plot(maps, titles, save_fig=False):
 
-        fig, axes = \
-            plt.subplots(3, 2, figsize=(4, 6))
+        fig, axes = plt.subplots(3, 2, figsize=(4, 6))
 
         for i in range(3):
             for j in range(2):
@@ -3403,9 +3401,10 @@ Support recovery on structured data (2D)
 
         fig.tight_layout()
 
-        figname = f'figures/simu_2D.png'
-        plt.savefig(figname)
-        print(f'Save figure to {figname}')
+        if save_fig:
+            figname = f'figures/simu_2D.png'
+            plt.savefig(figname)
+            print(f'Save figure to {figname}')
 
         plt.show()
 
@@ -3509,7 +3508,7 @@ Support recovery on structured data (2D)
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 2 minutes  2.689 seconds)
+   **Total running time of the script:** ( 1 minutes  57.284 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_2D_example.py:
