@@ -1,7 +1,7 @@
 import numpy as np
 from numpy.testing import assert_array_almost_equal
 
-from hidimstat.knockoffs.data_simulation import simu_data
+from hidimstat.data_simulation import simu_data
 
 n = 100
 p = 200

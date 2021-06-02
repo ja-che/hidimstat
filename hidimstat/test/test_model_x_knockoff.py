@@ -1,6 +1,6 @@
-from hidimstat.knockoffs.data_simulation import simu_data
-from hidimstat.knockoffs import model_x_knockoff
-from hidimstat.knockoffs.utils import cal_fdp_power
+from hidimstat.data_simulation import simu_data
+from hidimstat import model_x_knockoff
+from hidimstat.utils import cal_fdp_power
 
 seed = 0
 fdr = 0.1
