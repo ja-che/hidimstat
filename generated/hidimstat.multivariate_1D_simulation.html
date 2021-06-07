@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>hidimstat.scenario &#8212; hidimstat 0.0.5 documentation</title>
+    <title>hidimstat.multivariate_1D_simulation &#8212; hidimstat 0.0.5 documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/style.css" />
@@ -18,8 +18,8 @@
     <script src="../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="hidimstat.standardized_svr" href="hidimstat.standardized_svr.html" />
-    <link rel="prev" title="hidimstat.reid" href="hidimstat.reid.html" />
+    <link rel="next" title="hidimstat.permutation_test" href="hidimstat.permutation_test.html" />
+    <link rel="prev" title="hidimstat.hd_inference" href="hidimstat.hd_inference.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -92,38 +92,40 @@
   <div class="row">
     <div class="body col-md-12 content" role="main">
       
-  <div class="section" id="hidimstat-scenario">
-<h1>hidimstat.scenario<a class="headerlink" href="#hidimstat-scenario" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="hidimstat-multivariate-1d-simulation">
+<h1>hidimstat.multivariate_1D_simulation<a class="headerlink" href="#hidimstat-multivariate-1d-simulation" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
-<dt id="hidimstat.scenario">
-<code class="sig-prename descclassname">hidimstat.</code><code class="sig-name descname">scenario</code><span class="sig-paren">(</span><em class="sig-param">scenario='Toeplitz'</em>, <em class="sig-param">seed=0</em>, <em class="sig-param">n_samples=100</em>, <em class="sig-param">n_features=500</em>, <em class="sig-param">effect_small=0.25</em>, <em class="sig-param">effect_medium=0.5</em>, <em class="sig-param">effect_large=1</em>, <em class="sig-param">effect_s_nb=4</em>, <em class="sig-param">effect_m_nb=4</em>, <em class="sig-param">effect_l_nb=4</em>, <em class="sig-param">sigma=1</em>, <em class="sig-param">rho=0.0</em>, <em class="sig-param">shuffle=True</em><span class="sig-paren">)</span><a class="headerlink" href="#hidimstat.scenario" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generate the 1D data with 3 levels for the weight vector</p>
+<dt id="hidimstat.multivariate_1D_simulation">
+<code class="sig-prename descclassname">hidimstat.</code><code class="sig-name descname">multivariate_1D_simulation</code><span class="sig-paren">(</span><em class="sig-param">n_samples=100</em>, <em class="sig-param">n_features=500</em>, <em class="sig-param">support_size=10</em>, <em class="sig-param">sigma=1.0</em>, <em class="sig-param">rho=0.0</em>, <em class="sig-param">shuffle=True</em>, <em class="sig-param">seed=0</em><span class="sig-paren">)</span><a class="headerlink" href="#hidimstat.multivariate_1D_simulation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate 1D data with Toeplitz design matrix</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>scenario</strong><span class="classifier">string</span></dt><dd><p>Type of scenario generated</p>
-</dd>
 <dt><strong>n_samples</strong><span class="classifier">int</span></dt><dd><p>Number of samples</p>
 </dd>
 <dt><strong>n_features</strong><span class="classifier">int</span></dt><dd><p>Number of features</p>
 </dd>
-<dt><strong>effect_small</strong><span class="classifier">float</span></dt><dd><p>Value of the low non zero coefficients of the weight vector</p>
-</dd>
-<dt><strong>effect_medium</strong><span class="classifier">float</span></dt><dd><p>Value of the medium non zero coefficients of the weight vector</p>
-</dd>
-<dt><strong>effect_large</strong><span class="classifier">float</span></dt><dd><p>Value of the high non zero coefficients of the weight vector</p>
-</dd>
-<dt><strong>effect_s_nb</strong><span class="classifier">int</span></dt><dd><p>Number of coefficients with a low non zero value</p>
-</dd>
-<dt><strong>effect_m_nb</strong><span class="classifier">int</span></dt><dd><p>Number of coefficients with a medium non zero value</p>
-</dd>
-<dt><strong>effect_l_nb</strong><span class="classifier">int</span></dt><dd><p>Number of coefficients with a high non zero value</p>
+<dt><strong>support_size: int</strong></dt><dd><p>Size of the support</p>
 </dd>
 <dt><strong>sigma: float</strong></dt><dd><p>Standard deviation of the additive White Gaussian noise</p>
 </dd>
-<dt><strong>rho: float</strong></dt><dd><p>Level of correlation between neighboring features</p>
+<dt><strong>rho: float</strong></dt><dd><p>Level of correlation between neighboring features (if shuffle is False)</p>
 </dd>
-<dt><strong>shuffle</strong><span class="classifier">boolean</span></dt><dd><p>Shuffle the features (changing data structure) if True.</p>
+<dt><strong>shuffle</strong><span class="classifier">bool</span></dt><dd><p>Shuffle the features (changing data structure) if True.</p>
+</dd>
+<dt><strong>seed: int</strong></dt><dd><p>Seed used for generating design matrix and noise</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>X: ndarray, shape (n_samples, n_features)</dt><dd><p>Design matrix</p>
+</dd>
+<dt>y: ndarray, shape (n_samples,)</dt><dd><p>Target</p>
+</dd>
+<dt>beta: ndarray, shape (n_features,)</dt><dd><p>Parameter vector</p>
+</dd>
+<dt>epsilon: ndarray, shape (n_samples,)</dt><dd><p>Additive white Gaussian noise</p>
 </dd>
 </dl>
 </dd>

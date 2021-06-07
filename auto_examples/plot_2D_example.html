@@ -3360,10 +3360,10 @@ to download the full example code</p>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">ndimage</span>
 <span class="kn">from</span> <span class="nn">sklearn.feature_extraction</span> <span class="kn">import</span> <span class="n">image</span>
 <span class="kn">from</span> <span class="nn">sklearn.cluster</span> <span class="kn">import</span> <a href="https://scikit-learn.org/stable/modules/generated/sklearn.cluster.FeatureAgglomeration.html#sklearn.cluster.FeatureAgglomeration" title="sklearn.cluster.FeatureAgglomeration" class="sphx-glr-backref-module-sklearn-cluster sphx-glr-backref-type-py-class"><span class="n">FeatureAgglomeration</span></a>
 
+<span class="kn">from</span> <span class="nn">hidimstat.scenario</span> <span class="kn">import</span> <span class="n">multivariate_simulation</span>
 <span class="kn">from</span> <span class="nn">hidimstat.stat_tools</span> <span class="kn">import</span> <span class="n">zscore_from_sf_and_cdf</span>
 <span class="kn">from</span> <span class="nn">hidimstat.desparsified_lasso</span> <span class="kn">import</span> <a href="../generated/hidimstat.desparsified_lasso_confint.html#hidimstat.desparsified_lasso_confint" title="hidimstat.desparsified_lasso_confint" class="sphx-glr-backref-module-hidimstat sphx-glr-backref-type-py-function"><span class="n">desparsified_lasso_confint</span></a>
 <span class="kn">from</span> <span class="nn">hidimstat.stat_tools</span> <span class="kn">import</span> <span class="n">sf_from_cb</span><span class="p">,</span> <span class="n">cdf_from_cb</span>
@@ -3371,33 +3371,6 @@ to download the full example code</p>
 <span class="kn">from</span> <span class="nn">hidimstat.ensemble_clustered_inference</span> <span class="kn">import</span> <a href="../generated/hidimstat.ensemble_clustered_inference.html#hidimstat.ensemble_clustered_inference" title="hidimstat.ensemble_clustered_inference" class="sphx-glr-backref-module-hidimstat sphx-glr-backref-type-py-function"><span class="n">ensemble_clustered_inference</span></a>
 <span class="kn">from</span> <span class="nn">hidimstat.stat_tools</span> <span class="kn">import</span> <span class="n">zscore_from_sf</span>
 <span class="kn">from</span> <span class="nn">hidimstat.noise_std</span> <span class="kn">import</span> <span class="n">empirical_snr</span>
-
-
-<span class="k">def</span> <span class="nf">simulation_2D</span><span class="p">(</span><span class="n">n_samples</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="n">roi_size</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">smooth_X</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
-
-    <span class="n">rng</span> <span class="o">=</span> <a href="https://numpy.org/devdocs/reference/random/generator.html#numpy.random.default_rng" title="numpy.random.default_rng" class="sphx-glr-backref-module-numpy-random sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span></a><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
-    <span class="n">w</span> <span class="o">=</span> <a href="https://numpy.org/devdocs/reference/generated/numpy.zeros.html#numpy.zeros" title="numpy.zeros" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">zeros</span></a><span class="p">(</span><span class="n">shape</span> <span class="o">+</span> <span class="p">(</span><span class="mi">5</span><span class="p">,))</span>
-    <span class="n">w</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">roi_size</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="n">roi_size</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
-    <span class="n">w</span><span class="p">[</span><span class="o">-</span><span class="n">roi_size</span><span class="p">:,</span> <span class="o">-</span><span class="n">roi_size</span><span class="p">:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
-    <span class="n">w</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">roi_size</span><span class="p">,</span> <span class="o">-</span><span class="n">roi_size</span><span class="p">:,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
-    <span class="n">w</span><span class="p">[</span><span class="o">-</span><span class="n">roi_size</span><span class="p">:,</span> <span class="mi">0</span><span class="p">:</span><span class="n">roi_size</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
-    <span class="n">beta</span> <span class="o">=</span> <span class="n">w</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
-
-    <span class="n">X_</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">((</span><span class="n">n_samples</span><span class="p">,</span> <span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
-    <span class="n">X_init</span> <span class="o">=</span> <span class="p">[]</span>
-
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <a href="https://numpy.org/devdocs/reference/generated/numpy.arange.html#numpy.arange" title="numpy.arange" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">arange</span></a><span class="p">(</span><span class="n">n_samples</span><span class="p">):</span>
-        <span class="n">Xi</span> <span class="o">=</span> <a href="https://scipy.github.io/devdocs/reference/generated/scipy.ndimage.gaussian_filter.html#scipy.ndimage.gaussian_filter" title="scipy.ndimage.gaussian_filter" class="sphx-glr-backref-module-scipy-ndimage sphx-glr-backref-type-py-function"><span class="n">ndimage</span><span class="o">.</span><span class="n">filters</span><span class="o">.</span><span class="n">gaussian_filter</span></a><span class="p">(</span><span class="n">X_</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">smooth_X</span><span class="p">)</span>
-        <span class="n">X_init</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Xi</span><span class="o">.</span><span class="n">ravel</span><span class="p">())</span>
-
-    <span class="n">X_init</span> <span class="o">=</span> <a href="https://numpy.org/devdocs/reference/generated/numpy.asarray.html#numpy.asarray" title="numpy.asarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">asarray</span></a><span class="p">(</span><span class="n">X_init</span><span class="p">)</span>
-
-    <span class="n">X_</span> <span class="o">=</span> <span class="n">X_init</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">n_samples</span><span class="p">,</span> <span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
-
-    <span class="n">epsilon</span> <span class="o">=</span> <span class="n">sigma</span> <span class="o">*</span> <a href="https://numpy.org/devdocs/reference/random/generated/numpy.random.randn.html#numpy.random.randn" title="numpy.random.randn" class="sphx-glr-backref-module-numpy-random sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span></a><span class="p">(</span><span class="n">n_samples</span><span class="p">)</span>
-    <span class="n">y</span> <span class="o">=</span> <a href="https://numpy.org/devdocs/reference/generated/numpy.dot.html#numpy.dot" title="numpy.dot" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">dot</span></a><span class="p">(</span><span class="n">X_init</span><span class="p">,</span> <span class="n">beta</span><span class="p">)</span> <span class="o">+</span> <span class="n">epsilon</span>
-
-    <span class="k">return</span> <span class="n">X_init</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">beta</span><span class="p">,</span> <span class="n">epsilon</span>
 
 
 <span class="k">def</span> <span class="nf">weight_map_2D_extended</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="n">roi_size</span><span class="p">,</span> <span class="n">delta</span><span class="p">):</span>
@@ -3469,7 +3442,6 @@ to download the full example code</p>
 <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
 
     <span class="c1"># simulation parameters</span>
-    <span class="n">seed</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">n_samples</span> <span class="o">=</span> <span class="mi">100</span>
     <span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="mi">40</span><span class="p">)</span>
     <span class="n">n_features</span> <span class="o">=</span> <span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -3496,8 +3468,8 @@ to download the full example code</p>
     <span class="n">thr_c</span> <span class="o">=</span> <span class="n">zscore_from_sf</span><span class="p">((</span><span class="n">fwer_target</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">correction_cluster</span><span class="p">)</span>
     <span class="n">thr_nc</span> <span class="o">=</span> <span class="n">zscore_from_sf</span><span class="p">((</span><span class="n">fwer_target</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">correction_no_cluster</span><span class="p">)</span>
 
-    <span class="n">X_init</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">beta</span><span class="p">,</span> <span class="n">epsilon</span> <span class="o">=</span> \
-        <span class="n">simulation_2D</span><span class="p">(</span><span class="n">n_samples</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="n">roi_size</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">smooth_X</span><span class="p">,</span> <span class="n">seed</span><span class="p">)</span>
+    <span class="n">X_init</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">beta</span><span class="p">,</span> <span class="n">epsilon</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> \
+        <span class="n">multivariate_simulation</span><span class="p">(</span><span class="n">n_samples</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="n">roi_size</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">smooth_X</span><span class="p">)</span>
 
     <span class="n">empirical_snr</span><span class="p">(</span><span class="n">X_init</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">beta</span><span class="p">,</span> <span class="n">epsilon</span><span class="p">)</span>
 
@@ -3563,7 +3535,7 @@ to download the full example code</p>
     <span class="n">main</span><span class="p">()</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 1 minutes  57.284 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 1 minutes  43.399 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-plot-2d-example-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../_downloads/bb721633f49679c03b02460ad3fa281f/plot_2D_example.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_2D_example.py</span></code></a></p>
