@@ -39,8 +39,11 @@ def test_clustered_inference():
     expected = 0.5 * np.ones(n_features)
     expected[:support_size] = 0.0
 
-    assert_almost_equal(sf_corr[:support_size-margin_size],
-                        expected[:support_size-margin_size])
-    assert_almost_equal(sf_corr[support_size+margin_size:200],
-                        expected[support_size+margin_size:200],
+    interior_support = support_size - margin_size
+    extended_support = support_size + margin_size
+
+    assert_almost_equal(sf_corr[:interior_support],
+                        expected[:interior_support])
+    assert_almost_equal(sf_corr[extended_support:200],
+                        expected[extended_support:200],
                         decimal=1)

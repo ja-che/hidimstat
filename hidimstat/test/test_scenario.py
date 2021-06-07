@@ -67,7 +67,7 @@ def test_multivariate_simulation():
     assert_almost_equal(rho_hat, rho_expected, decimal=2)
     assert_equal(X.shape, (n_samples, shape[0] * shape[1]))
     assert_equal(X_.shape, (n_samples, shape[0], shape[1]))
-    assert_equal(np.count_nonzero(beta), 4 * roi_size**2)
+    assert_equal(np.count_nonzero(beta), 4 * (roi_size ** 2))
     assert_equal(y, np.dot(X, beta) + epsilon)
 
     shape = SHAPE_3D
@@ -81,4 +81,4 @@ def test_multivariate_simulation():
                                 seed=0)
 
     assert_equal(X.shape, (n_samples, shape[0] * shape[1] * shape[2]))
-    assert_equal(np.count_nonzero(beta), 5 * roi_size**3)
+    assert_equal(np.count_nonzero(beta), 5 * (roi_size ** 3))
