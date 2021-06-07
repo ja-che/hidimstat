@@ -7,10 +7,10 @@ Support recovery on structured data (2D)
 
 import numpy as np
 import matplotlib.pyplot as plt
-from scipy import ndimage
 from sklearn.feature_extraction import image
 from sklearn.cluster import FeatureAgglomeration
 
+from hidimstat.scenario import multivariate_simulation
 from hidimstat.stat_tools import zscore_from_sf_and_cdf
 from hidimstat.desparsified_lasso import desparsified_lasso_confint
 from hidimstat.stat_tools import sf_from_cb, cdf_from_cb
@@ -18,33 +18,6 @@ from hidimstat.clustered_inference import clustered_inference
 from hidimstat.ensemble_clustered_inference import ensemble_clustered_inference
 from hidimstat.stat_tools import zscore_from_sf
 from hidimstat.noise_std import empirical_snr
-
-
-def simulation_2D(n_samples, shape, roi_size, sigma, smooth_X, seed=0):
-
-    rng = np.random.default_rng(seed)
-    w = np.zeros(shape + (5,))
-    w[0:roi_size, 0:roi_size, 0] = 1.0
-    w[-roi_size:, -roi_size:, 1] = 1.0
-    w[0:roi_size, -roi_size:, 2] = 1.0
-    w[-roi_size:, 0:roi_size, 3] = 1.0
-    beta = w.sum(-1).ravel()
-
-    X_ = rng.standard_normal((n_samples, shape[0], shape[1]))
-    X_init = []
-
-    for i in np.arange(n_samples):
-        Xi = ndimage.filters.gaussian_filter(X_[i], smooth_X)
-        X_init.append(Xi.ravel())
-
-    X_init = np.asarray(X_init)
-
-    X_ = X_init.reshape((n_samples, shape[0], shape[1]))
-
-    epsilon = sigma * np.random.randn(n_samples)
-    y = np.dot(X_init, beta) + epsilon
-
-    return X_init, y, beta, epsilon
 
 
 def weight_map_2D_extended(shape, roi_size, delta):
@@ -116,7 +89,6 @@ def plot(maps, titles, save_fig=False):
 def main():
 
     # simulation parameters
-    seed = 0
     n_samples = 100
     shape = (40, 40)
     n_features = shape[1] * shape[0]
@@ -143,8 +115,8 @@ def main():
     thr_c = zscore_from_sf((fwer_target / 2) * correction_cluster)
     thr_nc = zscore_from_sf((fwer_target / 2) * correction_no_cluster)
 
-    X_init, y, beta, epsilon = \
-        simulation_2D(n_samples, shape, roi_size, sigma, smooth_X, seed)
+    X_init, y, beta, epsilon, _, _ = \
+        multivariate_simulation(n_samples, shape, roi_size, sigma, smooth_X)
 
     empirical_snr(X_init, y, beta, epsilon)
 
