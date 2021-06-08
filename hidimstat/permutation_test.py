@@ -48,6 +48,7 @@ def permutation_test_cv(X, y, n_permutations=1000, C=None,
     sf_corr : ndarray, shape (n_features,)
         Corrected survival function values with respect to the
         coefficients of the parameter vector
+
     cdf_corr : ndarray, shape (n_features,)
         Corrected cumulative distribution function values with respect to the
         coefficients of the parameter vector
@@ -109,6 +110,7 @@ def permutation_test(X, y, estimator, n_permutations=1000,
     sf_corr : ndarray, shape (n_features,)
         Corrected survival function values with respect to the
         coefficients of the parameter vector
+
     cdf_corr : ndarray, shape (n_features,)
         Corrected cumulative distribution function values with respect to the
         coefficients of the parameter vector
