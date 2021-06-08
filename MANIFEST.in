@@ -1,15 +1,16 @@
 include *.txt
 include *.yml
 include LICENSE
+
 recursive-include doc *.css
 recursive-include doc *.py
 recursive-include doc *.rst
 recursive-include doc *.txt
 recursive-include doc Makefile
-recursive-include examples *.png
 recursive-include examples *.py
 recursive-include examples *.txt
 recursive-include hidimstat *.py
+
 recursive-exclude doc/_build *
 recursive-exclude doc/generated *
 recursive-exclude doc/auto_examples *
