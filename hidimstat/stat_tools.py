@@ -456,8 +456,12 @@ def sf_and_cdf_from_pval_and_sign(pval, sign, eps=1e-14):
     -------
     sf : ndarray, shape (n_features,)
         Survival function values
+    sf_corr : ndarray, shape (n_features,)
+        Corrected survival function values
     cdf : ndarray, shape (n_features,)
         Cumulative distribution function values
+    cdf_corr : ndarray, shape (n_features,)
+        Corrected cumulative distribution function values
     """
 
     sf = sf_from_pval_and_sign(pval, sign, eps=eps)
