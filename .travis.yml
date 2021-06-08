@@ -22,8 +22,11 @@ before_install:
 install:
   - conda install --yes python=$TRAVIS_PYTHON_VERSION pip numpy scipy scikit-learn joblib pytest coverage -yq
   - pip install -U mne 
+  - pip install check-manifest flake8
 script:
   - set -e  # exit at first failure otherwise test might fail but build still passes
+  - check-manifest;
+  - flake8 hidimstat examples;
   - if [ "$ONLY_PYTEST" = true ]; then
       coverage run -m pytest;
       coverage report;
