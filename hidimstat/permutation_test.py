@@ -2,7 +2,7 @@ import numpy as np
 from joblib import Parallel, delayed
 
 from sklearn.base import clone
-from sklearn.utils import check_random_state, _safe_indexing
+from sklearn.utils import _safe_indexing
 from sklearn.svm import LinearSVR
 from sklearn.model_selection import GridSearchCV
 from sklearn.pipeline import Pipeline
@@ -11,9 +11,47 @@ from hidimstat.stat_tools import cdf_from_pval_and_sign
 from hidimstat.stat_tools import sf_from_pval_and_sign
 
 
-def permutation_test_cv(X, y, method='SVR', n_permutations=1000, C=None,
-                        normalize=False, random_state=None, n_jobs=1,
-                        verbose=1):
+def permutation_test_cv(X, y, n_permutations=1000, C=None,
+                        seed=0, n_jobs=1, verbose=1):
+    """Cross-validated permutation test shuffling the target
+
+    Parameters
+    -----------
+    X : ndarray or scipy.sparse matrix, (n_samples, n_features)
+        Data.
+
+    y : ndarray, shape (n_samples,) or (n_samples, n_targets)
+        Target. Will be cast to X's dtype if necessary.
+
+    C : float or None, optional (default=None)
+        If None, the linear SVR regularization parameter is set by cross-val.
+        Otherwise, the regularization parameter is equal to C.
+        The strength of the regularization is inversely proportional to C.
+
+    n_permutations : int, optional (default=1000)
+        Number of permutations used to compute the survival function
+        and cumulative distribution function scores.
+
+    seed: int, optional (default=0)
+        Determines the permutations used for shuffling the target
+
+    n_jobs : int or None, optional (default=1)
+        Number of CPUs to use during the cross validation.
+
+    verbose: int, optional (default=1)
+        The verbosity level: if non zero, progress messages are printed
+        when computing the permutation stats in parralel.
+        The frequency of the messages increases with the verbosity level.
+
+    Returns
+    -------
+    sf_corr : ndarray, shape (n_features,)
+        Corrected survival function values with respect to the
+        coefficients of the parameter vector
+    cdf_corr : ndarray, shape (n_features,)
+        Corrected cumulative distribution function values with respect to the
+        coefficients of the parameter vector
+    """
 
     if C is None:
 
@@ -32,8 +70,7 @@ def permutation_test_cv(X, y, method='SVR', n_permutations=1000, C=None,
 
     sf_corr, cdf_corr = permutation_test(X, y, estimator,
                                          n_permutations=n_permutations,
-                                         normalize=normalize,
-                                         random_state=random_state,
+                                         seed=seed,
                                          n_jobs=n_jobs,
                                          verbose=verbose)
 
@@ -41,24 +78,54 @@ def permutation_test_cv(X, y, method='SVR', n_permutations=1000, C=None,
 
 
 def permutation_test(X, y, estimator, n_permutations=1000,
-                     normalize=False, random_state=None, n_jobs=1, verbose=1):
+                     seed=0, n_jobs=1, verbose=1):
+    """Permutation test shuffling the target
 
-    random_state = check_random_state(random_state)
+    Parameters
+    -----------
+    X : ndarray or scipy.sparse matrix, (n_samples, n_features)
+        Data.
+
+    y : ndarray, shape (n_samples,) or (n_samples, n_targets)
+        Target. Will be cast to X's dtype if necessary.
+
+    n_permutations : int, optional (default=1000)
+        Number of permutations used to compute the survival function
+        and cumulative distribution function scores.
+
+    seed: int, optional (default=0)
+        Determines the permutations used for shuffling the target
+
+    n_jobs : int or None, optional (default=1)
+        Number of CPUs to use during the cross validation.
+
+    verbose: int, optional (default=1)
+        The verbosity level: if non zero, progress messages are printed
+        when computing the permutation stats in parralel.
+        The frequency of the messages increases with the verbosity level.
+
+    Returns
+    -------
+    sf_corr : ndarray, shape (n_features,)
+        Corrected survival function values with respect to the
+        coefficients of the parameter vector
+    cdf_corr : ndarray, shape (n_features,)
+        Corrected cumulative distribution function values with respect to the
+        coefficients of the parameter vector
+    """
+
+    rng = np.random.default_rng(seed)
 
     stat = _permutation_test_stat(clone(estimator), X, y)
 
     permutation_stats = \
         Parallel(n_jobs=n_jobs, verbose=verbose)(
             delayed(_permutation_test_stat)(clone(estimator), X,
-                                            _shuffle(y, random_state))
+                                            _shuffle(y, rng))
             for _ in range(n_permutations))
 
     permutation_stats = np.array(permutation_stats)
-    if normalize:
-        permutation_stats = \
-            (permutation_stats.T / np.linalg.norm(permutation_stats, axis=1)).T
-
-    pval_corr = _step_down_max_T(stat, permutation_stats)
+    pval_corr = step_down_max_T(stat, permutation_stats)
 
     stat_sign = np.sign(stat)
 
@@ -69,17 +136,41 @@ def permutation_test(X, y, estimator, n_permutations=1000,
 
 
 def _permutation_test_stat(estimator, X, y):
-
+    """Fit estimator and get coef"""
     stat = estimator.fit(X, y).coef_
     return stat
 
 
-def _shuffle(y, random_state):
-    indices = random_state.permutation(len(y))
+def _shuffle(y, rng):
+    """Shuffle vector"""
+    indices = rng.permutation(len(y))
     return _safe_indexing(y, indices)
 
 
-def _step_down_max_T(stat, permutation_stats):
+def step_down_max_T(stat, permutation_stats):
+    """
+    Step-down maxT algorithm for computing adjusted p-values
+
+    Parameters
+    -----------
+    stat : ndarray, shape (n_features,)
+        Statistic computed on the original (unpermutted) problem.
+
+    permutation_stats : ndarray, shape (n_permutations, n_features)
+        Statistics computed on permutted problems.
+
+    Returns
+    -------
+    pval_corr : array, shape (n_features,)
+        Adjusted p-values testing the null on the coefficients
+        of the parameter vector.
+
+    References
+    ----------
+    .. [1] Westfall, P. H., & Young, S. S. (1993).
+    Resampling-based multiple testing: Examples and methods for
+    p-value adjustment (Vol. 279). John Wiley & Sons.
+    """
 
     n_permutations, n_features = np.shape(permutation_stats)
 
