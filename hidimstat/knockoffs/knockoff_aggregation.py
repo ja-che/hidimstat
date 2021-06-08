@@ -94,7 +94,9 @@ def _empirical_pval(test_score, offset=1):
         if test_score[i] <= 0:
             pvals.append(1)
         else:
-            pvals.append((offset
-                + np.sum(test_score_inv >= test_score[i])) / n_features)
+            pvals.append(
+                (offset + np.sum(test_score_inv >= test_score[i])) /
+                n_features
+            )
 
     return np.array(pvals)

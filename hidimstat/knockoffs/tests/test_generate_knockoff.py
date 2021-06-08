@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Authors: Binh Nguyen <tuan-binh.nguyen@inria.fr>
-import numpy as np
+
 from hidimstat.knockoffs.data_simulation import simu_data
 from hidimstat.knockoffs.gaussian_knockoff import (
     _estimate_distribution, gaussian_knockoff_generation)

@@ -79,7 +79,7 @@ def plot(maps, titles, save_fig=False):
     fig.tight_layout()
 
     if save_fig:
-        figname = f'figures/simu_2D.png'
+        figname = 'figures/simu_2D.png'
         plt.savefig(figname)
         print(f'Save figure to {figname}')
 
