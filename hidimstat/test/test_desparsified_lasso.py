@@ -16,10 +16,10 @@ def test_desparsified_lasso_confint():
     n_support = 1
     sigma = 0.02
 
-    X = rng.randn(n_samples, n_features)
+    X = rng.normal(size=(n_samples, n_features))
     beta = np.zeros(n_features)
     beta[:n_support] = 1.0
-    epsilon = sigma * rng.randn(n_samples)
+    epsilon = sigma * rng.normal(size=n_samples)
     y = np.dot(X, beta) + epsilon
 
     beta_hat, cb_min, cb_max = desparsified_lasso_confint(X, y, n_jobs=1)
