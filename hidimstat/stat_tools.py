@@ -84,7 +84,7 @@ def sf_from_scale(beta, scale, eps=1e-14):
     beta : ndarray, shape (n_features,)
         Value of the parameters
     scale : ndarray, shape (n_features,)
-        Value of the variance of the parameters
+        Value of the standard deviation of the parameters
     eps : float, optional
         The machine-precision regularization in the computation of the
         survival function value
@@ -118,7 +118,7 @@ def cdf_from_scale(beta, scale, eps=1e-14):
     beta : ndarray, shape (n_features,)
         Value of the parameters
     scale : ndarray, shape (n_features,)
-        Value of the variance of the parameters
+        Value of the standard deviation of the parameters
     eps : float, optional
         The machine-precision regularization in the computation of the
         cumulative distribution function value
