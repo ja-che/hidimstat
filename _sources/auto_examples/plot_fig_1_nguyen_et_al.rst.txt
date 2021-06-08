@@ -125,7 +125,7 @@ To reduce the script runtime it is desirable to increase n_jobs parameter.
                  range=[0.0, 1.0], bins=n_bins, color=color_teal)
         plt.tight_layout()
 
-        figname = f'figures/histogram_ko_vs_ako.png'
+        figname = 'figures/histogram_ko_vs_ako.png'
         plt.savefig(figname)
         print(f'Save figure to {figname}')
 
@@ -161,7 +161,7 @@ To reduce the script runtime it is desirable to increase n_jobs parameter.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  30.640 seconds)
+   **Total running time of the script:** ( 0 minutes  30.103 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_fig_1_nguyen_et_al.py:
