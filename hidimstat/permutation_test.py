@@ -11,22 +11,29 @@ from hidimstat.stat_tools import cdf_from_pval_and_sign
 from hidimstat.stat_tools import sf_from_pval_and_sign
 
 
-def permutation_test_cv(X, y, n_permutations=1000, C=None,
+def permutation_test_cv(X, y, n_permutations=1000,
+                        C=None, Cs=np.logspace(-7, 1, 9),
                         seed=0, n_jobs=1, verbose=1):
     """Cross-validated permutation test shuffling the target
 
     Parameters
     -----------
-    X : ndarray or scipy.sparse matrix, (n_samples, n_features)
+    X : ndarray or scipy.sparse matrix, shape (n_samples, n_features)
         Data.
 
     y : ndarray, shape (n_samples,) or (n_samples, n_targets)
         Target. Will be cast to X's dtype if necessary.
 
     C : float or None, optional (default=None)
-        If None, the linear SVR regularization parameter is set by cross-val.
+        If None, the linear SVR regularization parameter is set by cross-val
+        running a grid search on the list of hyper-parameters contained in Cs.
         Otherwise, the regularization parameter is equal to C.
         The strength of the regularization is inversely proportional to C.
+
+    Cs : ndarray, optional (default=np.logspace(-7, 1, 9))
+        If C is None, the linear SVR regularization parameter is set by
+        cross-val running a grid search on the list of hyper-parameters
+        contained in Cs.
 
     n_permutations : int, optional (default=1000)
         Number of permutations used to compute the survival function
@@ -56,7 +63,6 @@ def permutation_test_cv(X, y, n_permutations=1000, C=None,
 
     if C is None:
 
-        Cs = np.logspace(-7, 1, 9)
         steps = [('SVR', LinearSVR())]
         pipeline = Pipeline(steps)
         parameters = {'SVR__C': Cs}
@@ -84,7 +90,7 @@ def permutation_test(X, y, estimator, n_permutations=1000,
 
     Parameters
     -----------
-    X : ndarray or scipy.sparse matrix, (n_samples, n_features)
+    X : ndarray or scipy.sparse matrix, shape (n_samples, n_features)
         Data.
 
     y : ndarray, shape (n_samples,) or (n_samples, n_targets)
@@ -150,8 +156,7 @@ def _shuffle(y, rng):
 
 
 def step_down_max_T(stat, permutation_stats):
-    """
-    Step-down maxT algorithm for computing adjusted p-values
+    """Step-down maxT algorithm for computing adjusted p-values
 
     Parameters
     -----------
@@ -169,9 +174,9 @@ def step_down_max_T(stat, permutation_stats):
 
     References
     ----------
-    .. [1] Westfall, P. H., & Young, S. S. (1993).
-    Resampling-based multiple testing: Examples and methods for
-    p-value adjustment (Vol. 279). John Wiley & Sons.
+    .. [1] Westfall, P. H., & Young, S. S. (1993). Resampling-based multiple
+           testing: Examples and methods for p-value adjustment (Vol. 279).
+           John Wiley & Sons.
     """
 
     n_permutations, n_features = np.shape(permutation_stats)
