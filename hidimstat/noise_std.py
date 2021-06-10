@@ -1,52 +1,75 @@
 import numpy as np
 from numpy.linalg import norm
-from sklearn.linear_model import LassoCV, LassoLarsCV
+from sklearn.linear_model import LassoCV
+from sklearn.model_selection import KFold
 
 
-def reid(X, y, method="lars", tol=1e-4, max_iter=1e+3, n_jobs=1):
+def reid(X, y, eps=1e-2, tol=1e-4, max_iter=1e+4, n_jobs=1, seed=0):
     """Estimation of noise standard deviation using Reid procedure
 
     Parameters
     -----------
-    X : ndarray or scipy.sparse matrix, (n_samples, n_features)
-        Data
+    X : ndarray or scipy.sparse matrix, shape (n_samples, n_features)
+        Data.
+
     y : ndarray, shape (n_samples,) or (n_samples, n_targets)
-        Target. Will be cast to X's dtype if necessary
-    method : string, optional
-        The method for the CV-lasso: "lars" or "lasso"
+        Target. Will be cast to X's dtype if necessary.
+
     tol : float, optional
         The tolerance for the optimization: if the updates are
         smaller than ``tol``, the optimization code checks the
         dual gap for optimality and continues until it is smaller
         than ``tol``.
+
     max_iter : int, optional
-        The maximum number of iterations
+        The maximum number of iterations.
+
     n_jobs : int or None, optional (default=1)
         Number of CPUs to use during the cross validation.
+
+    seed: int, optional (default=0)
+        Seed passed in the KFold object which is used to cross-validate
+        LassoCV. This seed controls the partitioning randomness.
+
+    Returns
+    -------
+    sigma_hat : float
+        Estimated noise standard deviation.
+
+    beta_hat : array, shape (n_features,)
+        Estimated parameter vector.
     """
 
     X = np.asarray(X)
     n_samples, n_features = X.shape
 
-    if int(max_iter / 5) <= n_features:
+    if max_iter // 5 <= n_features:
         max_iter = n_features * 5
+        print("'max_iter' has been increased to {}".format(max_iter))
 
-    if method == "lars":
-        clf_lars_cv = LassoLarsCV(max_iter=max_iter, normalize=False, cv=3,
-                                  n_jobs=n_jobs)
-        clf_lars_cv.fit(X, y)
-        error = clf_lars_cv.predict(X) - y
-        support = sum(clf_lars_cv.coef_ != 0)
+    cv = KFold(n_splits=5, shuffle=True, random_state=seed)
 
-    elif method == "lasso":
-        clf_lasso_cv = LassoCV(tol=tol, max_iter=max_iter, cv=3, n_jobs=n_jobs)
-        clf_lasso_cv.fit(X, y)
-        error = clf_lasso_cv.predict(X) - y
-        support = sum(clf_lasso_cv.coef_ != 0)
+    clf_lasso_cv = \
+        LassoCV(eps=eps, normalize=False, fit_intercept=False,
+                cv=cv, tol=tol, max_iter=max_iter, n_jobs=n_jobs)
+
+    clf_lasso_cv.fit(X, y)
+    beta_hat = clf_lasso_cv.coef_
+    error = clf_lasso_cv.predict(X) - y
+    coef_max = np.max(np.abs(beta_hat))
+
+    if coef_max == 0:
+        support = 0
+    else:
+        support = np.sum(np.abs(beta_hat) > tol * coef_max)
+
+    # avoid dividing by 0
+    if support >= n_samples:
+        support = n_samples - 1
 
     sigma_hat = np.sqrt((1. / (n_samples - support)) * norm(error) ** 2)
 
-    return sigma_hat
+    return sigma_hat, beta_hat
 
 
 def empirical_snr(X, y, beta, epsilon=None):

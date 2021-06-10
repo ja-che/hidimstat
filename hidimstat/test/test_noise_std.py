@@ -22,12 +22,7 @@ def test_reid():
     epsilon = sigma * np.random.randn(n_samples)
     y = np.dot(X, beta) + epsilon
 
-    sigma_hat = reid(X, y)
-    expected = sigma
-
-    assert_almost_equal(sigma_hat / expected, 1.0, decimal=0)
-
-    sigma_hat = reid(X, y, method='lasso')
+    sigma_hat, _ = reid(X, y)
     expected = sigma
 
     assert_almost_equal(sigma_hat / expected, 1.0, decimal=0)
