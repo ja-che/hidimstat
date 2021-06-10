@@ -34,9 +34,6 @@ def standardized_svr(X, y, Cs=np.logspace(-7, 1, 9), n_jobs=1):
 
     n_samples, n_features = X.shape
 
-    if Cs is None:
-        Cs = np.logspace(-7, 1, 9)
-
     steps = [('SVR', LinearSVR())]
     pipeline = Pipeline(steps)
     parameters = {'SVR__C': Cs}
