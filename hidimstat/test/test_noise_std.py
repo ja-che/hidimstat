@@ -2,10 +2,13 @@
 Test the noise_std module
 """
 
+import numpy as np
 from numpy.testing import assert_almost_equal
+from scipy.linalg import toeplitz
 
 from hidimstat.scenario import multivariate_1D_simulation
-from hidimstat.noise_std import reid, empirical_snr
+from hidimstat.scenario import multivariate_temporal_simulation
+from hidimstat.noise_std import reid, group_reid, empirical_snr
 
 
 def test_reid():
@@ -13,7 +16,7 @@ def test_reid():
     n_samples, n_features = 50, 30
     sigma = 2.0
 
-    # First test
+    # First expe
     # ##########
     support_size = 10
 
@@ -28,7 +31,7 @@ def test_reid():
 
     assert_almost_equal(sigma_hat / expected, 1.0, decimal=0)
 
-    # Second test
+    # Second expe
     # ###########
     support_size = 0
 
@@ -41,6 +44,71 @@ def test_reid():
     expected = sigma
 
     assert_almost_equal(sigma_hat / expected, 1.0, decimal=1)
+
+
+def test_group_reid():
+
+    n_samples = 30
+    n_features = 50
+    n_targets = 10
+    sigma = 1.0
+    rho = 0.9
+    Corr = toeplitz(np.geomspace(1, rho ** (n_targets - 1), n_targets))
+    Cov = np.outer(sigma, sigma) * Corr
+
+    # First expe
+    # ##########
+    support_size = 2
+
+    X, Y, Beta, E = \
+        multivariate_temporal_simulation(n_samples=n_samples,
+                                         n_features=n_features,
+                                         n_targets=n_targets,
+                                         support_size=support_size,
+                                         sigma=sigma, rho=rho)
+
+    # max_iter=1 to get a better coverage
+    Cov_hat, _ = group_reid(X, Y, tol=1e-3, max_iter=1)
+    error_ratio = Cov_hat / Cov
+
+    assert_almost_equal(np.max(error_ratio), 1.0, decimal=0)
+    assert_almost_equal(np.log(np.min(error_ratio)), 0.0, decimal=1)
+
+    Cov_hat, _ = group_reid(X, Y, method='AR')
+    error_ratio = Cov_hat / Cov
+
+    assert_almost_equal(np.max(error_ratio), 1.0, decimal=0)
+    assert_almost_equal(np.log(np.min(error_ratio)), 0.0, decimal=0)
+
+    # Second expe
+    # ###########
+    support_size = 0
+
+    X, Y, Beta, E = \
+        multivariate_temporal_simulation(n_samples=n_samples,
+                                         n_features=n_features,
+                                         n_targets=n_targets,
+                                         support_size=support_size,
+                                         sigma=sigma, rho=rho,
+                                         seed=2)
+
+    Cov_hat, _ = group_reid(X, Y)
+    error_ratio = Cov_hat / Cov
+
+    assert_almost_equal(np.max(error_ratio), 1.0, decimal=0)
+    assert_almost_equal(np.log(np.min(error_ratio)), 0.0, decimal=1)
+
+    Cov_hat, _ = group_reid(X, Y, fit_Y=False, stationary=False)
+    error_ratio = Cov_hat / Cov
+
+    assert_almost_equal(np.max(error_ratio), 1.0, decimal=0)
+    assert_almost_equal(np.log(np.min(error_ratio)), 0.0, decimal=0)
+
+    Cov_hat, _ = group_reid(X, Y, method='AR')
+    error_ratio = Cov_hat / Cov
+
+    assert_almost_equal(np.max(error_ratio), 1.0, decimal=0)
+    assert_almost_equal(np.log(np.min(error_ratio)), 0.0, decimal=1)
 
 
 def test_empirical_snr():
