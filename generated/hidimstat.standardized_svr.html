@@ -95,8 +95,32 @@
 <h1>hidimstat.standardized_svr<a class="headerlink" href="#hidimstat-standardized-svr" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
 <dt id="hidimstat.standardized_svr">
-<code class="sig-prename descclassname">hidimstat.</code><code class="sig-name descname">standardized_svr</code><span class="sig-paren">(</span><em class="sig-param">X</em>, <em class="sig-param">y</em>, <em class="sig-param">Cs=array([1.e-07</em>, <em class="sig-param">1.e-06</em>, <em class="sig-param">1.e-05</em>, <em class="sig-param">1.e-04</em>, <em class="sig-param">1.e-03</em>, <em class="sig-param">1.e-02</em>, <em class="sig-param">1.e-01</em>, <em class="sig-param">1.e+00</em>, <em class="sig-param">1.e+01])</em>, <em class="sig-param">return_C=False</em>, <em class="sig-param">n_jobs=1</em><span class="sig-paren">)</span><a class="headerlink" href="#hidimstat.standardized_svr" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="sig-prename descclassname">hidimstat.</code><code class="sig-name descname">standardized_svr</code><span class="sig-paren">(</span><em class="sig-param">X</em>, <em class="sig-param">y</em>, <em class="sig-param">Cs=array([1.e-07</em>, <em class="sig-param">1.e-06</em>, <em class="sig-param">1.e-05</em>, <em class="sig-param">1.e-04</em>, <em class="sig-param">1.e-03</em>, <em class="sig-param">1.e-02</em>, <em class="sig-param">1.e-01</em>, <em class="sig-param">1.e+00</em>, <em class="sig-param">1.e+01])</em>, <em class="sig-param">n_jobs=1</em><span class="sig-paren">)</span><a class="headerlink" href="#hidimstat.standardized_svr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cross-validated SVR</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>X</strong><span class="classifier">ndarray or scipy.sparse matrix, shape (n_samples, n_features)</span></dt><dd><p>Data.</p>
+</dd>
+<dt><strong>y</strong><span class="classifier">ndarray, shape (n_samples,) or (n_samples, n_targets)</span></dt><dd><p>Target. Will be cast to X’s dtype if necessary.</p>
+</dd>
+<dt><strong>Cs</strong><span class="classifier">ndarray, optional (default=np.logspace(-7, 1, 9))</span></dt><dd><p>The linear SVR regularization parameter is set by cross-val running
+a grid search on the list of hyper-parameters contained in Cs.</p>
+</dd>
+<dt><strong>n_jobs</strong><span class="classifier">int or None, optional (default=1)</span></dt><dd><p>Number of CPUs to use during the cross validation.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>beta_hat</strong><span class="classifier">array, shape (n_features,)</span></dt><dd><p>Estimated parameter vector.</p>
+</dd>
+<dt><strong>scale</strong><span class="classifier">ndarray, shape (n_features,)</span></dt><dd><p>Value of the standard deviation of the parameters.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
 
 </div>
 

@@ -96,8 +96,49 @@
 <h1>hidimstat.permutation_test_cv<a class="headerlink" href="#hidimstat-permutation-test-cv" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
 <dt id="hidimstat.permutation_test_cv">
-<code class="sig-prename descclassname">hidimstat.</code><code class="sig-name descname">permutation_test_cv</code><span class="sig-paren">(</span><em class="sig-param">X</em>, <em class="sig-param">y</em>, <em class="sig-param">method='SVR'</em>, <em class="sig-param">n_permutations=1000</em>, <em class="sig-param">C=None</em>, <em class="sig-param">normalize=False</em>, <em class="sig-param">random_state=None</em>, <em class="sig-param">n_jobs=1</em>, <em class="sig-param">verbose=1</em><span class="sig-paren">)</span><a class="headerlink" href="#hidimstat.permutation_test_cv" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="sig-prename descclassname">hidimstat.</code><code class="sig-name descname">permutation_test_cv</code><span class="sig-paren">(</span><em class="sig-param">X</em>, <em class="sig-param">y</em>, <em class="sig-param">n_permutations=1000</em>, <em class="sig-param">C=None</em>, <em class="sig-param">Cs=array([1.e-07</em>, <em class="sig-param">1.e-06</em>, <em class="sig-param">1.e-05</em>, <em class="sig-param">1.e-04</em>, <em class="sig-param">1.e-03</em>, <em class="sig-param">1.e-02</em>, <em class="sig-param">1.e-01</em>, <em class="sig-param">1.e+00</em>, <em class="sig-param">1.e+01])</em>, <em class="sig-param">seed=0</em>, <em class="sig-param">n_jobs=1</em>, <em class="sig-param">verbose=1</em><span class="sig-paren">)</span><a class="headerlink" href="#hidimstat.permutation_test_cv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cross-validated permutation test shuffling the target</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>X</strong><span class="classifier">ndarray or scipy.sparse matrix, shape (n_samples, n_features)</span></dt><dd><p>Data.</p>
+</dd>
+<dt><strong>y</strong><span class="classifier">ndarray, shape (n_samples,) or (n_samples, n_targets)</span></dt><dd><p>Target. Will be cast to X’s dtype if necessary.</p>
+</dd>
+<dt><strong>C</strong><span class="classifier">float or None, optional (default=None)</span></dt><dd><p>If None, the linear SVR regularization parameter is set by cross-val
+running a grid search on the list of hyper-parameters contained in Cs.
+Otherwise, the regularization parameter is equal to C.
+The strength of the regularization is inversely proportional to C.</p>
+</dd>
+<dt><strong>Cs</strong><span class="classifier">ndarray, optional (default=np.logspace(-7, 1, 9))</span></dt><dd><p>If C is None, the linear SVR regularization parameter is set by
+cross-val running a grid search on the list of hyper-parameters
+contained in Cs.</p>
+</dd>
+<dt><strong>n_permutations</strong><span class="classifier">int, optional (default=1000)</span></dt><dd><p>Number of permutations used to compute the survival function
+and cumulative distribution function scores.</p>
+</dd>
+<dt><strong>seed: int, optional (default=0)</strong></dt><dd><p>Determines the permutations used for shuffling the target</p>
+</dd>
+<dt><strong>n_jobs</strong><span class="classifier">int or None, optional (default=1)</span></dt><dd><p>Number of CPUs to use during the cross validation.</p>
+</dd>
+<dt><strong>verbose: int, optional (default=1)</strong></dt><dd><p>The verbosity level: if non zero, progress messages are printed
+when computing the permutation stats in parralel.
+The frequency of the messages increases with the verbosity level.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>sf_corr</strong><span class="classifier">ndarray, shape (n_features,)</span></dt><dd><p>Corrected survival function values with respect to the
+coefficients of the parameter vector</p>
+</dd>
+<dt><strong>cdf_corr</strong><span class="classifier">ndarray, shape (n_features,)</span></dt><dd><p>Corrected cumulative distribution function values with respect to the
+coefficients of the parameter vector</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
 
 </div>
 
