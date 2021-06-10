@@ -2,25 +2,40 @@
 Test the noise_std module
 """
 
-import numpy as np
 from numpy.testing import assert_almost_equal
 
+from hidimstat.scenario import multivariate_1D_simulation
 from hidimstat.noise_std import reid, empirical_snr
 
 
 def test_reid():
 
-    np.random.seed(0)
-
     n_samples, n_features = 30, 30
-    n_support = 10
     sigma = 2.0
 
-    X = np.random.randn(n_samples, n_features)
-    beta = np.zeros(n_features)
-    beta[:n_support] = 1.0
-    epsilon = sigma * np.random.randn(n_samples)
-    y = np.dot(X, beta) + epsilon
+    # First test
+    # ##########
+    support_size = 10
+
+    X, y, beta, epsilon = \
+        multivariate_1D_simulation(n_samples=n_samples, n_features=n_features,
+                                   support_size=support_size, sigma=sigma,
+                                   seed=0)
+
+    # max_iter=1 to get a better coverage
+    sigma_hat, _ = reid(X, y, tol=1e-3, max_iter=1)
+    expected = sigma
+
+    assert_almost_equal(sigma_hat / expected, 1.0, decimal=0)
+
+    # Second test
+    # ###########
+    support_size = 0
+
+    X, y, beta, epsilon = \
+        multivariate_1D_simulation(n_samples=n_samples, n_features=n_features,
+                                   support_size=support_size, sigma=sigma,
+                                   seed=1)
 
     sigma_hat, _ = reid(X, y)
     expected = sigma
@@ -30,17 +45,14 @@ def test_reid():
 
 def test_empirical_snr():
 
-    np.random.seed(0)
-
     n_samples, n_features = 30, 30
-    n_support = 10
+    support_size = 10
     sigma = 2.0
 
-    X = np.random.randn(n_samples, n_features)
-    beta = np.zeros(n_features)
-    beta[:n_support] = 1.0
-    epsilon = sigma * np.random.randn(n_samples)
-    y = np.dot(X, beta) + epsilon
+    X, y, beta, epsilon = \
+        multivariate_1D_simulation(n_samples=n_samples, n_features=n_features,
+                                   support_size=support_size, sigma=sigma,
+                                   seed=0)
 
     snr = empirical_snr(X, y, beta)
     expected = 2.0
