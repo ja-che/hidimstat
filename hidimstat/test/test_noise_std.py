@@ -10,7 +10,7 @@ from hidimstat.noise_std import reid, empirical_snr
 
 def test_reid():
 
-    n_samples, n_features = 30, 30
+    n_samples, n_features = 50, 30
     sigma = 2.0
 
     # First test
@@ -40,7 +40,7 @@ def test_reid():
     sigma_hat, _ = reid(X, y)
     expected = sigma
 
-    assert_almost_equal(sigma_hat / expected, 1.0, decimal=0)
+    assert_almost_equal(sigma_hat / expected, 1.0, decimal=1)
 
 
 def test_empirical_snr():

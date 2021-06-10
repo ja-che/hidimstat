@@ -21,8 +21,8 @@ def permutation_test_cv(X, y, n_permutations=1000,
     X : ndarray or scipy.sparse matrix, shape (n_samples, n_features)
         Data.
 
-    y : ndarray, shape (n_samples,) or (n_samples, n_targets)
-        Target. Will be cast to X's dtype if necessary.
+    y : ndarray, shape (n_samples,)
+        Target.
 
     C : float or None, optional (default=None)
         If None, the linear SVR regularization parameter is set by cross-val
@@ -39,7 +39,7 @@ def permutation_test_cv(X, y, n_permutations=1000,
         Number of permutations used to compute the survival function
         and cumulative distribution function scores.
 
-    seed: int, optional (default=0)
+    seed : int, optional (default=0)
         Determines the permutations used for shuffling the target
 
     n_jobs : int or None, optional (default=1)
@@ -93,14 +93,14 @@ def permutation_test(X, y, estimator, n_permutations=1000,
     X : ndarray or scipy.sparse matrix, shape (n_samples, n_features)
         Data.
 
-    y : ndarray, shape (n_samples,) or (n_samples, n_targets)
-        Target. Will be cast to X's dtype if necessary.
+    y : ndarray, shape (n_samples,)
+        Target.
 
     n_permutations : int, optional (default=1000)
         Number of permutations used to compute the survival function
         and cumulative distribution function scores.
 
-    seed: int, optional (default=0)
+    seed : int, optional (default=0)
         Determines the permutations used for shuffling the target
 
     n_jobs : int or None, optional (default=1)
