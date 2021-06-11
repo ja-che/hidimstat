@@ -10,11 +10,11 @@ def standardized_svr(X, y, Cs=np.logspace(-7, 1, 9), n_jobs=1):
 
     Parameters
     -----------
-    X : ndarray or scipy.sparse matrix, shape (n_samples, n_features)
+    X : ndarray, shape (n_samples, n_features)
         Data.
 
-    y : ndarray, shape (n_samples,) or (n_samples, n_targets)
-        Target. Will be cast to X's dtype if necessary.
+    y : ndarray, shape (n_samples,)
+        Target.
 
     Cs : ndarray, optional (default=np.logspace(-7, 1, 9))
         The linear SVR regularization parameter is set by cross-val running

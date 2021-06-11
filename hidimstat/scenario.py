@@ -19,26 +19,26 @@ def multivariate_1D_simulation(n_samples=100, n_features=500,
         Number of samples
     n_features : int
         Number of features
-    support_size: int
+    support_size : int
         Size of the support
-    sigma: float
+    sigma : float
         Standard deviation of the additive White Gaussian noise
     rho: float
         Level of correlation between neighboring features (if shuffle is False)
     shuffle : bool
         Shuffle the features (changing data structure) if True.
-    seed: int
+    seed : int
         Seed used for generating design matrix and noise
 
     Returns
     -------
-    X: ndarray, shape (n_samples, n_features)
+    X : ndarray, shape (n_samples, n_features)
         Design matrix
-    y: ndarray, shape (n_samples,)
+    y : ndarray, shape (n_samples,)
         Target
-    beta: ndarray, shape (n_features,)
+    beta : ndarray, shape (n_features,)
         Parameter vector
-    epsilon: ndarray, shape (n_samples,)
+    noise : ndarray, shape (n_samples,)
         Additive white Gaussian noise
     """
 
@@ -48,8 +48,8 @@ def multivariate_1D_simulation(n_samples=100, n_features=500,
     X[:, 0] = rng.standard_normal(n_samples)
 
     for i in np.arange(1, n_features):
-        epsilon = ((1 - rho ** 2) ** 0.5) * rng.standard_normal(n_samples)
-        X[:, i] = rho * X[:, i - 1] + epsilon
+        rand_vector = ((1 - rho ** 2) ** 0.5) * rng.standard_normal(n_samples)
+        X[:, i] = rho * X[:, i - 1] + rand_vector
 
     if shuffle:
         rng.shuffle(X.T)
@@ -57,10 +57,10 @@ def multivariate_1D_simulation(n_samples=100, n_features=500,
     beta = np.zeros(n_features)
     beta[0:support_size] = 1.0
 
-    epsilon = sigma * rng.standard_normal(n_samples)
-    y = np.dot(X, beta) + epsilon
+    noise = sigma * rng.standard_normal(n_samples)
+    y = np.dot(X, beta) + noise
 
-    return X, y, beta, epsilon
+    return X, y, beta, noise
 
 
 def generate_2D_weight(shape, roi_size):
@@ -132,24 +132,24 @@ def multivariate_simulation(n_samples=100,
         Shape of the data in the simulation
     roi_size : int
         Size of the edge of the ROIs
-    sigma: float
+    sigma : float
         Standard deviation of the additive white Gaussian noise
     smooth_X : float
         Level of smoothing using a Gaussian filter
     return_shaped_data : bool
         If true, the function returns shaped data and weight map
-    seed: int
+    seed : int
         Seed used for generating design matrix and noise
 
     Returns
     -------
-    X: ndarray, shape (n_samples, n_features)
+    X : ndarray, shape (n_samples, n_features)
         Design matrix
-    y: ndarray, shape (n_samples,)
+    y : ndarray, shape (n_samples,)
         Target
     beta: ndarray, shape (n_features,)
         Parameter vector (flattened weight map)
-    epsilon: ndarray, shape (n_samples,)
+    noise: ndarray, shape (n_samples,)
         Additive white Gaussian noise
     X_: ndarray, shape (n_samples, n_x, n_y) or (n_samples, n_x, n_y, n_z)
         Reshaped design matrix
@@ -175,10 +175,65 @@ def multivariate_simulation(n_samples=100,
     X = np.asarray(X)
     X_ = X.reshape((n_samples,) + shape)
 
-    epsilon = sigma * rng.standard_normal(n_samples)
-    y = np.dot(X, beta) + epsilon
+    noise = sigma * rng.standard_normal(n_samples)
+    y = np.dot(X, beta) + noise
 
     if return_shaped_data:
-        return X, y, beta, epsilon, X_, w
+        return X, y, beta, noise, X_, w
 
-    return X, y, beta, epsilon
+    return X, y, beta, noise
+
+
+def multivariate_temporal_simulation(n_samples=100, n_features=500,
+                                     n_times=30, support_size=10,
+                                     sigma=1.0, rho=0.0, seed=0):
+    """Generate 1D temporal data with constant design matrix
+
+    Parameters
+    -----------
+    n_samples : int
+        Number of samples
+    n_features : int
+        Number of features
+    n_times : int
+        Number of time points
+    support_size: int
+        Size of the row support
+    sigma : float
+        Standard deviation of the noise at each time point
+    rho : float
+        Level of autocorrelation in the noise
+    seed : int
+        Seed used for generating design matrix and noise
+
+    Returns
+    -------
+    X: ndarray, shape (n_samples, n_features)
+        Design matrix
+    Y : ndarray, shape (n_samples, n_times)
+        Target
+    beta : ndarray, shape (n_features, n_times)
+        Parameter matrix
+    noise : ndarray, shape (n_samples, n_times)
+        Noise matrix
+    """
+
+    rng = np.random.default_rng(seed)
+
+    X = rng.standard_normal((n_samples, n_features))
+
+    beta = np.zeros((n_features, n_times))
+    beta[0:support_size, :] = 1.0
+
+    noise = np.zeros((n_samples, n_times))
+    noise[:, 0] = rng.standard_normal(n_samples)
+
+    for i in range(1, n_times):
+        rand_vector = ((1 - rho ** 2) ** 0.5) * rng.standard_normal(n_samples)
+        noise[:, i] = rho * noise[:, i - 1] + rand_vector
+
+    noise = sigma * noise
+
+    Y = np.dot(X, beta) + noise
+
+    return X, Y, beta, noise

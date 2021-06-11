@@ -142,7 +142,7 @@ def desparsified_lasso_confint(X, y, confidence=0.95, max_iter=5000,
 
     beta_hat = beta_bias - P_nodiag.dot(beta_lasso)
 
-    sigma_hat = reid(X, y)
+    sigma_hat, _ = reid(X, y)
 
     confint_radius = np.abs(quantile * sigma_hat /
                             (np.sqrt(n_samples) * omega_invsqrt_diag))
