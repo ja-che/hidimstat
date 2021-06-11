@@ -5,7 +5,7 @@ from sklearn.linear_model import LassoCV, MultiTaskLassoCV
 from sklearn.model_selection import KFold
 
 
-def reid(X, y, eps=1e-2, tol=1e-4, max_iter=1e+4, n_jobs=1, seed=0):
+def reid(X, y, eps=1e-2, tol=1e-4, max_iter=1e4, n_jobs=1, seed=0):
     """Estimation of noise standard deviation using Reid procedure
 
     Parameters
@@ -26,7 +26,7 @@ def reid(X, y, eps=1e-2, tol=1e-4, max_iter=1e+4, n_jobs=1, seed=0):
         dual gap for optimality and continues until it is smaller
         than ``tol``.
 
-    max_iter : int, optional (default=1e+4)
+    max_iter : int, optional (default=1e4)
         The maximum number of iterations.
 
     n_jobs : int or None, optional (default=1)
@@ -43,6 +43,11 @@ def reid(X, y, eps=1e-2, tol=1e-4, max_iter=1e+4, n_jobs=1, seed=0):
 
     beta_hat : array, shape (n_features,)
         Estimated parameter vector.
+
+    References
+    ----------
+    .. [1] Reid, S., Tibshirani, R., & Friedman, J. (2016). A study of error
+           variance estimation in lasso regression. Statistica Sinica, 35-67.
     """
 
     X = np.asarray(X)
@@ -60,25 +65,20 @@ def reid(X, y, eps=1e-2, tol=1e-4, max_iter=1e+4, n_jobs=1, seed=0):
 
     clf_lasso_cv.fit(X, y)
     beta_hat = clf_lasso_cv.coef_
-    error = clf_lasso_cv.predict(X) - y
+    residual = clf_lasso_cv.predict(X) - y
     coef_max = np.max(np.abs(beta_hat))
-
-    if coef_max == 0:
-        support = 0
-    else:
-        support = np.sum(np.abs(beta_hat) > tol * coef_max)
+    support = np.sum(np.abs(beta_hat) > tol * coef_max)
 
     # avoid dividing by 0
-    if support >= n_samples:
-        support = n_samples - 1
+    support = min(support, n_samples - 1)
 
-    sigma_hat = norm(error) / np.sqrt(n_samples - support)
+    sigma_hat = norm(residual) / np.sqrt(n_samples - support)
 
     return sigma_hat, beta_hat
 
 
 def group_reid(X, Y, fit_Y=True, stationary=True, method='simple', order=1,
-               eps=1e-2, tol=1e-4, max_iter=1e+4, n_jobs=1, seed=0):
+               eps=1e-2, tol=1e-4, max_iter=1e4, n_jobs=1, seed=0):
 
     """Estimation of the covariance matrix using group Reid procedure
 
@@ -96,16 +96,21 @@ def group_reid(X, Y, fit_Y=True, stationary=True, method='simple', order=1,
         Otherwise, covariance matrix is estimated directly on Y.
 
     stationary : bool, optional (default=True)
-        If True, noise is considered to have the same magnitude at each
-        time point. Otherwise, magnitude of the noise is not constant.
+        If True, noise is considered to have the same magnitude for each
+        target. Otherwise, magnitude of the noise is not constant.
 
     method : bool, optional (default='simple')
         If 'simple', the correlation matrix is estimated by taking the
-        median of the correlation between two consecutive time points
-        and the noise standard deviation at each time point is estimated
-        by taking the median of the standard deviations for every time steps.
+        median of the correlation between two consecutive targets (time points)
+        and the noise standard deviation for each target is estimated
+        by taking the median of the standard deviations for every target.
         If 'AR', the order of the AR model is given by `order` and the
         Yule-Walker method is used to estimate the covariance matrix.
+
+    order : int, optional (default=1)
+        If `stationary=True` and `method=AR`, `order` gives the
+        order of the estimated autoregressive model. `order` must
+        be smaller than the number of targets.
 
     eps : float, optional (default=1e-2)
         Length of the cross-validation path.
@@ -117,7 +122,7 @@ def group_reid(X, Y, fit_Y=True, stationary=True, method='simple', order=1,
         dual gap for optimality and continues until it is smaller
         than ``tol``.
 
-    max_iter : int, optional (default=1e+4)
+    max_iter : int, optional (default=1e4)
         The maximum number of iterations.
 
     n_jobs : int or None, optional (default=1)
@@ -129,11 +134,18 @@ def group_reid(X, Y, fit_Y=True, stationary=True, method='simple', order=1,
 
     Returns
     -------
-    sigma_hat : float
-        Estimated noise standard deviation.
+    cov_hat : float
+        Estimated covariance matrix.
 
     beta_hat : array, shape (n_features,)
-        Estimated parameter vector.
+        Estimated parameter matrix.
+
+    References
+    ----------
+    .. [1] Chevalier, J. A., Gramfort, A., Salmon, J., & Thirion, B. (2020).
+           Statistical control for spatio-temporal MEG/EEG source imaging with
+           desparsified multi-task Lasso. In NeurIPS 2020-34h Conference on
+           Neural Information Processing Systems.
     """
 
     X = np.asarray(X)
@@ -155,95 +167,88 @@ def group_reid(X, Y, fit_Y=True, stationary=True, method='simple', order=1,
 
         clf_mtlcv = \
             MultiTaskLassoCV(eps=eps, normalize=False, fit_intercept=False,
-                             cv=cv, tol=tol, max_iter=max_iter,
-                             n_jobs=n_jobs)
+                             cv=cv, tol=tol, max_iter=max_iter, n_jobs=n_jobs)
 
         clf_mtlcv.fit(X, Y)
-        Beta_hat = clf_mtlcv.coef_
-        Error = clf_mtlcv.predict(X) - Y
-        coef_max = np.max(np.abs(Beta_hat))
-        row_max = np.max(np.sum(np.abs(Beta_hat), axis=0))
+        beta_hat = clf_mtlcv.coef_
+        residual = clf_mtlcv.predict(X) - Y
+        row_max = np.max(np.sum(np.abs(beta_hat), axis=0))
+        support = np.sum(np.sum(np.abs(beta_hat), axis=0) > tol * row_max)
 
-        if coef_max == 0:
-            support = 0
-        else:
-            support = np.sum(np.sum(np.abs(Beta_hat), axis=0) > tol * row_max)
+        # avoid dividing by 0
+        support = min(support, n_samples - 1)
 
     else:
 
-        Beta_hat = np.zeros((n_features, n_targets))
-        Error = np.copy(Y)
+        beta_hat = np.zeros((n_features, n_targets))
+        residual = np.copy(Y)
         support = 0
 
-    # avoid dividing by 0
-    if support >= n_samples:
-        support = n_samples - 1
-
-    sigma_hat_raw = norm(Error, axis=0) / np.sqrt(n_samples - support)
+    sigma_hat_raw = norm(residual, axis=0) / np.sqrt(n_samples - support)
 
     if stationary:
         sigma_hat = np.median(sigma_hat_raw) * np.ones(n_targets)
-        Corr_emp = np.corrcoef(Error.T)
+        corr_emp = np.corrcoef(residual.T)
     else:
         sigma_hat = sigma_hat_raw
-        Error_resc = Error / sigma_hat
-        Corr_emp = np.corrcoef(Error_resc.T)
+        residual_rescaled = residual / sigma_hat
+        corr_emp = np.corrcoef(residual_rescaled.T)
 
     # Median method
     if not stationary or method == 'simple':
 
-        rho_hat = np.median(np.diag(Corr_emp, 1))
-        Corr_hat = \
+        rho_hat = np.median(np.diag(corr_emp, 1))
+        corr_hat = \
             toeplitz(np.geomspace(1, rho_hat ** (n_targets - 1), n_targets))
-        Cov_hat = np.outer(sigma_hat, sigma_hat) * Corr_hat
+        cov_hat = np.outer(sigma_hat, sigma_hat) * corr_hat
 
     # Yule-Walker method
     elif stationary and method == 'AR':
 
         if order > n_targets - 1:
             raise ValueError('The requested AR order is to high with ' +
-                             'respect to the number of time points.')
+                             'respect to the number of targets.')
 
         rho_ar = np.zeros(order + 1)
         rho_ar[0] = 1
 
         for i in range(1, order + 1):
-            rho_ar[i] = np.median(np.diag(Corr_emp, i))
+            rho_ar[i] = np.median(np.diag(corr_emp, i))
 
         A = toeplitz(rho_ar[:-1])
         coef_ar = solve(A, rho_ar[1:])
 
-        Error_estimate = np.zeros((n_samples, n_targets - order))
+        residual_estimate = np.zeros((n_samples, n_targets - order))
 
         for i in range(order):
-            # time window used to estimate the error from AR model
+            # time window used to estimate the residual from AR model
             start = order - i - 1
             end = - i - 1
-            Error_estimate += coef_ar[i] * Error[:, start:end]
+            residual_estimate += coef_ar[i] * residual[:, start:end]
 
-        epsilon = Error[:, order:] - Error_estimate
-        sigma_eps = np.median(norm(epsilon, axis=0) / np.sqrt(n_samples))
+        residual_diff = residual[:, order:] - residual_estimate
+        sigma_eps = np.median(norm(residual_diff, axis=0) / np.sqrt(n_samples))
 
         rho_ar_full = np.zeros(n_targets)
-        rho_ar_full[:order+1] = rho_ar
+        rho_ar_full[:rho_ar.size] = rho_ar
 
         for i in range(order + 1, n_targets):
             start = i - order
             end = i
             rho_ar_full[i] = np.dot(coef_ar[::-1], rho_ar_full[start:end])
 
-        Corr_hat = toeplitz(rho_ar_full)
+        corr_hat = toeplitz(rho_ar_full)
         sigma_hat[:] = sigma_eps / np.sqrt((1 - np.dot(coef_ar, rho_ar[1:])))
-        Cov_hat = np.outer(sigma_hat, sigma_hat) * Corr_hat
+        cov_hat = np.outer(sigma_hat, sigma_hat) * corr_hat
 
     else:
         raise ValueError('Unknown method for estimating the covariance matrix')
 
-    return Cov_hat, Beta_hat
+    return cov_hat, beta_hat
 
 
-def empirical_snr(X, y, beta, epsilon=None):
-    """Compute the SNR for the linear model: y = X beta + epsilon
+def empirical_snr(X, y, beta, noise=None):
+    """Compute the SNR for the linear model: y = X beta + noise
 
     Parameters
     -----------
@@ -253,18 +258,18 @@ def empirical_snr(X, y, beta, epsilon=None):
         Target.
     beta : ndarray, shape (n_features,)
         True parameter vector.
-    epsilon : ndarray, shape (n_samples,), optional (default=None)
+    noise : ndarray, shape (n_samples,), optional (default=None)
         True error vector.
     """
     X = np.asarray(X)
 
     signal = np.dot(X, beta)
 
-    if epsilon is None:
-        epsilon = y - signal
+    if noise is None:
+        noise = y - signal
 
     sig_signal = np.linalg.norm(signal - np.mean(signal))
-    sig_noise = np.linalg.norm(epsilon - np.mean(epsilon))
+    sig_noise = np.linalg.norm(noise - np.mean(noise))
     snr_hat = (sig_signal / sig_noise) ** 2
 
     return snr_hat

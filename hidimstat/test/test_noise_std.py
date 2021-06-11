@@ -20,7 +20,7 @@ def test_reid():
     # ##########
     support_size = 10
 
-    X, y, beta, epsilon = \
+    X, y, beta, noise = \
         multivariate_1D_simulation(n_samples=n_samples, n_features=n_features,
                                    support_size=support_size, sigma=sigma,
                                    seed=0)
@@ -35,7 +35,7 @@ def test_reid():
     # ###########
     support_size = 0
 
-    X, y, beta, epsilon = \
+    X, y, beta, noise = \
         multivariate_1D_simulation(n_samples=n_samples, n_features=n_features,
                                    support_size=support_size, sigma=sigma,
                                    seed=1)
@@ -53,14 +53,14 @@ def test_group_reid():
     n_targets = 10
     sigma = 1.0
     rho = 0.9
-    Corr = toeplitz(np.geomspace(1, rho ** (n_targets - 1), n_targets))
-    Cov = np.outer(sigma, sigma) * Corr
+    corr = toeplitz(np.geomspace(1, rho ** (n_targets - 1), n_targets))
+    cov = np.outer(sigma, sigma) * corr
 
     # First expe
     # ##########
     support_size = 2
 
-    X, Y, Beta, E = \
+    X, Y, beta, noise = \
         multivariate_temporal_simulation(n_samples=n_samples,
                                          n_features=n_features,
                                          n_targets=n_targets,
@@ -68,14 +68,14 @@ def test_group_reid():
                                          sigma=sigma, rho=rho)
 
     # max_iter=1 to get a better coverage
-    Cov_hat, _ = group_reid(X, Y, tol=1e-3, max_iter=1)
-    error_ratio = Cov_hat / Cov
+    cov_hat, _ = group_reid(X, Y, tol=1e-3, max_iter=1)
+    error_ratio = cov_hat / cov
 
     assert_almost_equal(np.max(error_ratio), 1.0, decimal=0)
     assert_almost_equal(np.log(np.min(error_ratio)), 0.0, decimal=1)
 
-    Cov_hat, _ = group_reid(X, Y, method='AR')
-    error_ratio = Cov_hat / Cov
+    cov_hat, _ = group_reid(X, Y, method='AR')
+    error_ratio = cov_hat / cov
 
     assert_almost_equal(np.max(error_ratio), 1.0, decimal=0)
     assert_almost_equal(np.log(np.min(error_ratio)), 0.0, decimal=0)
@@ -84,7 +84,7 @@ def test_group_reid():
     # ###########
     support_size = 0
 
-    X, Y, Beta, E = \
+    X, Y, beta, noise = \
         multivariate_temporal_simulation(n_samples=n_samples,
                                          n_features=n_features,
                                          n_targets=n_targets,
@@ -92,20 +92,20 @@ def test_group_reid():
                                          sigma=sigma, rho=rho,
                                          seed=2)
 
-    Cov_hat, _ = group_reid(X, Y)
-    error_ratio = Cov_hat / Cov
+    cov_hat, _ = group_reid(X, Y)
+    error_ratio = cov_hat / cov
 
     assert_almost_equal(np.max(error_ratio), 1.0, decimal=0)
     assert_almost_equal(np.log(np.min(error_ratio)), 0.0, decimal=1)
 
-    Cov_hat, _ = group_reid(X, Y, fit_Y=False, stationary=False)
-    error_ratio = Cov_hat / Cov
+    cov_hat, _ = group_reid(X, Y, fit_Y=False, stationary=False)
+    error_ratio = cov_hat / cov
 
     assert_almost_equal(np.max(error_ratio), 1.0, decimal=0)
     assert_almost_equal(np.log(np.min(error_ratio)), 0.0, decimal=0)
 
-    Cov_hat, _ = group_reid(X, Y, method='AR')
-    error_ratio = Cov_hat / Cov
+    cov_hat, _ = group_reid(X, Y, method='AR')
+    error_ratio = cov_hat / cov
 
     assert_almost_equal(np.max(error_ratio), 1.0, decimal=0)
     assert_almost_equal(np.log(np.min(error_ratio)), 0.0, decimal=1)
@@ -117,7 +117,7 @@ def test_empirical_snr():
     support_size = 10
     sigma = 2.0
 
-    X, y, beta, epsilon = \
+    X, y, beta, noise = \
         multivariate_1D_simulation(n_samples=n_samples, n_features=n_features,
                                    support_size=support_size, sigma=sigma,
                                    seed=0)
