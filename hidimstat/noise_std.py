@@ -55,7 +55,7 @@ def reid(X, y, eps=1e-2, tol=1e-4, max_iter=1e4, n_jobs=1, seed=0):
 
     if max_iter // 5 <= n_features:
         max_iter = n_features * 5
-        print("'max_iter' has been increased to {}".format(max_iter))
+        print(f"'max_iter' has been increased to {max_iter}")
 
     cv = KFold(n_splits=5, shuffle=True, random_state=seed)
 
@@ -130,7 +130,7 @@ def group_reid(X, Y, fit_Y=True, stationary=True, method='simple', order=1,
 
     seed: int, optional (default=0)
         Seed passed in the KFold object which is used to cross-validate
-        LassoCV. This seed controls the partitioning randomness.
+        LassoCV. This seed controls also the partitioning randomness.
 
     Returns
     -------
@@ -155,11 +155,11 @@ def group_reid(X, Y, fit_Y=True, stationary=True, method='simple', order=1,
     if method == 'simple':
         print('Group reid: simple cov estimation')
     else:
-        print('Group reid: ' + method + str(order) + ' cov estimation')
+        print(f'Group reid: {method}{order} cov estimation')
 
     if (max_iter // 5) <= n_features:
         max_iter = n_features * 5
-        print("'max_iter' has been increased to {}".format(max_iter))
+        print(f"'max_iter' has been increased to {max_iter}")
 
     cv = KFold(n_splits=5, shuffle=True, random_state=seed)
 
