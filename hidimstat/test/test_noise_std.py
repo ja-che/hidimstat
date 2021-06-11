@@ -50,10 +50,10 @@ def test_group_reid():
 
     n_samples = 30
     n_features = 50
-    n_targets = 10
+    n_times = 10
     sigma = 1.0
     rho = 0.9
-    corr = toeplitz(np.geomspace(1, rho ** (n_targets - 1), n_targets))
+    corr = toeplitz(np.geomspace(1, rho ** (n_times - 1), n_times))
     cov = np.outer(sigma, sigma) * corr
 
     # First expe
@@ -63,7 +63,7 @@ def test_group_reid():
     X, Y, beta, noise = \
         multivariate_temporal_simulation(n_samples=n_samples,
                                          n_features=n_features,
-                                         n_targets=n_targets,
+                                         n_times=n_times,
                                          support_size=support_size,
                                          sigma=sigma, rho=rho)
 
@@ -87,7 +87,7 @@ def test_group_reid():
     X, Y, beta, noise = \
         multivariate_temporal_simulation(n_samples=n_samples,
                                          n_features=n_features,
-                                         n_targets=n_targets,
+                                         n_times=n_times,
                                          support_size=support_size,
                                          sigma=sigma, rho=rho,
                                          seed=2)

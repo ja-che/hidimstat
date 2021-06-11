@@ -18,7 +18,7 @@ def permutation_test_cv(X, y, n_permutations=1000,
 
     Parameters
     -----------
-    X : ndarray or scipy.sparse matrix, shape (n_samples, n_features)
+    X : ndarray, shape (n_samples, n_features)
         Data.
 
     y : ndarray, shape (n_samples,)
@@ -90,7 +90,7 @@ def permutation_test(X, y, estimator, n_permutations=1000,
 
     Parameters
     -----------
-    X : ndarray or scipy.sparse matrix, shape (n_samples, n_features)
+    X : ndarray, shape (n_samples, n_features)
         Data.
 
     y : ndarray, shape (n_samples,)

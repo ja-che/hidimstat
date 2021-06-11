@@ -10,7 +10,7 @@ def reid(X, y, eps=1e-2, tol=1e-4, max_iter=1e4, n_jobs=1, seed=0):
 
     Parameters
     -----------
-    X : ndarray or scipy.sparse matrix, shape (n_samples, n_features)
+    X : ndarray, shape (n_samples, n_features)
         Data.
 
     y : ndarray, shape (n_samples,)
@@ -84,10 +84,10 @@ def group_reid(X, Y, fit_Y=True, stationary=True, method='simple', order=1,
 
     Parameters
     -----------
-    X : ndarray or scipy.sparse matrix, shape (n_samples, n_features)
+    X : ndarray, shape (n_samples, n_features)
         Data.
 
-    Y : ndarray, shape (n_samples, n_targets)
+    Y : ndarray, shape (n_samples, n_times)
         Target.
 
     fit_Y : bool, optional (default=True)
@@ -97,20 +97,20 @@ def group_reid(X, Y, fit_Y=True, stationary=True, method='simple', order=1,
 
     stationary : bool, optional (default=True)
         If True, noise is considered to have the same magnitude for each
-        target. Otherwise, magnitude of the noise is not constant.
+        time step. Otherwise, magnitude of the noise is not constant.
 
     method : bool, optional (default='simple')
         If 'simple', the correlation matrix is estimated by taking the
-        median of the correlation between two consecutive targets (time points)
-        and the noise standard deviation for each target is estimated
-        by taking the median of the standard deviations for every target.
+        median of the correlation between two consecutive time steps
+        and the noise standard deviation for each time step is estimated
+        by taking the median of the standard deviations for every time step.
         If 'AR', the order of the AR model is given by `order` and the
         Yule-Walker method is used to estimate the covariance matrix.
 
     order : int, optional (default=1)
         If `stationary=True` and `method=AR`, `order` gives the
         order of the estimated autoregressive model. `order` must
-        be smaller than the number of targets.
+        be smaller than the number of time steps.
 
     eps : float, optional (default=1e-2)
         Length of the cross-validation path.
@@ -137,7 +137,7 @@ def group_reid(X, Y, fit_Y=True, stationary=True, method='simple', order=1,
     cov_hat : float
         Estimated covariance matrix.
 
-    beta_hat : array, shape (n_features,)
+    beta_hat : ndarray, shape (n_features, n_times)
         Estimated parameter matrix.
 
     References
@@ -150,7 +150,7 @@ def group_reid(X, Y, fit_Y=True, stationary=True, method='simple', order=1,
 
     X = np.asarray(X)
     n_samples, n_features = X.shape
-    n_targets = Y.shape[1]
+    n_times = Y.shape[1]
 
     if method == 'simple':
         print('Group reid: simple cov estimation')
@@ -180,14 +180,14 @@ def group_reid(X, Y, fit_Y=True, stationary=True, method='simple', order=1,
 
     else:
 
-        beta_hat = np.zeros((n_features, n_targets))
+        beta_hat = np.zeros((n_features, n_times))
         residual = np.copy(Y)
         support = 0
 
     sigma_hat_raw = norm(residual, axis=0) / np.sqrt(n_samples - support)
 
     if stationary:
-        sigma_hat = np.median(sigma_hat_raw) * np.ones(n_targets)
+        sigma_hat = np.median(sigma_hat_raw) * np.ones(n_times)
         corr_emp = np.corrcoef(residual.T)
     else:
         sigma_hat = sigma_hat_raw
@@ -199,15 +199,15 @@ def group_reid(X, Y, fit_Y=True, stationary=True, method='simple', order=1,
 
         rho_hat = np.median(np.diag(corr_emp, 1))
         corr_hat = \
-            toeplitz(np.geomspace(1, rho_hat ** (n_targets - 1), n_targets))
+            toeplitz(np.geomspace(1, rho_hat ** (n_times - 1), n_times))
         cov_hat = np.outer(sigma_hat, sigma_hat) * corr_hat
 
     # Yule-Walker method
     elif stationary and method == 'AR':
 
-        if order > n_targets - 1:
+        if order > n_times - 1:
             raise ValueError('The requested AR order is to high with ' +
-                             'respect to the number of targets.')
+                             'respect to the number of time steps.')
 
         rho_ar = np.zeros(order + 1)
         rho_ar[0] = 1
@@ -218,7 +218,7 @@ def group_reid(X, Y, fit_Y=True, stationary=True, method='simple', order=1,
         A = toeplitz(rho_ar[:-1])
         coef_ar = solve(A, rho_ar[1:])
 
-        residual_estimate = np.zeros((n_samples, n_targets - order))
+        residual_estimate = np.zeros((n_samples, n_times - order))
 
         for i in range(order):
             # time window used to estimate the residual from AR model
@@ -229,10 +229,10 @@ def group_reid(X, Y, fit_Y=True, stationary=True, method='simple', order=1,
         residual_diff = residual[:, order:] - residual_estimate
         sigma_eps = np.median(norm(residual_diff, axis=0) / np.sqrt(n_samples))
 
-        rho_ar_full = np.zeros(n_targets)
+        rho_ar_full = np.zeros(n_times)
         rho_ar_full[:rho_ar.size] = rho_ar
 
-        for i in range(order + 1, n_targets):
+        for i in range(order + 1, n_times):
             start = i - order
             end = i
             rho_ar_full[i] = np.dot(coef_ar[::-1], rho_ar_full[start:end])
