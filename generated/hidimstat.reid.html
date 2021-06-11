@@ -96,27 +96,46 @@
 <h1>hidimstat.reid<a class="headerlink" href="#hidimstat-reid" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
 <dt id="hidimstat.reid">
-<code class="sig-prename descclassname">hidimstat.</code><code class="sig-name descname">reid</code><span class="sig-paren">(</span><em class="sig-param">X</em>, <em class="sig-param">y</em>, <em class="sig-param">method='lars'</em>, <em class="sig-param">tol=0.0001</em>, <em class="sig-param">max_iter=1000.0</em>, <em class="sig-param">n_jobs=1</em><span class="sig-paren">)</span><a class="headerlink" href="#hidimstat.reid" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">hidimstat.</code><code class="sig-name descname">reid</code><span class="sig-paren">(</span><em class="sig-param">X</em>, <em class="sig-param">y</em>, <em class="sig-param">eps=0.01</em>, <em class="sig-param">tol=0.0001</em>, <em class="sig-param">max_iter=10000.0</em>, <em class="sig-param">n_jobs=1</em>, <em class="sig-param">seed=0</em><span class="sig-paren">)</span><a class="headerlink" href="#hidimstat.reid" title="Permalink to this definition">¶</a></dt>
 <dd><p>Estimation of noise standard deviation using Reid procedure</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>X</strong><span class="classifier">ndarray or scipy.sparse matrix, (n_samples, n_features)</span></dt><dd><p>Data</p>
+<dt><strong>X</strong><span class="classifier">ndarray, shape (n_samples, n_features)</span></dt><dd><p>Data.</p>
 </dd>
-<dt><strong>y</strong><span class="classifier">ndarray, shape (n_samples,) or (n_samples, n_targets)</span></dt><dd><p>Target. Will be cast to X’s dtype if necessary</p>
+<dt><strong>y</strong><span class="classifier">ndarray, shape (n_samples,)</span></dt><dd><p>Target.</p>
 </dd>
-<dt><strong>method</strong><span class="classifier">string, optional</span></dt><dd><p>The method for the CV-lasso: “lars” or “lasso”</p>
+<dt><strong>eps: float, optional (default=1e-2)</strong></dt><dd><p>Length of the cross-validation path.
+eps=1e-2 means that alpha_min / alpha_max = 1e-2.</p>
 </dd>
-<dt><strong>tol</strong><span class="classifier">float, optional</span></dt><dd><p>The tolerance for the optimization: if the updates are
+<dt><strong>tol</strong><span class="classifier">float, optional (default=1e-4)</span></dt><dd><p>The tolerance for the optimization: if the updates are
 smaller than <code class="docutils literal notranslate"><span class="pre">tol</span></code>, the optimization code checks the
 dual gap for optimality and continues until it is smaller
 than <code class="docutils literal notranslate"><span class="pre">tol</span></code>.</p>
 </dd>
-<dt><strong>max_iter</strong><span class="classifier">int, optional</span></dt><dd><p>The maximum number of iterations</p>
+<dt><strong>max_iter</strong><span class="classifier">int, optional (default=1e4)</span></dt><dd><p>The maximum number of iterations.</p>
 </dd>
 <dt><strong>n_jobs</strong><span class="classifier">int or None, optional (default=1)</span></dt><dd><p>Number of CPUs to use during the cross validation.</p>
 </dd>
+<dt><strong>seed: int, optional (default=0)</strong></dt><dd><p>Seed passed in the KFold object which is used to cross-validate
+LassoCV. This seed controls the partitioning randomness.</p>
+</dd>
 </dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>sigma_hat</strong><span class="classifier">float</span></dt><dd><p>Estimated noise standard deviation.</p>
+</dd>
+<dt><strong>beta_hat</strong><span class="classifier">array, shape (n_features,)</span></dt><dd><p>Estimated parameter vector.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<dl class="citation">
+<dt class="label" id="r7f6eb9104fcf-1"><span class="brackets">1</span></dt>
+<dd><p>Reid, S., Tibshirani, R., &amp; Friedman, J. (2016). A study of error
+variance estimation in lasso regression. Statistica Sinica, 35-67.</p>
 </dd>
 </dl>
 </dd></dl>

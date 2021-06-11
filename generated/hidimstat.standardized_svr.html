@@ -100,9 +100,9 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>X</strong><span class="classifier">ndarray or scipy.sparse matrix, shape (n_samples, n_features)</span></dt><dd><p>Data.</p>
+<dt><strong>X</strong><span class="classifier">ndarray, shape (n_samples, n_features)</span></dt><dd><p>Data.</p>
 </dd>
-<dt><strong>y</strong><span class="classifier">ndarray, shape (n_samples,) or (n_samples, n_targets)</span></dt><dd><p>Target. Will be cast to X’s dtype if necessary.</p>
+<dt><strong>y</strong><span class="classifier">ndarray, shape (n_samples,)</span></dt><dd><p>Target.</p>
 </dd>
 <dt><strong>Cs</strong><span class="classifier">ndarray, optional (default=np.logspace(-7, 1, 9))</span></dt><dd><p>The linear SVR regularization parameter is set by cross-val running
 a grid search on the list of hyper-parameters contained in Cs.</p>

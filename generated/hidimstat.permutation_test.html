@@ -101,14 +101,14 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>X</strong><span class="classifier">ndarray or scipy.sparse matrix, shape (n_samples, n_features)</span></dt><dd><p>Data.</p>
+<dt><strong>X</strong><span class="classifier">ndarray, shape (n_samples, n_features)</span></dt><dd><p>Data.</p>
 </dd>
-<dt><strong>y</strong><span class="classifier">ndarray, shape (n_samples,) or (n_samples, n_targets)</span></dt><dd><p>Target. Will be cast to X’s dtype if necessary.</p>
+<dt><strong>y</strong><span class="classifier">ndarray, shape (n_samples,)</span></dt><dd><p>Target.</p>
 </dd>
 <dt><strong>n_permutations</strong><span class="classifier">int, optional (default=1000)</span></dt><dd><p>Number of permutations used to compute the survival function
 and cumulative distribution function scores.</p>
 </dd>
-<dt><strong>seed: int, optional (default=0)</strong></dt><dd><p>Determines the permutations used for shuffling the target</p>
+<dt><strong>seed</strong><span class="classifier">int, optional (default=0)</span></dt><dd><p>Determines the permutations used for shuffling the target</p>
 </dd>
 <dt><strong>n_jobs</strong><span class="classifier">int or None, optional (default=1)</span></dt><dd><p>Number of CPUs to use during the cross validation.</p>
 </dd>
