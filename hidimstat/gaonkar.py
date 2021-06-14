@@ -15,6 +15,14 @@ def gaonkar(X, y, rcond=1e-3):
     rcond : float, optional (default=1e-3)
         Cutoff for small singular values. Singular values smaller (in modulus)
         than `rcond` * largest_singular_value are set to zero.
+
+    References
+    ----------
+    .. [1] Gaonkar, B., & Davatzikos, C. (2012, October). Deriving statistical
+           significance maps for SVM based image classification and group
+           comparisons. In International Conference on Medical Image Computing
+           and Computer-Assisted Intervention (pp. 723-730). Springer, Berlin,
+           Heidelberg.
     """
 
     X = np.asarray(X)
