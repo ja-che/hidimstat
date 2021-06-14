@@ -1,5 +1,5 @@
 from .clustered_inference import clustered_inference, hd_inference
-from .desparsified_lasso import desparsified_lasso_confint
+from .desparsified_lasso import desparsified_lasso
 from .ensemble_clustered_inference import ensemble_clustered_inference
 from .gaonkar import gaonkar
 from .multi_sample_split import aggregate_medians, aggregate_quantiles
@@ -13,7 +13,7 @@ __all__ = [
     'aggregate_medians',
     'aggregate_quantiles',
     'clustered_inference',
-    'desparsified_lasso_confint',
+    'desparsified_lasso',
     'ensemble_clustered_inference',
     'gaonkar',
     'hd_inference',

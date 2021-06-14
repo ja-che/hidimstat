@@ -3,7 +3,7 @@ from sklearn.utils import resample
 from sklearn.preprocessing import StandardScaler
 
 from .stat_tools import sf_from_cb, cdf_from_cb
-from .desparsified_lasso import desparsified_lasso_confint
+from .desparsified_lasso import desparsified_lasso
 
 
 def clustered_inference(X_init, y, ward, n_clusters, method='DL',
@@ -77,8 +77,7 @@ def hd_inference(X, y, method='DL', predict=False, n_jobs=1):
 
     if method == 'DL':
 
-        beta_hat, cb_min, cb_max = \
-            desparsified_lasso_confint(X, y, n_jobs=n_jobs)
+        beta_hat, cb_min, cb_max = desparsified_lasso(X, y, n_jobs=n_jobs)
         sf, sf_corr = sf_from_cb(cb_min, cb_max)
         cdf, cdf_corr = cdf_from_cb(cb_min, cb_max)
 

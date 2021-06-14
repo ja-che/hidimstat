@@ -12,7 +12,7 @@ from sklearn.cluster import FeatureAgglomeration
 
 from hidimstat.scenario import multivariate_simulation
 from hidimstat.stat_tools import zscore_from_sf_and_cdf
-from hidimstat.desparsified_lasso import desparsified_lasso_confint
+from hidimstat.desparsified_lasso import desparsified_lasso
 from hidimstat.stat_tools import sf_from_cb, cdf_from_cb
 from hidimstat.clustered_inference import clustered_inference
 from hidimstat.ensemble_clustered_inference import ensemble_clustered_inference
@@ -124,7 +124,7 @@ def main():
 
     # desparsified lasso
     beta_hat, cb_min, cb_max = \
-        desparsified_lasso_confint(X_init, y, n_jobs=n_jobs)
+        desparsified_lasso(X_init, y, n_jobs=n_jobs)
     sf, sf_corr = sf_from_cb(cb_min, cb_max)
     cdf, cdf_corr = cdf_from_cb(cb_min, cb_max)
     zscore = zscore_from_sf_and_cdf(sf, cdf)
