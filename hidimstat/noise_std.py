@@ -98,7 +98,7 @@ def group_reid(X, Y, fit_Y=True, stationary=True, method='simple', order=1,
         If True, noise is considered to have the same magnitude for each
         time step. Otherwise, magnitude of the noise is not constant.
 
-    method : bool, optional (default='simple')
+    method : string, optional (default='simple')
         If 'simple', the correlation matrix is estimated by taking the
         median of the correlation between two consecutive time steps
         and the noise standard deviation for each time step is estimated
@@ -132,7 +132,7 @@ def group_reid(X, Y, fit_Y=True, stationary=True, method='simple', order=1,
 
     Returns
     -------
-    cov_hat : float
+    cov_hat : ndarray, shape (n_times, n_times)
         Estimated covariance matrix.
 
     beta_hat : ndarray, shape (n_features, n_times)
