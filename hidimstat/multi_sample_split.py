@@ -2,12 +2,23 @@ import numpy as np
 
 
 def aggregate_medians(list_sf):
-    """Aggregation of survival function values with the twice median procedure
+    """Aggregation of survival function values taking twice the median
 
     Parameters
     -----------
-        list_sf : ndarray or scipy.sparse matrix, (n_iter, n_features)
-            List of survival fuction values
+    list_sf : ndarray, shape (n_iter, n_features)
+        List of survival function values
+
+    Returns
+    -------
+    sf : ndarray, shape (n_features,)
+        Aggregated survival function values
+
+    References
+    ----------
+    .. [1] Meinshausen, N., Meier, L., & Bühlmann, P. (2009). P-values for
+           high-dimensional regression. Journal of the American Statistical
+           Association, 104(488), 1671-1681.
     """
 
     n_iter, n_features = list_sf.shape
@@ -20,12 +31,27 @@ def aggregate_medians(list_sf):
 
 
 def aggregate_quantiles(list_sf, gamma_min=0.2):
-    """Aggregation of survival function values with the Meinshausen procedure
+    """Aggregation of survival function values by adaptive quantile procedure
 
     Parameters
     -----------
-        list_sf : ndarray or scipy.sparse matrix, (n_iter, n_features)
-            List of survival fuction values
+    list_sf : ndarray, shape (n_iter, n_features)
+        List of survival function values
+
+    gamma_min : float, optional (default=0.2)
+        Lowest gamma-quantile being considered to compute the simple
+        quantile aggregation (cf. [1]_).
+
+    Returns
+    -------
+    sf : ndarray, shape (n_features,)
+        Aggregated survival function values
+
+    References
+    ----------
+    .. [1] Meinshausen, N., Meier, L., & Bühlmann, P. (2009). P-values for
+           high-dimensional regression. Journal of the American Statistical
+           Association, 104(488), 1671-1681.
     """
 
     n_iter, n_features = list_sf.shape
