@@ -136,6 +136,28 @@ def desparsified_lasso_confint(X, y, normalize=True, dof_ajdustement=False,
 
     cb_max : array, shape (n_features)
         Upper bound of the confidence intervals on the parameter vector.
+
+    References
+    ----------
+    .. [1] Zhang, C. H., & Zhang, S. S. (2014). Confidence intervals for
+           low dimensional parameters in high dimensional linear models.
+           Journal of the Royal Statistical Society: Series B: Statistical
+           Methodology, 217-242.
+
+    .. [2] Van de Geer, S., Bühlmann, P., Ritov, Y. A., & Dezeure, R. (2014).
+           On asymptotically optimal confidence regions and tests for
+           high-dimensional models. Annals of Statistics, 42(3), 1166-1202.
+
+    .. [3] Javanmard, A., & Montanari, A. (2014). Confidence intervals and
+           hypothesis testing for high-dimensional regression. The Journal
+           of Machine Learning Research, 15(1), 2869-2909.
+
+    .. [4] Bellec, P. C., & Zhang, C. H. (2019). De-biasing the lasso with
+           degrees-of-freedom adjustment. arXiv preprint arXiv:1902.08885.
+
+    .. [5] Celentano, M., Montanari, A., & Wei, Y. (2020). The Lasso with
+           general Gaussian designs with applications to hypothesis testing.
+           arXiv preprint arXiv:2007.13716.
     """
 
     X = np.asarray(X)
