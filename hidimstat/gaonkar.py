@@ -13,8 +13,16 @@ def gaonkar(X, y, rcond=1e-3):
         Target.
 
     rcond : float, optional (default=1e-3)
-        Cutoff for small singular values. Singular values smaller (in modulus)
+        Cutoff for small singular values. Singular values smaller
         than `rcond` * largest_singular_value are set to zero.
+
+    Returns
+    -------
+    beta_hat : array, shape (n_features,)
+        Estimated parameter vector.
+
+    scale : ndarray, shape (n_features,)
+        Value of the standard deviation of the parameters.
 
     References
     ----------
@@ -36,9 +44,9 @@ def gaonkar(X, y, rcond=1e-3):
 
     beta_hat = np.dot(C, y)
 
-    scale_beta = np.sqrt(np.sum(C ** 2, axis=1))
+    scale = np.sqrt(np.sum(C ** 2, axis=1))
 
-    return beta_hat, scale_beta
+    return beta_hat, scale
 
 
 def _manual_inverting(X, rcond=1e-3, full_rank=False):
