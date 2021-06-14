@@ -39,8 +39,8 @@ def aggregate_quantiles(list_sf, gamma_min=0.2):
         List of survival function values
 
     gamma_min : float, optional (default=0.2)
-        Lowest gamma-quantile being considered to compute the simple
-        quantile aggregation (cf. [1]_).
+        Lowest gamma-quantile being considered to compute the adaptive
+        quantile aggregation formula (cf. [1]_).
 
     Returns
     -------

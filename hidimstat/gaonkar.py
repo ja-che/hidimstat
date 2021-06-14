@@ -6,15 +6,15 @@ def gaonkar(X, y, rcond=1e-3):
 
     Parameters
     -----------
-    X : ndarray or scipy.sparse matrix, (n_samples, n_features)
-        Data
-    y : ndarray, shape (n_samples,) or (n_samples, n_targets)
-        Target. Will be cast to X's dtype if necessary
-    rcond : float, optional
-        Cutoff for small singular values.
-        Singular values smaller (in modulus) than
-        `rcond` * largest_singular_value (again, in modulus)
-        are set to zero. Broadcasts against the stack of matrices
+    X : ndarray, shape (n_samples, n_features)
+        Data.
+
+    y : ndarray, shape (n_samples,)
+        Target.
+
+    rcond : float, optional (default=1e-3)
+        Cutoff for small singular values. Singular values smaller (in modulus)
+        than `rcond` * largest_singular_value are set to zero.
     """
 
     X = np.asarray(X)
