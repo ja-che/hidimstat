@@ -21,10 +21,9 @@ def reid(X, y, eps=1e-2, tol=1e-4, max_iter=1e4, n_jobs=1, seed=0):
         eps=1e-2 means that alpha_min / alpha_max = 1e-2.
 
     tol : float, optional (default=1e-4)
-        The tolerance for the optimization: if the updates are
-        smaller than ``tol``, the optimization code checks the
-        dual gap for optimality and continues until it is smaller
-        than ``tol``.
+        The tolerance for the optimization: if the updates are smaller
+        than `tol`, the optimization code checks the dual gap for optimality
+        and continues until it is smaller than `tol`.
 
     max_iter : int, optional (default=1e4)
         The maximum number of iterations.
@@ -117,10 +116,9 @@ def group_reid(X, Y, fit_Y=True, stationary=True, method='simple', order=1,
         eps=1e-2 means that alpha_min / alpha_max = 1e-2.
 
     tol : float, optional (default=1e-4)
-        The tolerance for the optimization: if the updates are
-        smaller than ``tol``, the optimization code checks the
-        dual gap for optimality and continues until it is smaller
-        than ``tol``.
+        The tolerance for the optimization: if the updates are smaller
+        than `tol`, the optimization code checks the dual gap for optimality
+        and continues until it is smaller than `tol`.
 
     max_iter : int, optional (default=1e4)
         The maximum number of iterations.
