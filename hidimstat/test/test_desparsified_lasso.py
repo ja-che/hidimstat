@@ -54,7 +54,7 @@ def test_desparsified_group_lasso():
                                          n_features=n_features,
                                          n_times=n_times,
                                          support_size=support_size,
-                                         sigma=sigma, rho=rho)
+                                         sigma=sigma, rho_noise=rho)
 
     beta_hat, sf, sf_corr, cdf, cdf_corr = \
         desparsified_group_lasso(X, Y, cov=cov)

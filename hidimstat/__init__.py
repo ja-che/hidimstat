@@ -1,4 +1,4 @@
-from .clustered_inference import clustered_inference, hd_inference
+from .clustered_inference import clustered_inference
 from .desparsified_lasso import desparsified_lasso
 from .ensemble_clustered_inference import ensemble_clustered_inference
 from .gaonkar import gaonkar
@@ -16,7 +16,6 @@ __all__ = [
     'desparsified_lasso',
     'ensemble_clustered_inference',
     'gaonkar',
-    'hd_inference',
     'multivariate_1D_simulation',
     'permutation_test',
     'permutation_test_cv',

@@ -264,7 +264,7 @@ def desparsified_group_lasso(X, Y, cov=None, test='chi2', normalize=True,
         dual gap for optimality and continues until it is smaller than `tol`.
 
     residual_method : str, optional (default='lasso')
-        The method for the computind the residuals of the Nodewise Lasso.
+        Method used for computing the residuals of the Nodewise Lasso.
         Currently the only method available is 'lasso'.
 
     alpha_max_fraction : float, optional (default=0.01)
@@ -302,16 +302,16 @@ def desparsified_group_lasso(X, Y, cov=None, test='chi2', normalize=True,
         Estimated parameter matrix.
 
     sf : ndarray, shape (n_features,)
-        Survival function values of every feature
+        Survival function values of every feature.
 
     sf_corr : ndarray, shape (n_features,)
-        Corrected survival function values of every feature
+        Corrected survival function values of every feature.
 
     cdf : ndarray, shape (n_features,)
-        Cumulative distribution function values of every feature
+        Cumulative distribution function values of every feature.
 
     cdf_corr : ndarray, shape (n_features,)
-        Corrected cumulative distribution function values of every feature
+        Corrected cumulative distribution function values of every feature.
 
     References
     ----------
