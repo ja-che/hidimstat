@@ -92,21 +92,38 @@ def test_multivariate_temporal_simulation():
     n_times = 10
     support_size = 2
     sigma = 1.0
-    rho = 0.9
+    rho_noise = 0.9
+    rho_data = 0.95
 
     X, Y, beta, noise = \
         multivariate_temporal_simulation(n_samples=n_samples,
                                          n_features=n_features,
                                          n_times=n_times,
                                          support_size=support_size,
-                                         sigma=sigma, rho=rho)
+                                         sigma=sigma,
+                                         rho_noise=rho_noise,
+                                         rho_data=rho_data)
 
     sigma_hat = np.std(noise[:, -1])
-    rho_hat = np.corrcoef(noise[:, -1], noise[:, -2])[0, 1]
+    rho_noise_hat = np.corrcoef(noise[:, -1], noise[:, -2])[0, 1]
 
     assert_almost_equal(sigma_hat, sigma, decimal=1)
-    assert_almost_equal(rho_hat, rho, decimal=1)
+    assert_almost_equal(rho_noise_hat, rho_noise, decimal=1)
     assert_equal(X.shape, (n_samples, n_features))
     assert_equal(Y.shape, (n_samples, n_times))
     assert_equal(np.count_nonzero(beta), support_size * n_times)
+    assert_equal(Y, np.dot(X, beta) + noise)
+
+    X, Y, beta, noise = \
+        multivariate_temporal_simulation(n_samples=n_samples,
+                                         n_features=n_features,
+                                         n_times=n_times,
+                                         support_size=support_size,
+                                         sigma=sigma,
+                                         rho_noise=rho_noise,
+                                         rho_data=rho_data,
+                                         shuffle=False)
+
+    rho_data_hat = np.corrcoef(X[:, 19], X[:, 20])[0, 1]
+    assert_almost_equal(rho_data_hat, rho_data, decimal=1)
     assert_equal(Y, np.dot(X, beta) + noise)
