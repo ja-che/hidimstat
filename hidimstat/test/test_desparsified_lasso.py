@@ -71,3 +71,7 @@ def test_desparsified_group_lasso():
 
     assert_almost_equal(beta_hat, beta, decimal=1)
     assert_almost_equal(sf_corr, expected_sf_corr, decimal=1)
+
+    bad_cov = np.delete(cov, 0, axis=1)
+    np.testing.assert_raises(ValueError, desparsified_group_lasso,
+                             X=X, Y=Y, cov=bad_cov)

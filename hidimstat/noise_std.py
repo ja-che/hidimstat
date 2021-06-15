@@ -98,12 +98,12 @@ def group_reid(X, Y, fit_Y=True, stationary=True, method='simple', order=1,
         If True, noise is considered to have the same magnitude for each
         time step. Otherwise, magnitude of the noise is not constant.
 
-    method : string, optional (default='simple')
+    method : str, optional (default='simple')
         If 'simple', the correlation matrix is estimated by taking the
         median of the correlation between two consecutive time steps
         and the noise standard deviation for each time step is estimated
         by taking the median of the standard deviations for every time step.
-        If 'AR', the order of the AR model is given by `order` and the
+        If 'AR', the order of the AR model is given by `order` and
         Yule-Walker method is used to estimate the covariance matrix.
 
     order : int, optional (default=1)

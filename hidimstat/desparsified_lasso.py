@@ -1,6 +1,6 @@
 import numpy as np
 from numpy.linalg import multi_dot
-import scipy.stats as st
+from scipy import stats
 from scipy.linalg import inv
 from joblib import Parallel, delayed
 from sklearn.utils.validation import check_memory
@@ -12,7 +12,8 @@ from .stat_tools import sf_and_cdf_from_pval_and_sign
 
 
 def _compute_all_residuals(X, alphas, gram=None, max_iter=5000, tol=1e-3,
-                           method='lasso', c=0.01, n_jobs=1, verbose=0):
+                           method='lasso', alpha_max_fraction=0.01, n_jobs=1,
+                           verbose=0):
     """Nodewise Lasso. Compute all the residuals: regressing each column of the
     design matrix against the other columns"""
 
@@ -28,7 +29,7 @@ def _compute_all_residuals(X, alphas, gram=None, max_iter=5000, tol=1e-3,
                  max_iter=max_iter,
                  tol=tol,
                  method=method,
-                 c=c)
+                 alpha_max_fraction=alpha_max_fraction)
             for i in range(n_features))
 
     results = np.asarray(results)
@@ -39,7 +40,7 @@ def _compute_all_residuals(X, alphas, gram=None, max_iter=5000, tol=1e-3,
 
 
 def _compute_residuals(X, column_index, alpha=None, gram=None, max_iter=5000,
-                       tol=1e-3, method='lasso', c=0.01):
+                       tol=1e-3, method='lasso', alpha_max_fraction=0.01):
     """Compute the residuals of the regression of a given column of the
     design matrix against the other columns"""
 
@@ -58,8 +59,8 @@ def _compute_residuals(X, column_index, alpha=None, gram=None, max_iter=5000,
         gram_loc = np.delete(np.delete(gram, i, axis=0), i, axis=1)
 
     if alpha is None:
-        k = c * (1. / n_samples)
-        alpha = k * np.max(np.abs(np.dot(y.T, X_new)))
+        alpha_max = np.max(np.abs(np.dot(y.T, X_new))) / n_samples
+        alpha = alpha_max_fraction * alpha_max
 
     clf_lasso_loc = Lasso(alpha=alpha, precompute=gram_loc, max_iter=max_iter,
                           tol=tol)
@@ -74,8 +75,8 @@ def _compute_residuals(X, column_index, alpha=None, gram=None, max_iter=5000,
 
 def desparsified_lasso(X, y, normalize=True, dof_ajdustement=False,
                        confidence=0.95, max_iter=5000, tol=1e-3,
-                       residual_method='lasso', c=0.01, n_jobs=1,
-                       memory=None, verbose=0):
+                       residual_method='lasso', alpha_max_fraction=0.01,
+                       n_jobs=1, memory=None, verbose=0):
 
     """Desparsified Lasso with confidence intervals
 
@@ -109,12 +110,13 @@ def desparsified_lasso(X, y, normalize=True, dof_ajdustement=False,
         updates are smaller than `tol`, the optimization code checks the
         dual gap for optimality and continues until it is smaller than `tol`.
 
-    residual_method : string, optional (default='lasso')
-        The method for the computind the residuals of the Nodewise Lasso.
+    residual_method : str, optional (default='lasso')
+        Method used for computing the residuals of the Nodewise Lasso.
         Currently the only method available is 'lasso'.
 
-    c : float, optional (default=0.01)
-        Only used if method='lasso'. Then alpha = c * alpha_max.
+    alpha_max_fraction : float, optional (default=0.01)
+        Only used if method='lasso'.
+        Then alpha = alpha_max_fraction * alpha_max.
 
     n_jobs : int or None, optional (default=1)
         Number of CPUs to use during the Nodewise Lasso.
@@ -174,9 +176,10 @@ def desparsified_lasso(X, y, normalize=True, dof_ajdustement=False,
         y = y - np.mean(y)
         X = StandardScaler().fit_transform(X)
         gram = np.dot(X.T, X)
+        gram_nodiag = gram - np.diag(np.diag(gram))
 
-        k = c * (1. / n_samples)
-        alphas = k * np.max(np.abs(gram - np.diag(np.diag(gram))), axis=0)
+        list_alpha_max = np.max(np.abs(gram_nodiag), axis=0) / n_samples
+        alphas = alpha_max_fraction * list_alpha_max
 
     else:
 
@@ -186,7 +189,8 @@ def desparsified_lasso(X, y, normalize=True, dof_ajdustement=False,
     # Calculating precision matrix (Nodewise Lasso)
     Z, omega_diag = memory.cache(_compute_all_residuals, ignore=['n_jobs'])(
         X, alphas, gram=gram, max_iter=max_iter, tol=tol,
-        method=residual_method, c=c, n_jobs=n_jobs, verbose=verbose)
+        method=residual_method, alpha_max_fraction=alpha_max_fraction,
+        n_jobs=n_jobs, verbose=verbose)
 
     # Lasso regression
     sigma_hat, beta_lasso = reid(X, y, n_jobs=n_jobs)
@@ -213,7 +217,7 @@ def desparsified_lasso(X, y, normalize=True, dof_ajdustement=False,
     omega_diag = omega_diag * dof_factor ** 2
     omega_invsqrt_diag = omega_diag ** (-0.5)
 
-    quantile = st.norm.ppf(1 - (1 - confidence) / 2)
+    quantile = stats.norm.ppf(1 - (1 - confidence) / 2)
 
     confint_radius = np.abs(quantile * sigma_hat /
                             (np.sqrt(n_samples) * omega_invsqrt_diag))
@@ -225,8 +229,8 @@ def desparsified_lasso(X, y, normalize=True, dof_ajdustement=False,
 
 def desparsified_group_lasso(X, Y, cov=None, test='chi2', normalize=True,
                              max_iter=5000, tol=1e-3, residual_method='lasso',
-                             c=0.01, noise_method='AR', order=1,
-                             n_jobs=1, memory=None, verbose=0):
+                             alpha_max_fraction=0.01, noise_method='AR',
+                             order=1, n_jobs=1, memory=None, verbose=0):
     """Desparsified Group Lasso
 
     Parameters
@@ -241,7 +245,7 @@ def desparsified_group_lasso(X, Y, cov=None, test='chi2', normalize=True,
         If None, a temporal covariance matrix of the noise is estimated.
         Otherwise, `cov` is the temporal covariance matrix of the noise.
 
-    test : string, optional (default='chi2')
+    test : str, optional (default='chi2')
         Statistical test used to compute p-values. 'chi2' corresponds
         to a chi-squared test and 'F' corresponds to an F-test.
 
@@ -259,19 +263,20 @@ def desparsified_group_lasso(X, Y, cov=None, test='chi2', normalize=True,
         updates are smaller than `tol`, the optimization code checks the
         dual gap for optimality and continues until it is smaller than `tol`.
 
-    residual_method : string, optional (default='lasso')
+    residual_method : str, optional (default='lasso')
         The method for the computind the residuals of the Nodewise Lasso.
         Currently the only method available is 'lasso'.
 
-    c : float, optional (default=0.01)
-        Only used if method='lasso'. Then alpha = c * alpha_max.
+    alpha_max_fraction : float, optional (default=0.01)
+        Only used if method='lasso'.
+        Then alpha = alpha_max_fraction * alpha_max.
 
-    noise_method : string, optional (default='simple')
+    noise_method : str, optional (default='simple')
         If 'simple', the correlation matrix is estimated by taking the
         median of the correlation between two consecutive time steps
         and the noise standard deviation for each time step is estimated
         by taking the median of the standard deviations for every time step.
-        If 'AR', the order of the AR model is given by `order` and the
+        If 'AR', the order of the AR model is given by `order` and
         Yule-Walker method is used to estimate the covariance matrix.
 
     order : int, optional (default=1)
@@ -324,16 +329,18 @@ def desparsified_group_lasso(X, Y, cov=None, test='chi2', normalize=True,
     memory = check_memory(memory)
 
     if cov is not None and cov.shape != (n_times, n_times):
-        raise ValueError(f'Shape of cov should be ({n_times}, {n_times})')
+        raise ValueError(f'Shape of "cov" should be ({n_times}, {n_times}),' +
+                         f' the shape of "cov" was ({cov.shape}) instead')
 
     if normalize:
 
         Y = Y - np.mean(Y)
         X = StandardScaler().fit_transform(X)
         gram = np.dot(X.T, X)
+        gram_nodiag = gram - np.diag(np.diag(gram))
 
-        k = c * (1. / n_samples)
-        alphas = k * np.max(np.abs(gram - np.diag(np.diag(gram))), axis=0)
+        list_alpha_max = np.max(np.abs(gram_nodiag), axis=0) / n_samples
+        alphas = alpha_max_fraction * list_alpha_max
 
     else:
 
@@ -343,7 +350,8 @@ def desparsified_group_lasso(X, Y, cov=None, test='chi2', normalize=True,
     # Calculating precision matrix (Nodewise Lasso)
     Z, omega_diag = memory.cache(_compute_all_residuals, ignore=['n_jobs'])(
         X, alphas, gram=gram, max_iter=max_iter, tol=tol,
-        method=residual_method, c=c, n_jobs=n_jobs, verbose=verbose)
+        method=residual_method, alpha_max_fraction=alpha_max_fraction,
+        n_jobs=n_jobs, verbose=verbose)
 
     # Group Lasso regression
     cov_hat, beta_mtl = \
@@ -369,13 +377,13 @@ def desparsified_group_lasso(X, Y, cov=None, test='chi2', normalize=True,
 
         chi2_scores = \
             np.diag(multi_dot([beta_hat, theta_hat, beta_hat.T])) / omega_diag
-        pval = np.minimum(st.chi2.sf(chi2_scores, df=n_times) * 2, 1.0)
+        pval = np.minimum(stats.chi2.sf(chi2_scores, df=n_times) * 2, 1.0)
 
     if test == 'F':
 
         f_scores = (np.diag(multi_dot([beta_hat, theta_hat, beta_hat.T])) /
                     omega_diag / n_times)
-        pval = np.minimum(st.f.sf(f_scores, dfd=n_samples, dfn=n_times) * 2,
+        pval = np.minimum(stats.f.sf(f_scores, dfd=n_samples, dfn=n_times) * 2,
                           1.0)
 
     sign_beta = np.sign(np.sum(beta_hat, axis=1))
