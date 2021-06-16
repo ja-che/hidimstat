@@ -106,7 +106,7 @@ def clustered_inference(X_init, y, ward, n_clusters, train_size=0.3,
     X_init : ndarray, shape (n_samples, n_features)
         Original data (uncompressed).
 
-    Y : ndarray, shape (n_samples, n_times)
+    y : ndarray, shape (n_samples,) or (n_samples, n_times)
         Target.
 
     ward : sklearn.cluster.FeatureAgglomeration Object
@@ -125,7 +125,7 @@ def clustered_inference(X_init, y, ward, n_clusters, train_size=0.3,
         the subsamples that serve for computing the clustering.
 
     method : str, optional (default='desparsified-lasso')
-        Regression method used for meking the inference.
+        Method used for making the inference.
         Currently the two methods available are 'desparsified-lasso'
         and 'group-desparsified-lasso'. Use 'desparsified-lasso' for
         non-temporal data and 'group-desparsified-lasso' for temporal data.
@@ -139,7 +139,7 @@ def clustered_inference(X_init, y, ward, n_clusters, train_size=0.3,
 
     memory : str or joblib.Memory object, optional (default=None)
         Used to cache the output of the computation of the clustering
-        and theinference. By default, no caching is done. If a string is
+        and the inference. By default, no caching is done. If a string is
         given, it is the path to the caching directory.
 
     verbose: int, optional (default=1)

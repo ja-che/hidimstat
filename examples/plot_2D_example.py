@@ -146,7 +146,7 @@ def main():
                                  cdf_corr < fwer_target / 2)
 
     # ensemble of clustered desparsified lasso (EnCluDL)
-    sf, sf_corr, cdf, cdf_corr = \
+    beta_hat, sf, sf_corr, cdf, cdf_corr = \
         ensemble_clustered_inference(X_init, y, ward,
                                      n_clusters, train_size=0.1)
     zscore = zscore_from_sf_and_cdf(sf, cdf)
