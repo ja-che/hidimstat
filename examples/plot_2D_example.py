@@ -138,7 +138,7 @@ def main():
     ward = FeatureAgglomeration(n_clusters=n_clusters,
                                 connectivity=connectivity,
                                 linkage='ward')
-    sf, sf_corr, cdf, cdf_corr = \
+    beta_hat, sf, sf_corr, cdf, cdf_corr = \
         clustered_inference(X_init, y, ward, n_clusters)
     zscore = zscore_from_sf_and_cdf(sf, cdf)
     selected_cdl = zscore > thr_c
