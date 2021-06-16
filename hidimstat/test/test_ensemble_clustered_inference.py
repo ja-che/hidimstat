@@ -25,7 +25,7 @@ def test_ensemble_clustered_inference():
 
     margin_size = 5
     n_clusters = 200
-    n_rand = 3
+    n_bootstraps = 3
 
     y = y - np.mean(y)
     X_init = X_init - np.mean(X_init, axis=0)
@@ -37,7 +37,7 @@ def test_ensemble_clustered_inference():
 
     beta_hat, sf, sf_corr, cdf, cdf_corr = \
         ensemble_clustered_inference(X_init, y, ward, n_clusters,
-                                     n_rand=n_rand)
+                                     n_bootstraps=n_bootstraps)
 
     expected = 0.5 * np.ones(n_features)
     expected[:support_size] = 0.0
