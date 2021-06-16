@@ -11,9 +11,8 @@ from .noise_std import reid, group_reid
 from .stat_tools import sf_and_cdf_from_pval_and_sign
 
 
-def _compute_all_residuals(X, alphas, gram=None, max_iter=5000, tol=1e-3,
-                           method='lasso', alpha_max_fraction=0.01, n_jobs=1,
-                           verbose=0):
+def _compute_all_residuals(X, alphas, gram, max_iter=5000, tol=1e-3,
+                           method='lasso', n_jobs=1, verbose=0):
     """Nodewise Lasso. Compute all the residuals: regressing each column of the
     design matrix against the other columns"""
 
@@ -28,8 +27,7 @@ def _compute_all_residuals(X, alphas, gram=None, max_iter=5000, tol=1e-3,
                  gram=gram,
                  max_iter=max_iter,
                  tol=tol,
-                 method=method,
-                 alpha_max_fraction=alpha_max_fraction)
+                 method=method)
             for i in range(n_features))
 
     results = np.asarray(results)
@@ -39,8 +37,8 @@ def _compute_all_residuals(X, alphas, gram=None, max_iter=5000, tol=1e-3,
     return Z, omega_diag
 
 
-def _compute_residuals(X, column_index, alpha=None, gram=None, max_iter=5000,
-                       tol=1e-3, method='lasso', alpha_max_fraction=0.01):
+def _compute_residuals(X, column_index, alpha, gram, max_iter=5000,
+                       tol=1e-3, method='lasso'):
     """Compute the residuals of the regression of a given column of the
     design matrix against the other columns"""
 
@@ -50,30 +48,24 @@ def _compute_residuals(X, column_index, alpha=None, gram=None, max_iter=5000,
     X_new = np.delete(X, i, axis=1)
     y = np.copy(X[:, i])
 
-    if method != 'lasso':
+    if method == 'lasso':
+
+        gram_ = np.delete(np.delete(gram, i, axis=0), i, axis=1)
+        clf = Lasso(alpha=alpha, precompute=gram_, max_iter=max_iter, tol=tol)
+
+    else:
+
         ValueError("The only regression method available is 'lasso'")
 
-    if gram is None:
-        gram_loc = False
-    else:
-        gram_loc = np.delete(np.delete(gram, i, axis=0), i, axis=1)
-
-    if alpha is None:
-        alpha_max = np.max(np.abs(np.dot(y.T, X_new))) / n_samples
-        alpha = alpha_max_fraction * alpha_max
-
-    clf_lasso_loc = Lasso(alpha=alpha, precompute=gram_loc, max_iter=max_iter,
-                          tol=tol)
-
-    clf_lasso_loc.fit(X_new, y)
-    z = y - clf_lasso_loc.predict(X_new)
+    clf.fit(X_new, y)
+    z = y - clf.predict(X_new)
 
     omega_diag_i = n_samples * np.sum(z ** 2) / np.dot(y, z) ** 2
 
     return z, omega_diag_i
 
 
-def desparsified_lasso(X, y, normalize=True, dof_ajdustement=False,
+def desparsified_lasso(X, y, dof_ajdustement=False,
                        confidence=0.95, max_iter=5000, tol=1e-3,
                        residual_method='lasso', alpha_max_fraction=0.01,
                        n_jobs=1, memory=None, verbose=0):
@@ -87,10 +79,6 @@ def desparsified_lasso(X, y, normalize=True, dof_ajdustement=False,
 
     y : ndarray, shape (n_samples,)
         Target.
-
-    normalize : bool, optional (default=True)
-        If True, the regressors X will be normalized before regression and
-        the target y will be centered.
 
     dof_ajdustement : bool, optional (default=False)
         If True, makes the degrees of freedom adjustement (cf. [4]_ and [5]_).
@@ -171,26 +159,18 @@ def desparsified_lasso(X, y, normalize=True, dof_ajdustement=False,
 
     memory = check_memory(memory)
 
-    if normalize:
+    y = y - np.mean(y)
+    X = StandardScaler().fit_transform(X)
+    gram = np.dot(X.T, X)
+    gram_nodiag = gram - np.diag(np.diag(gram))
 
-        y = y - np.mean(y)
-        X = StandardScaler().fit_transform(X)
-        gram = np.dot(X.T, X)
-        gram_nodiag = gram - np.diag(np.diag(gram))
-
-        list_alpha_max = np.max(np.abs(gram_nodiag), axis=0) / n_samples
-        alphas = alpha_max_fraction * list_alpha_max
-
-    else:
-
-        gram = None
-        alphas = n_features * [None]
+    list_alpha_max = np.max(np.abs(gram_nodiag), axis=0) / n_samples
+    alphas = alpha_max_fraction * list_alpha_max
 
     # Calculating precision matrix (Nodewise Lasso)
     Z, omega_diag = memory.cache(_compute_all_residuals, ignore=['n_jobs'])(
-        X, alphas, gram=gram, max_iter=max_iter, tol=tol,
-        method=residual_method, alpha_max_fraction=alpha_max_fraction,
-        n_jobs=n_jobs, verbose=verbose)
+        X, alphas, gram, max_iter=max_iter, tol=tol,
+        method=residual_method, n_jobs=n_jobs, verbose=verbose)
 
     # Lasso regression
     sigma_hat, beta_lasso = reid(X, y, n_jobs=n_jobs)
@@ -227,7 +207,7 @@ def desparsified_lasso(X, y, normalize=True, dof_ajdustement=False,
     return beta_hat, cb_min, cb_max
 
 
-def desparsified_group_lasso(X, Y, cov=None, test='chi2', normalize=True,
+def desparsified_group_lasso(X, Y, cov=None, test='chi2',
                              max_iter=5000, tol=1e-3, residual_method='lasso',
                              alpha_max_fraction=0.01, noise_method='AR',
                              order=1, n_jobs=1, memory=None, verbose=0):
@@ -248,11 +228,6 @@ def desparsified_group_lasso(X, Y, cov=None, test='chi2', normalize=True,
     test : str, optional (default='chi2')
         Statistical test used to compute p-values. 'chi2' corresponds
         to a chi-squared test and 'F' corresponds to an F-test.
-
-    normalize : bool, optional (default=True)
-        If True, the regressors X will be normalized before regression and
-        the target Y will be centered substracting the mean of all the
-        elements of Y to every element of Y.
 
     max_iter : int, optional (default=5000)
         The maximum number of iterations when regressing, by Lasso,
@@ -332,26 +307,18 @@ def desparsified_group_lasso(X, Y, cov=None, test='chi2', normalize=True,
         raise ValueError(f'Shape of "cov" should be ({n_times}, {n_times}),' +
                          f' the shape of "cov" was ({cov.shape}) instead')
 
-    if normalize:
+    Y = Y - np.mean(Y)
+    X = StandardScaler().fit_transform(X)
+    gram = np.dot(X.T, X)
+    gram_nodiag = gram - np.diag(np.diag(gram))
 
-        Y = Y - np.mean(Y)
-        X = StandardScaler().fit_transform(X)
-        gram = np.dot(X.T, X)
-        gram_nodiag = gram - np.diag(np.diag(gram))
-
-        list_alpha_max = np.max(np.abs(gram_nodiag), axis=0) / n_samples
-        alphas = alpha_max_fraction * list_alpha_max
-
-    else:
-
-        gram = None
-        alphas = n_features * [None]
+    list_alpha_max = np.max(np.abs(gram_nodiag), axis=0) / n_samples
+    alphas = alpha_max_fraction * list_alpha_max
 
     # Calculating precision matrix (Nodewise Lasso)
     Z, omega_diag = memory.cache(_compute_all_residuals, ignore=['n_jobs'])(
-        X, alphas, gram=gram, max_iter=max_iter, tol=tol,
-        method=residual_method, alpha_max_fraction=alpha_max_fraction,
-        n_jobs=n_jobs, verbose=verbose)
+        X, alphas, gram, max_iter=max_iter, tol=tol,
+        method=residual_method, n_jobs=n_jobs, verbose=verbose)
 
     # Group Lasso regression
     cov_hat, beta_mtl = \

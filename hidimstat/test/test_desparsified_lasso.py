@@ -30,8 +30,7 @@ def test_desparsified_lasso():
     assert_almost_equal(cb_min, beta - 0.05, decimal=1)
     assert_almost_equal(cb_max,  beta + 0.05, decimal=1)
 
-    beta_hat, cb_min, cb_max = \
-        desparsified_lasso(X, y, normalize=False, dof_ajdustement=True)
+    beta_hat, cb_min, cb_max = desparsified_lasso(X, y, dof_ajdustement=True)
 
     assert_almost_equal(beta_hat, beta, decimal=1)
     assert_almost_equal(cb_min, beta - 0.05, decimal=1)
@@ -67,7 +66,7 @@ def test_desparsified_group_lasso():
     assert_almost_equal(sf_corr, expected_sf_corr, decimal=1)
 
     beta_hat, sf, sf_corr, cdf, cdf_corr = \
-        desparsified_group_lasso(X, Y, normalize=False, test='F')
+        desparsified_group_lasso(X, Y, test='F')
 
     assert_almost_equal(beta_hat, beta, decimal=1)
     assert_almost_equal(sf_corr, expected_sf_corr, decimal=1)
