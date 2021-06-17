@@ -65,7 +65,7 @@ def _compute_residuals(X, column_index, alpha, gram, max_iter=5000,
     return z, omega_diag_i
 
 
-def desparsified_lasso(X, y, dof_ajdustement=False,
+def desparsified_lasso(X, y, dof_ajdustement=False, standardize=True,
                        confidence=0.95, max_iter=5000, tol=1e-3,
                        residual_method='lasso', alpha_max_fraction=0.01,
                        n_jobs=1, memory=None, verbose=0):
@@ -73,7 +73,7 @@ def desparsified_lasso(X, y, dof_ajdustement=False,
     """Desparsified Lasso with confidence intervals
 
     Parameters
-    -----------
+    ----------
     X : ndarray, shape (n_samples, n_features)
         Data.
 
@@ -84,6 +84,12 @@ def desparsified_lasso(X, y, dof_ajdustement=False,
         If True, makes the degrees of freedom adjustement (cf. [4]_ and [5]_).
         Otherwise, the original Desparsified Lasso estimator is computed
         (cf. [1]_ and [2]_ and [3]_).
+
+    standardize : bool, optional (default=True)
+        If True, standardize the columns of `X`, this default value is
+        recommanded. The only relevant exception is when X is prescaled
+        from measurements. Note that the columns of `X` and `y` are
+        always centered (cf. Notes).
 
     confidence : float, optional (default=0.95)
         Confidence level used to compute the confidence intervals.
@@ -130,6 +136,14 @@ def desparsified_lasso(X, y, dof_ajdustement=False,
     cb_max : array, shape (n_features)
         Upper bound of the confidence intervals on the parameter vector.
 
+    Notes
+    -----
+    The columns of `X` and `y` are always centered, this ensures that
+    the intercepts of the Nodewise Lasso problems are all equal to zero
+    and the intercept of the noise model is also equal to zero. Since
+    the values of the intercepts are not of interest, the centering avoids
+    the consideration of unecessary additional parameters.
+
     References
     ----------
     .. [1] Zhang, C. H., & Zhang, S. S. (2014). Confidence intervals for
@@ -160,7 +174,7 @@ def desparsified_lasso(X, y, dof_ajdustement=False,
     memory = check_memory(memory)
 
     y = y - np.mean(y)
-    X = StandardScaler().fit_transform(X)
+    X = StandardScaler(with_std=standardize).fit_transform(X)
     gram = np.dot(X.T, X)
     gram_nodiag = gram - np.diag(np.diag(gram))
 
@@ -207,14 +221,14 @@ def desparsified_lasso(X, y, dof_ajdustement=False,
     return beta_hat, cb_min, cb_max
 
 
-def desparsified_group_lasso(X, Y, cov=None, test='chi2',
+def desparsified_group_lasso(X, Y, cov=None, test='chi2', standardize=True,
                              max_iter=5000, tol=1e-3, residual_method='lasso',
                              alpha_max_fraction=0.01, noise_method='AR',
                              order=1, n_jobs=1, memory=None, verbose=0):
     """Desparsified Group Lasso
 
     Parameters
-    -----------
+    ----------
     X : ndarray, shape (n_samples, n_features)
         Data.
 
@@ -228,6 +242,12 @@ def desparsified_group_lasso(X, Y, cov=None, test='chi2',
     test : str, optional (default='chi2')
         Statistical test used to compute p-values. 'chi2' corresponds
         to a chi-squared test and 'F' corresponds to an F-test.
+
+    standardize : bool, optional (default=True)
+        If True, standardize the column of `X`, this default value
+        is recommanded in general. The only relevant exception is
+        when X is prescaled from measurements. Note that `y` and `X`
+        are always centered (see Notes).
 
     max_iter : int, optional (default=5000)
         The maximum number of iterations when regressing, by Lasso,
@@ -288,6 +308,14 @@ def desparsified_group_lasso(X, Y, cov=None, test='chi2',
     cdf_corr : ndarray, shape (n_features,)
         Corrected cumulative distribution function values of every feature.
 
+    Notes
+    -----
+    The columns of `X` and the matrix `Y` are always centered, this ensures
+    that the intercepts of the Nodewise Lasso problems are all equal to zero
+    and the intercept of the noise model is also equal to zero. Since
+    the values of the intercepts are not of interest, the centering avoids
+    the consideration of unecessary additional parameters.
+
     References
     ----------
     .. [1] Chevalier, J. A., Gramfort, A., Salmon, J., & Thirion, B. (2020).
@@ -308,7 +336,7 @@ def desparsified_group_lasso(X, Y, cov=None, test='chi2',
                          f' the shape of "cov" was ({cov.shape}) instead')
 
     Y = Y - np.mean(Y)
-    X = StandardScaler().fit_transform(X)
+    X = StandardScaler(with_std=standardize).fit_transform(X)
     gram = np.dot(X.T, X)
     gram_nodiag = gram - np.diag(np.diag(gram))
 
