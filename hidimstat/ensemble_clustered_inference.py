@@ -40,7 +40,7 @@ def ensemble_clustered_inference(X_init, y, ward, n_clusters,
     """Ensemble clustered inference algorithm
 
     Parameters
-    -----------
+    ----------
     X_init : ndarray, shape (n_samples, n_features)
         Original data (uncompressed).
 

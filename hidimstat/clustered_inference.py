@@ -102,7 +102,7 @@ def clustered_inference(X_init, y, ward, n_clusters, train_size=0.3,
     """Clustered inference algorithm
 
     Parameters
-    -----------
+    ----------
     X_init : ndarray, shape (n_samples, n_features)
         Original data (uncompressed).
 
