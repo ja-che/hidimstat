@@ -246,8 +246,8 @@ def desparsified_group_lasso(X, Y, cov=None, test='chi2', standardize=True,
     standardize : bool, optional (default=True)
         If True, standardize the column of `X`, this default value
         is recommanded in general. The only relevant exception is
-        when X is prescaled from measurements. Note that `y` and `X`
-        are always centered (see Notes).
+        when X is prescaled from measurements. Note that `Y` and
+        the columns of `X` are always centered (see Notes).
 
     max_iter : int, optional (default=5000)
         The maximum number of iterations when regressing, by Lasso,
