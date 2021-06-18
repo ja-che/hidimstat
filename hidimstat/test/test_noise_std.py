@@ -65,7 +65,8 @@ def test_group_reid():
                                          n_features=n_features,
                                          n_times=n_times,
                                          support_size=support_size,
-                                         sigma=sigma, rho=rho)
+                                         sigma=sigma,
+                                         rho_noise=rho)
 
     # max_iter=1 to get a better coverage
     cov_hat, _ = group_reid(X, Y, tol=1e-3, max_iter=1)
@@ -89,8 +90,9 @@ def test_group_reid():
                                          n_features=n_features,
                                          n_times=n_times,
                                          support_size=support_size,
-                                         sigma=sigma, rho=rho,
-                                         seed=2)
+                                         sigma=sigma,
+                                         rho_noise=rho,
+                                         seed=1)
 
     cov_hat, _ = group_reid(X, Y)
     error_ratio = cov_hat / cov

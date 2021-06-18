@@ -21,10 +21,9 @@ def reid(X, y, eps=1e-2, tol=1e-4, max_iter=1e4, n_jobs=1, seed=0):
         eps=1e-2 means that alpha_min / alpha_max = 1e-2.
 
     tol : float, optional (default=1e-4)
-        The tolerance for the optimization: if the updates are
-        smaller than ``tol``, the optimization code checks the
-        dual gap for optimality and continues until it is smaller
-        than ``tol``.
+        The tolerance for the optimization: if the updates are smaller
+        than `tol`, the optimization code checks the dual gap for optimality
+        and continues until it is smaller than `tol`.
 
     max_iter : int, optional (default=1e4)
         The maximum number of iterations.
@@ -99,12 +98,12 @@ def group_reid(X, Y, fit_Y=True, stationary=True, method='simple', order=1,
         If True, noise is considered to have the same magnitude for each
         time step. Otherwise, magnitude of the noise is not constant.
 
-    method : bool, optional (default='simple')
+    method : str, optional (default='simple')
         If 'simple', the correlation matrix is estimated by taking the
         median of the correlation between two consecutive time steps
         and the noise standard deviation for each time step is estimated
         by taking the median of the standard deviations for every time step.
-        If 'AR', the order of the AR model is given by `order` and the
+        If 'AR', the order of the AR model is given by `order` and
         Yule-Walker method is used to estimate the covariance matrix.
 
     order : int, optional (default=1)
@@ -117,10 +116,9 @@ def group_reid(X, Y, fit_Y=True, stationary=True, method='simple', order=1,
         eps=1e-2 means that alpha_min / alpha_max = 1e-2.
 
     tol : float, optional (default=1e-4)
-        The tolerance for the optimization: if the updates are
-        smaller than ``tol``, the optimization code checks the
-        dual gap for optimality and continues until it is smaller
-        than ``tol``.
+        The tolerance for the optimization: if the updates are smaller
+        than `tol`, the optimization code checks the dual gap for optimality
+        and continues until it is smaller than `tol`.
 
     max_iter : int, optional (default=1e4)
         The maximum number of iterations.
@@ -134,7 +132,7 @@ def group_reid(X, Y, fit_Y=True, stationary=True, method='simple', order=1,
 
     Returns
     -------
-    cov_hat : float
+    cov_hat : ndarray, shape (n_times, n_times)
         Estimated covariance matrix.
 
     beta_hat : ndarray, shape (n_features, n_times)

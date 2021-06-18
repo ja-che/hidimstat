@@ -24,7 +24,7 @@ def multivariate_1D_simulation(n_samples=100, n_features=500,
     sigma : float
         Standard deviation of the additive White Gaussian noise
     rho: float
-        Level of correlation between neighboring features (if shuffle is False)
+        Level of correlation between neighboring features (if not `shuffle`)
     shuffle : bool
         Shuffle the features (changing data structure) if True.
     seed : int
@@ -184,9 +184,9 @@ def multivariate_simulation(n_samples=100,
     return X, y, beta, noise
 
 
-def multivariate_temporal_simulation(n_samples=100, n_features=500,
-                                     n_times=30, support_size=10,
-                                     sigma=1.0, rho=0.0, seed=0):
+def multivariate_temporal_simulation(n_samples=100, n_features=500, n_times=30,
+                                     support_size=10, sigma=1.0, rho_noise=0.0,
+                                     rho_data=0.0, shuffle=True, seed=0):
     """Generate 1D temporal data with constant design matrix
 
     Parameters
@@ -201,8 +201,12 @@ def multivariate_temporal_simulation(n_samples=100, n_features=500,
         Size of the row support
     sigma : float
         Standard deviation of the noise at each time point
-    rho : float
+    rho_noise : float
         Level of autocorrelation in the noise
+    rho_data: float
+        Level of correlation between neighboring features (if not `shuffle`)
+    shuffle : bool
+        Shuffle the features (changing data structure) if True.
     seed : int
         Seed used for generating design matrix and noise
 
@@ -220,7 +224,16 @@ def multivariate_temporal_simulation(n_samples=100, n_features=500,
 
     rng = np.random.default_rng(seed)
 
-    X = rng.standard_normal((n_samples, n_features))
+    X = np.zeros((n_samples, n_features))
+    X[:, 0] = rng.standard_normal(n_samples)
+
+    for i in np.arange(1, n_features):
+        rand_vector = \
+            ((1 - rho_data ** 2) ** 0.5) * rng.standard_normal(n_samples)
+        X[:, i] = rho_data * X[:, i - 1] + rand_vector
+
+    if shuffle:
+        rng.shuffle(X.T)
 
     beta = np.zeros((n_features, n_times))
     beta[0:support_size, :] = 1.0
@@ -229,8 +242,9 @@ def multivariate_temporal_simulation(n_samples=100, n_features=500,
     noise[:, 0] = rng.standard_normal(n_samples)
 
     for i in range(1, n_times):
-        rand_vector = ((1 - rho ** 2) ** 0.5) * rng.standard_normal(n_samples)
-        noise[:, i] = rho * noise[:, i - 1] + rand_vector
+        rand_vector = \
+            ((1 - rho_noise ** 2) ** 0.5) * rng.standard_normal(n_samples)
+        noise[:, i] = rho_noise * noise[:, i - 1] + rand_vector
 
     noise = sigma * noise
 

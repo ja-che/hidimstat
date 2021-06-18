@@ -6,15 +6,31 @@ def gaonkar(X, y, rcond=1e-3):
 
     Parameters
     -----------
-    X : ndarray or scipy.sparse matrix, (n_samples, n_features)
-        Data
-    y : ndarray, shape (n_samples,) or (n_samples, n_targets)
-        Target. Will be cast to X's dtype if necessary
-    rcond : float, optional
-        Cutoff for small singular values.
-        Singular values smaller (in modulus) than
-        `rcond` * largest_singular_value (again, in modulus)
-        are set to zero. Broadcasts against the stack of matrices
+    X : ndarray, shape (n_samples, n_features)
+        Data.
+
+    y : ndarray, shape (n_samples,)
+        Target.
+
+    rcond : float, optional (default=1e-3)
+        Cutoff for small singular values. Singular values smaller
+        than `rcond` * largest_singular_value are set to zero.
+
+    Returns
+    -------
+    beta_hat : array, shape (n_features,)
+        Estimated parameter vector.
+
+    scale : ndarray, shape (n_features,)
+        Value of the standard deviation of the parameters.
+
+    References
+    ----------
+    .. [1] Gaonkar, B., & Davatzikos, C. (2012, October). Deriving statistical
+           significance maps for SVM based image classification and group
+           comparisons. In International Conference on Medical Image Computing
+           and Computer-Assisted Intervention (pp. 723-730). Springer, Berlin,
+           Heidelberg.
     """
 
     X = np.asarray(X)
@@ -28,9 +44,9 @@ def gaonkar(X, y, rcond=1e-3):
 
     beta_hat = np.dot(C, y)
 
-    scale_beta = np.sqrt(np.sum(C ** 2, axis=1))
+    scale = np.sqrt(np.sum(C ** 2, axis=1))
 
-    return beta_hat, scale_beta
+    return beta_hat, scale
 
 
 def _manual_inverting(X, rcond=1e-3, full_rank=False):

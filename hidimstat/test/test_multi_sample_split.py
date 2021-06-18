@@ -18,8 +18,7 @@ def test_aggregate_medians():
     sf = aggregate_medians(list_sf)
     expected = 0.04 * np.ones(n_features)
 
-    for i in np.arange(expected.size):
-        assert_almost_equal(sf[i], expected[i], decimal=2)
+    assert_almost_equal(sf, expected, decimal=2)
 
 
 def test_aggregate_quantiles():
@@ -32,5 +31,4 @@ def test_aggregate_quantiles():
     sf = aggregate_quantiles(list_sf)
     expected = 0.03 * np.ones(n_features)
 
-    for i in np.arange(expected.size):
-        assert_almost_equal(sf[i], expected[i], decimal=2)
+    assert_almost_equal(sf, expected, decimal=2)

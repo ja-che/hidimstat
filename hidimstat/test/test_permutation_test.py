@@ -16,7 +16,7 @@ def test_permutation_test():
     sigma = 0.1
     rho = 0.0
 
-    X_init, y, beta, epsilon = \
+    X_init, y, beta, noise = \
         multivariate_1D_simulation(n_samples=n_samples, n_features=n_features,
                                    support_size=support_size, sigma=sigma,
                                    rho=rho, shuffle=False, seed=3)
