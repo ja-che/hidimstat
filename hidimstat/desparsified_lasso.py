@@ -4,7 +4,6 @@ from scipy import stats
 from scipy.linalg import inv
 from joblib import Parallel, delayed
 from sklearn.utils.validation import check_memory
-from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import Lasso
 
 from .noise_std import reid, group_reid
@@ -170,7 +169,7 @@ def desparsified_lasso(X, y, dof_ajdustement=False,
     memory = check_memory(memory)
 
     y = y - np.mean(y)
-    X = StandardScaler(with_std=False).fit_transform(X)
+    X = X - np.mean(X, axis=0)
     gram = np.dot(X.T, X)
     gram_nodiag = gram - np.diag(np.diag(gram))
 
@@ -328,7 +327,7 @@ def desparsified_group_lasso(X, Y, cov=None, test='chi2',
                          f' the shape of "cov" was ({cov.shape}) instead')
 
     Y = Y - np.mean(Y)
-    X = StandardScaler(with_std=False).fit_transform(X)
+    X = X - np.mean(X, axis=0)
     gram = np.dot(X.T, X)
     gram_nodiag = gram - np.diag(np.diag(gram))
 

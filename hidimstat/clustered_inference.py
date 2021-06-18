@@ -109,8 +109,8 @@ def clustered_inference(X_init, y, ward, n_clusters, train_size=0.3,
     y : ndarray, shape (n_samples,) or (n_samples, n_times)
         Target.
 
-    ward : sklearn.cluster.FeatureAgglomeration Object
-        Scikit-learn object that computes ward hierarchical clustering.
+    ward : sklearn.cluster.FeatureAgglomeration
+        Scikit-learn object that computes Ward hierarchical clustering.
 
     n_clusters : int
         Number of clusters used for the compression.
