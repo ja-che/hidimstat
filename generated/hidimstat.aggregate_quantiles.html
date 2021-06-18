@@ -97,13 +97,30 @@
 <dl class="function">
 <dt id="hidimstat.aggregate_quantiles">
 <code class="sig-prename descclassname">hidimstat.</code><code class="sig-name descname">aggregate_quantiles</code><span class="sig-paren">(</span><em class="sig-param">list_sf</em>, <em class="sig-param">gamma_min=0.2</em><span class="sig-paren">)</span><a class="headerlink" href="#hidimstat.aggregate_quantiles" title="Permalink to this definition">¶</a></dt>
-<dd><p>Aggregation of survival function values with the Meinshausen procedure</p>
+<dd><p>Aggregation of survival function values by adaptive quantile procedure</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>list_sf</strong><span class="classifier">ndarray or scipy.sparse matrix, (n_iter, n_features)</span></dt><dd><p>List of survival fuction values</p>
+<dt><strong>list_sf</strong><span class="classifier">ndarray, shape (n_iter, n_features)</span></dt><dd><p>List of survival function values</p>
+</dd>
+<dt><strong>gamma_min</strong><span class="classifier">float, optional (default=0.2)</span></dt><dd><p>Lowest gamma-quantile being considered to compute the adaptive
+quantile aggregation formula (cf. <a class="reference internal" href="#ra27054ad05b6-1" id="id1">[1]</a>).</p>
 </dd>
 </dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>sf</strong><span class="classifier">ndarray, shape (n_features,)</span></dt><dd><p>Aggregated survival function values</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<dl class="citation">
+<dt class="label" id="ra27054ad05b6-1"><span class="brackets"><a class="fn-backref" href="#id1">1</a></span></dt>
+<dd><p>Meinshausen, N., Meier, L., &amp; Bühlmann, P. (2009). P-values for
+high-dimensional regression. Journal of the American Statistical
+Association, 104(488), 1671-1681.</p>
 </dd>
 </dl>
 </dd></dl>

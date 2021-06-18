@@ -12,7 +12,7 @@ from sklearn.cluster import FeatureAgglomeration
 
 from hidimstat.scenario import multivariate_simulation
 from hidimstat.stat_tools import zscore_from_sf_and_cdf
-from hidimstat.desparsified_lasso import desparsified_lasso_confint
+from hidimstat.desparsified_lasso import desparsified_lasso
 from hidimstat.stat_tools import sf_from_cb, cdf_from_cb
 from hidimstat.clustered_inference import clustered_inference
 from hidimstat.ensemble_clustered_inference import ensemble_clustered_inference
@@ -124,7 +124,7 @@ def main():
 
     # desparsified lasso
     beta_hat, cb_min, cb_max = \
-        desparsified_lasso_confint(X_init, y, n_jobs=n_jobs)
+        desparsified_lasso(X_init, y, n_jobs=n_jobs)
     sf, sf_corr = sf_from_cb(cb_min, cb_max)
     cdf, cdf_corr = cdf_from_cb(cb_min, cb_max)
     zscore = zscore_from_sf_and_cdf(sf, cdf)
@@ -138,7 +138,7 @@ def main():
     ward = FeatureAgglomeration(n_clusters=n_clusters,
                                 connectivity=connectivity,
                                 linkage='ward')
-    sf, sf_corr, cdf, cdf_corr = \
+    beta_hat, sf, sf_corr, cdf, cdf_corr = \
         clustered_inference(X_init, y, ward, n_clusters)
     zscore = zscore_from_sf_and_cdf(sf, cdf)
     selected_cdl = zscore > thr_c
@@ -146,7 +146,7 @@ def main():
                                  cdf_corr < fwer_target / 2)
 
     # ensemble of clustered desparsified lasso (EnCluDL)
-    sf, sf_corr, cdf, cdf_corr = \
+    beta_hat, sf, sf_corr, cdf, cdf_corr = \
         ensemble_clustered_inference(X_init, y, ward,
                                      n_clusters, train_size=0.1)
     zscore = zscore_from_sf_and_cdf(sf, cdf)

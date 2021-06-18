@@ -18,7 +18,7 @@
     <script src="../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="hidimstat.desparsified_lasso_confint" href="hidimstat.desparsified_lasso_confint.html" />
+    <link rel="next" title="hidimstat.desparsified_lasso" href="hidimstat.desparsified_lasso.html" />
     <link rel="prev" title="hidimstat.aggregate_quantiles" href="hidimstat.aggregate_quantiles.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -96,8 +96,70 @@
 <h1>hidimstat.clustered_inference<a class="headerlink" href="#hidimstat-clustered-inference" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
 <dt id="hidimstat.clustered_inference">
-<code class="sig-prename descclassname">hidimstat.</code><code class="sig-name descname">clustered_inference</code><span class="sig-paren">(</span><em class="sig-param">X_init</em>, <em class="sig-param">y</em>, <em class="sig-param">ward</em>, <em class="sig-param">n_clusters</em>, <em class="sig-param">method='DL'</em>, <em class="sig-param">train_size=0.7</em>, <em class="sig-param">condition_mask=None</em>, <em class="sig-param">groups=None</em>, <em class="sig-param">rand=0</em>, <em class="sig-param">predict=False</em><span class="sig-paren">)</span><a class="headerlink" href="#hidimstat.clustered_inference" title="Permalink to this definition">¶</a></dt>
-<dd><p>CluDL</p>
+<code class="sig-prename descclassname">hidimstat.</code><code class="sig-name descname">clustered_inference</code><span class="sig-paren">(</span><em class="sig-param">X_init</em>, <em class="sig-param">y</em>, <em class="sig-param">ward</em>, <em class="sig-param">n_clusters</em>, <em class="sig-param">train_size=0.3</em>, <em class="sig-param">groups=None</em>, <em class="sig-param">method='desparsified-lasso'</em>, <em class="sig-param">seed=0</em>, <em class="sig-param">n_jobs=1</em>, <em class="sig-param">memory=None</em>, <em class="sig-param">verbose=1</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#hidimstat.clustered_inference" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clustered inference algorithm</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>X_init</strong><span class="classifier">ndarray, shape (n_samples, n_features)</span></dt><dd><p>Original data (uncompressed).</p>
+</dd>
+<dt><strong>y</strong><span class="classifier">ndarray, shape (n_samples,) or (n_samples, n_times)</span></dt><dd><p>Target.</p>
+</dd>
+<dt><strong>ward</strong><span class="classifier">sklearn.cluster.FeatureAgglomeration</span></dt><dd><p>Scikit-learn object that computes Ward hierarchical clustering.</p>
+</dd>
+<dt><strong>n_clusters</strong><span class="classifier">int</span></dt><dd><p>Number of clusters used for the compression.</p>
+</dd>
+<dt><strong>train_size</strong><span class="classifier">float, optional (default=0.3)</span></dt><dd><p>Fraction of samples used to compute the clustering.
+If <cite>train_size = 1</cite>, clustering is not random since all the samples
+are used to compute the clustering.</p>
+</dd>
+<dt><strong>groups</strong><span class="classifier">ndarray, shape (n_samples,), optional (default=None)</span></dt><dd><p>Group labels for every sample. If not None, <cite>groups</cite> is used to build
+the subsamples that serve for computing the clustering.</p>
+</dd>
+<dt><strong>method</strong><span class="classifier">str, optional (default=’desparsified-lasso’)</span></dt><dd><p>Method used for making the inference.
+Currently the two methods available are ‘desparsified-lasso’
+and ‘group-desparsified-lasso’. Use ‘desparsified-lasso’ for
+non-temporal data and ‘group-desparsified-lasso’ for temporal data.</p>
+</dd>
+<dt><strong>seed: int, optional (default=0)</strong></dt><dd><p>Seed used for generating a random subsample of the data.
+This seed controls the clustering randomness.</p>
+</dd>
+<dt><strong>n_jobs</strong><span class="classifier">int or None, optional (default=1)</span></dt><dd><p>Number of CPUs to use during parallel steps such as inference.</p>
+</dd>
+<dt><strong>memory</strong><span class="classifier">str or joblib.Memory object, optional (default=None)</span></dt><dd><p>Used to cache the output of the computation of the clustering
+and the inference. By default, no caching is done. If a string is
+given, it is the path to the caching directory.</p>
+</dd>
+<dt><strong>verbose: int, optional (default=1)</strong></dt><dd><p>The verbosity level. If <cite>verbose &gt; 0</cite>, we print a message before
+runing the clustered inference.</p>
+</dd>
+<dt><strong>**kwargs:</strong></dt><dd><p>Arguments passed to the statistical inference function.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>beta_hat</strong><span class="classifier">ndarray, shape (n_features,) or (n_features, n_times)</span></dt><dd><p>Estimated parameter vector or matrix.</p>
+</dd>
+<dt><strong>sf</strong><span class="classifier">ndarray, shape (n_features,)</span></dt><dd><p>Survival function values of every feature.</p>
+</dd>
+<dt><strong>sf_corr</strong><span class="classifier">ndarray, shape (n_features,)</span></dt><dd><p>Corrected survival function values of every feature.</p>
+</dd>
+<dt><strong>cdf</strong><span class="classifier">ndarray, shape (n_features,)</span></dt><dd><p>Cumulative distribution function values of every feature.</p>
+</dd>
+<dt><strong>cdf_corr</strong><span class="classifier">ndarray, shape (n_features,)</span></dt><dd><p>Corrected cumulative distribution function values of every feature.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<dl class="citation">
+<dt class="label" id="r371da4698ae4-1"><span class="brackets">1</span></dt>
+<dd><p>Chevalier, J. A., Nguyen, T. B., Thirion, B., &amp; Salmon, J. (2021).
+Spatially relaxed inference on high-dimensional linear models.
+arXiv preprint arXiv:2106.02590.</p>
+</dd>
+</dl>
 </dd></dl>
 
 </div>

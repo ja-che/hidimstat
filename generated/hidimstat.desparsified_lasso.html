@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>hidimstat.desparsified_lasso &#8212; hidimstat 0.0.5 documentation</title>
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/style.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-rendered-html.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="hidimstat.ensemble_clustered_inference" href="hidimstat.ensemble_clustered_inference.html" />
+    <link rel="prev" title="hidimstat.clustered_inference" href="hidimstat.clustered_inference.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-sphinx.js "></script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html">
+          hidimstat</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.0.5</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../auto_examples/index.html">Examples</a></li>
+                <li><a href="../api.html">API</a></li>
+                <li><a href="https://github.com/ja-che/hidimstat">GitHub</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API Documentation</a></li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+      
+  <div class="section" id="hidimstat-desparsified-lasso">
+<h1>hidimstat.desparsified_lasso<a class="headerlink" href="#hidimstat-desparsified-lasso" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="hidimstat.desparsified_lasso">
+<code class="sig-prename descclassname">hidimstat.</code><code class="sig-name descname">desparsified_lasso</code><span class="sig-paren">(</span><em class="sig-param">X</em>, <em class="sig-param">y</em>, <em class="sig-param">dof_ajdustement=False</em>, <em class="sig-param">confidence=0.95</em>, <em class="sig-param">max_iter=5000</em>, <em class="sig-param">tol=0.001</em>, <em class="sig-param">residual_method='lasso'</em>, <em class="sig-param">alpha_max_fraction=0.01</em>, <em class="sig-param">n_jobs=1</em>, <em class="sig-param">memory=None</em>, <em class="sig-param">verbose=0</em><span class="sig-paren">)</span><a class="headerlink" href="#hidimstat.desparsified_lasso" title="Permalink to this definition">¶</a></dt>
+<dd><p>Desparsified Lasso with confidence intervals</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>X</strong><span class="classifier">ndarray, shape (n_samples, n_features)</span></dt><dd><p>Data.</p>
+</dd>
+<dt><strong>y</strong><span class="classifier">ndarray, shape (n_samples,)</span></dt><dd><p>Target.</p>
+</dd>
+<dt><strong>dof_ajdustement</strong><span class="classifier">bool, optional (default=False)</span></dt><dd><p>If True, makes the degrees of freedom adjustement (cf. <a class="reference internal" href="#rd84d7f69adb6-4" id="id1">[4]</a> and <a class="reference internal" href="#rd84d7f69adb6-5" id="id2">[5]</a>).
+Otherwise, the original Desparsified Lasso estimator is computed
+(cf. <a class="reference internal" href="#rd84d7f69adb6-1" id="id3">[1]</a> and <a class="reference internal" href="#rd84d7f69adb6-2" id="id4">[2]</a> and <a class="reference internal" href="#rd84d7f69adb6-3" id="id5">[3]</a>).</p>
+</dd>
+<dt><strong>confidence</strong><span class="classifier">float, optional (default=0.95)</span></dt><dd><p>Confidence level used to compute the confidence intervals.
+Each value should be in the range [0, 1].</p>
+</dd>
+<dt><strong>max_iter</strong><span class="classifier">int, optional (default=5000)</span></dt><dd><p>The maximum number of iterations when regressing, by Lasso,
+each column of the design matrix against the others.</p>
+</dd>
+<dt><strong>tol</strong><span class="classifier">float, optional (default=1e-3)</span></dt><dd><p>The tolerance for the optimization of the Lasso problems: if the
+updates are smaller than <cite>tol</cite>, the optimization code checks the
+dual gap for optimality and continues until it is smaller than <cite>tol</cite>.</p>
+</dd>
+<dt><strong>residual_method</strong><span class="classifier">str, optional (default=’lasso’)</span></dt><dd><p>Method used for computing the residuals of the Nodewise Lasso.
+Currently the only method available is ‘lasso’.</p>
+</dd>
+<dt><strong>alpha_max_fraction</strong><span class="classifier">float, optional (default=0.01)</span></dt><dd><p>Only used if method=’lasso’.
+Then alpha = alpha_max_fraction * alpha_max.</p>
+</dd>
+<dt><strong>n_jobs</strong><span class="classifier">int or None, optional (default=1)</span></dt><dd><p>Number of CPUs to use during the Nodewise Lasso.</p>
+</dd>
+<dt><strong>memory</strong><span class="classifier">str or joblib.Memory object, optional (default=None)</span></dt><dd><p>Used to cache the output of the computation of the Nodewise Lasso.
+By default, no caching is done. If a string is given, it is the path
+to the caching directory.</p>
+</dd>
+<dt><strong>verbose: int, optional (default=1)</strong></dt><dd><p>The verbosity level: if non zero, progress messages are printed
+when computing the Nodewise Lasso in parralel.
+The frequency of the messages increases with the verbosity level.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>beta_hat</strong><span class="classifier">array, shape (n_features,)</span></dt><dd><p>Estimated parameter vector.</p>
+</dd>
+<dt><strong>cb_min</strong><span class="classifier">array, shape (n_features)</span></dt><dd><p>Lower bound of the confidence intervals on the parameter vector.</p>
+</dd>
+<dt><strong>cb_max</strong><span class="classifier">array, shape (n_features)</span></dt><dd><p>Upper bound of the confidence intervals on the parameter vector.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>The columns of <cite>X</cite> and <cite>y</cite> are always centered, this ensures that
+the intercepts of the Nodewise Lasso problems are all equal to zero
+and the intercept of the noise model is also equal to zero. Since
+the values of the intercepts are not of interest, the centering avoids
+the consideration of unecessary additional parameters.
+Also, you may consider to center and scale <cite>X</cite> beforehand, notably if
+the data contained in <cite>X</cite> has not been prescaled from measurements.</p>
+<p class="rubric">References</p>
+<dl class="citation">
+<dt class="label" id="rd84d7f69adb6-1"><span class="brackets"><a class="fn-backref" href="#id3">1</a></span></dt>
+<dd><p>Zhang, C. H., &amp; Zhang, S. S. (2014). Confidence intervals for
+low dimensional parameters in high dimensional linear models.
+Journal of the Royal Statistical Society: Series B: Statistical
+Methodology, 217-242.</p>
+</dd>
+<dt class="label" id="rd84d7f69adb6-2"><span class="brackets"><a class="fn-backref" href="#id4">2</a></span></dt>
+<dd><p>Van de Geer, S., Bühlmann, P., Ritov, Y. A., &amp; Dezeure, R. (2014).
+On asymptotically optimal confidence regions and tests for
+high-dimensional models. Annals of Statistics, 42(3), 1166-1202.</p>
+</dd>
+<dt class="label" id="rd84d7f69adb6-3"><span class="brackets"><a class="fn-backref" href="#id5">3</a></span></dt>
+<dd><p>Javanmard, A., &amp; Montanari, A. (2014). Confidence intervals and
+hypothesis testing for high-dimensional regression. The Journal
+of Machine Learning Research, 15(1), 2869-2909.</p>
+</dd>
+<dt class="label" id="rd84d7f69adb6-4"><span class="brackets"><a class="fn-backref" href="#id1">4</a></span></dt>
+<dd><p>Bellec, P. C., &amp; Zhang, C. H. (2019). De-biasing the lasso with
+degrees-of-freedom adjustment. arXiv preprint arXiv:1902.08885.</p>
+</dd>
+<dt class="label" id="rd84d7f69adb6-5"><span class="brackets"><a class="fn-backref" href="#id2">5</a></span></dt>
+<dd><p>Celentano, M., Montanari, A., &amp; Wei, Y. (2020). The Lasso with
+general Gaussian designs with applications to hypothesis testing.
+arXiv preprint arXiv:2007.13716.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2020, Jerome-Alexis Chevalier &amp; Binh Nguyen.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>
