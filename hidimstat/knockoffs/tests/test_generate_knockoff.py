@@ -11,7 +11,7 @@ fdr = 0.1
 
 def test_estimate_distribution():
     n = 100
-    p = 200
+    p = 50
     X, y, _, non_zero = simu_data(n, p, seed=SEED)
     mu, Sigma = _estimate_distribution(X, cov_estimator='ledoit_wolf')
 
@@ -26,7 +26,7 @@ def test_estimate_distribution():
 
 def test_gaussian_knockoff_equi():
     n = 100
-    p = 200
+    p = 50
     X, y, _, non_zero = simu_data(n, p, seed=SEED)
     mu, Sigma = _estimate_distribution(X, cov_estimator='ledoit_wolf')
 
