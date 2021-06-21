@@ -55,21 +55,21 @@ def test_desparsified_group_lasso():
                                          support_size=support_size,
                                          sigma=sigma, rho_noise=rho)
 
-    beta_hat, sf, sf_corr, cdf, cdf_corr = \
+    beta_hat, pval, pval_corr, one_minus_pval, one_minus_pval_corr = \
         desparsified_group_lasso(X, Y, cov=cov)
 
-    expected_sf_corr = \
+    expected_pval_corr = \
         np.concatenate((np.zeros(support_size),
                         0.5 * np.ones(n_features - support_size)))
 
     assert_almost_equal(beta_hat, beta, decimal=1)
-    assert_almost_equal(sf_corr, expected_sf_corr, decimal=1)
+    assert_almost_equal(pval_corr, expected_pval_corr, decimal=1)
 
-    beta_hat, sf, sf_corr, cdf, cdf_corr = \
+    beta_hat, pval, pval_corr, one_minus_pval, one_minus_pval_corr = \
         desparsified_group_lasso(X, Y, test='F')
 
     assert_almost_equal(beta_hat, beta, decimal=1)
-    assert_almost_equal(sf_corr, expected_sf_corr, decimal=1)
+    assert_almost_equal(pval_corr, expected_pval_corr, decimal=1)
 
     bad_cov = np.delete(cov, 0, axis=1)
     np.testing.assert_raises(ValueError, desparsified_group_lasso,

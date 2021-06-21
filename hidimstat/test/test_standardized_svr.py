@@ -6,39 +6,31 @@ import numpy as np
 from numpy.testing import assert_almost_equal
 
 from hidimstat.scenario import multivariate_1D_simulation
-from hidimstat.stat_tools import sf_from_scale
+from hidimstat.stat_tools import pval_from_scale
 from hidimstat.standardized_svr import standardized_svr
 
 
 def test_standardized_svr():
 
-    n_samples, n_features = 100, 2000
-    support_size = 15
-    sigma = 5.0
-    rho = 0.9
-    margin_size = 5
+    n_samples, n_features = 20, 50
+    support_size = 1
+    sigma = 0.1
+    rho = 0.0
 
     X_init, y, beta, noise = \
         multivariate_1D_simulation(n_samples=n_samples, n_features=n_features,
                                    support_size=support_size, sigma=sigma,
-                                   rho=rho, shuffle=False, seed=0)
+                                   rho=rho, shuffle=False, seed=3)
 
     y = y - np.mean(y)
     X_init = X_init - np.mean(X_init, axis=0)
 
     beta_hat, scale_hat = standardized_svr(X_init, y)
 
-    sf, sf_corr = sf_from_scale(beta_hat, scale_hat)
+    pval, pval_corr = pval_from_scale(beta_hat, scale_hat,
+                                      testing_sign='minus')
 
     expected = 0.5 * np.ones(n_features)
     expected[:support_size] = 0.0
 
-    interior_support = support_size - margin_size
-    extended_support = support_size + margin_size
-
-    assert_almost_equal(sf_corr[:interior_support],
-                        expected[:interior_support],
-                        decimal=1)
-    assert_almost_equal(sf_corr[extended_support:200],
-                        expected[extended_support:200],
-                        decimal=1)
+    assert_almost_equal(pval_corr, expected, decimal=1)

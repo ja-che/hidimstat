@@ -7,7 +7,7 @@ from sklearn.utils.validation import check_memory
 from sklearn.linear_model import Lasso
 
 from .noise_std import reid, group_reid
-from .stat_tools import sf_and_cdf_from_pval_and_sign
+from .stat_tools import one_sided_pvals_from_two_sided_pval_and_sign
 
 
 def _compute_all_residuals(X, alphas, gram, max_iter=5000, tol=1e-3,
@@ -285,17 +285,21 @@ def desparsified_group_lasso(X, Y, cov=None, test='chi2',
     beta_hat : ndarray, shape (n_features, n_times)
         Estimated parameter matrix.
 
-    sf : ndarray, shape (n_features,)
-        Survival function values of every feature.
+    pval : ndarray, shape (n_features,)
+        p-values, testing the negativity (low p-values means
+        that we may reject negativity).
 
-    sf_corr : ndarray, shape (n_features,)
-        Corrected survival function values of every feature.
+    pval_corr : ndarray, shape (n_features,)
+        Corrected p-values, testing the negativity (low p-values means
+        that we may reject negativity).
 
-    cdf : ndarray, shape (n_features,)
-        Cumulative distribution function values of every feature.
+    one_minus_pval : ndarray, shape (n_features,)
+        p-values, testing the positivity (low p-values means
+        that we may reject positivity).
 
-    cdf_corr : ndarray, shape (n_features,)
-        Corrected cumulative distribution function values of every feature.
+    one_minus_pval_corr : ndarray, shape (n_features,)
+        Corrected p-values, testing the positivity (low p-values means
+        that we may reject positivity).
 
     Notes
     -----
@@ -363,16 +367,19 @@ def desparsified_group_lasso(X, Y, cov=None, test='chi2',
 
         chi2_scores = \
             np.diag(multi_dot([beta_hat, theta_hat, beta_hat.T])) / omega_diag
-        pval = np.minimum(stats.chi2.sf(chi2_scores, df=n_times) * 2, 1.0)
+        two_sided_pval = \
+            np.minimum(2 * stats.chi2.sf(chi2_scores, df=n_times), 1.0)
 
     if test == 'F':
 
         f_scores = (np.diag(multi_dot([beta_hat, theta_hat, beta_hat.T])) /
                     omega_diag / n_times)
-        pval = np.minimum(stats.f.sf(f_scores, dfd=n_samples, dfn=n_times) * 2,
-                          1.0)
+        two_sided_pval = \
+            np.minimum(2 * stats.f.sf(f_scores, dfd=n_samples, dfn=n_times),
+                       1.0)
 
     sign_beta = np.sign(np.sum(beta_hat, axis=1))
-    sf, sf_corr, cdf, cdf_corr = sf_and_cdf_from_pval_and_sign(pval, sign_beta)
+    pval, pval_corr, one_minus_pval, one_minus_pval_corr = \
+        one_sided_pvals_from_two_sided_pval_and_sign(two_sided_pval, sign_beta)
 
-    return beta_hat, sf, sf_corr, cdf, cdf_corr
+    return beta_hat, pval, pval_corr, one_minus_pval, one_minus_pval_corr

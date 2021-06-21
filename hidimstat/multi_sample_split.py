@@ -1,18 +1,18 @@
 import numpy as np
 
 
-def aggregate_medians(list_sf):
+def aggregate_medians(list_one_sided_pval):
     """Aggregation of survival function values taking twice the median
 
     Parameters
     -----------
-    list_sf : ndarray, shape (n_iter, n_features)
-        List of survival function values
+    list_one_sided_pval : ndarray, shape (n_iter, n_features)
+        List of p-values, testing the negativity or positivity.
 
     Returns
     -------
-    sf : ndarray, shape (n_features,)
-        Aggregated survival function values
+    one_sided_pval : ndarray, shape (n_features,)
+        p-values, testing the negativity or positivity (same testing as input).
 
     References
     ----------
@@ -21,22 +21,24 @@ def aggregate_medians(list_sf):
            Association, 104(488), 1671-1681.
     """
 
-    n_iter, n_features = list_sf.shape
+    n_iter, n_features = list_one_sided_pval.shape
 
-    sf = np.median(list_sf, axis=0)
-    sf[sf > 0.5] = np.maximum(0.5, 1 - (1 - sf[sf > 0.5]) * 2)
-    sf[sf < 0.5] = np.minimum(0.5, sf[sf < 0.5] * 2)
+    one_sided_pval = np.median(list_one_sided_pval, axis=0)
+    one_sided_pval[one_sided_pval > 0.5] = \
+        np.maximum(0.5, 1 - (1 - one_sided_pval[one_sided_pval > 0.5]) * 2)
+    one_sided_pval[one_sided_pval < 0.5] = \
+        np.minimum(0.5, one_sided_pval[one_sided_pval < 0.5] * 2)
 
-    return sf
+    return one_sided_pval
 
 
-def aggregate_quantiles(list_sf, gamma_min=0.2):
+def aggregate_quantiles(list_one_sided_pval, gamma_min=0.2):
     """Aggregation of survival function values by adaptive quantile procedure
 
     Parameters
     -----------
-    list_sf : ndarray, shape (n_iter, n_features)
-        List of survival function values
+    list_one_sided_pval : ndarray, shape (n_iter, n_features)
+        List of p-values, testing the negativity or positivity.
 
     gamma_min : float, optional (default=0.2)
         Lowest gamma-quantile being considered to compute the adaptive
@@ -44,8 +46,8 @@ def aggregate_quantiles(list_sf, gamma_min=0.2):
 
     Returns
     -------
-    sf : ndarray, shape (n_features,)
-        Aggregated survival function values
+    one_sided_pval : ndarray, shape (n_features,)
+        p-values, testing the negativity or positivity (same testing as input).
 
     References
     ----------
@@ -54,31 +56,34 @@ def aggregate_quantiles(list_sf, gamma_min=0.2):
            Association, 104(488), 1671-1681.
     """
 
-    n_iter, n_features = list_sf.shape
-    sf = 0.5 * np.ones(n_features)
+    n_iter, n_features = list_one_sided_pval.shape
+    one_sided_pval = 0.5 * np.ones(n_features)
 
     m = n_iter + 1
     k = np.maximum(1, int(np.floor(gamma_min * n_iter)))
     r = 1 - np.log(gamma_min)
     seq = range(k, n_iter)
 
-    asc_sf = np.sort(list_sf, axis=0)
-    dsc_sf = asc_sf[::-1]
+    ordered_pval = np.sort(list_one_sided_pval, axis=0)
+    rev_ordered_pval = ordered_pval[::-1]
 
     for i in np.arange(n_features):
 
-        sf_neg = min([asc_sf[j, i] * m / (j + 1) for j in seq])
-        sf_neg = min(0.5, sf_neg)
+        adjusted_ordered_pval = \
+            min([ordered_pval[j, i] * m / (j + 1) for j in seq])
+        adjusted_ordered_pval = min(0.5, adjusted_ordered_pval)
 
-        sf_pos = max([1 - (1 - dsc_sf[j, i]) * m / (j + 1) for j in seq])
-        sf_pos = max(0.5, sf_pos)
+        adjusted_rev_ordered_pval = \
+            max([1 - (1 - rev_ordered_pval[j, i]) * m / (j + 1) for j in seq])
+        adjusted_rev_ordered_pval = max(0.5, adjusted_rev_ordered_pval)
 
-        if (1 - sf_pos) < sf_neg:
+        if (1 - adjusted_rev_ordered_pval) < adjusted_ordered_pval:
 
-            sf[i] = np.maximum(0.5, 1 - (1 - sf_pos) * r)
+            one_sided_pval[i] = \
+                np.maximum(0.5, 1 - (1 - adjusted_rev_ordered_pval) * r)
 
         else:
 
-            sf[i] = np.minimum(0.5, sf_neg * r)
+            one_sided_pval[i] = np.minimum(0.5, adjusted_ordered_pval * r)
 
-    return sf
+    return one_sided_pval

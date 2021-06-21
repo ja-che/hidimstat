@@ -24,9 +24,10 @@ def test_permutation_test():
     y = y - np.mean(y)
     X_init = X_init - np.mean(X_init, axis=0)
 
-    sf_corr, cdf_corr = permutation_test_cv(X_init, y, n_permutations=100)
+    pval_corr, one_minus_pval_corr = \
+        permutation_test_cv(X_init, y, n_permutations=100)
 
     expected = 0.5 * np.ones(n_features)
     expected[:support_size] = 0.0
 
-    assert_almost_equal(sf_corr, expected, decimal=1)
+    assert_almost_equal(pval_corr, expected, decimal=1)

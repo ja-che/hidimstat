@@ -6,7 +6,7 @@ import numpy as np
 from numpy.testing import assert_almost_equal
 
 from hidimstat.scenario import multivariate_1D_simulation
-from hidimstat.stat_tools import sf_from_scale
+from hidimstat.stat_tools import pval_from_scale
 from hidimstat.gaonkar import gaonkar
 
 
@@ -27,12 +27,13 @@ def test_gaonkar():
 
     beta_hat, scale_hat = gaonkar(X_init, y)
 
-    sf, sf_corr = sf_from_scale(beta_hat, scale_hat)
+    pval, pval_corr = pval_from_scale(beta_hat, scale_hat,
+                                      testing_sign='minus')
 
     expected = 0.5 * np.ones(n_features)
     expected[:support_size] = 0.0
 
-    assert_almost_equal(sf[:support_size], expected[:support_size],
+    assert_almost_equal(pval[:support_size], expected[:support_size],
                         decimal=1)
-    assert_almost_equal(sf_corr[support_size:], expected[support_size:],
+    assert_almost_equal(pval_corr[support_size:], expected[support_size:],
                         decimal=1)

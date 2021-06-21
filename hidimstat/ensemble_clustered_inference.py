@@ -5,30 +5,31 @@ from .multi_sample_split import aggregate_medians, aggregate_quantiles
 from .clustered_inference import clustered_inference
 
 
-def _ensembling(list_beta_hat, list_sf, list_sf_corr, list_cdf, list_cdf_corr,
-                method='quantiles', gamma_min=0.2):
+def _ensembling(list_beta_hat, list_pval, list_pval_corr, list_one_minus_pval,
+                list_one_minus_pval_corr, method='quantiles', gamma_min=0.2):
 
     beta_hat = np.mean(np.asarray(list_beta_hat), axis=0)
 
     if method == 'quantiles':
 
-        sf = aggregate_quantiles(list_sf, gamma_min)
-        sf_corr = aggregate_quantiles(list_sf_corr, gamma_min)
-        cdf = aggregate_quantiles(list_cdf, gamma_min)
-        cdf_corr = aggregate_quantiles(list_cdf_corr, gamma_min)
+        pval = aggregate_quantiles(list_pval, gamma_min)
+        pval_corr = aggregate_quantiles(list_pval_corr, gamma_min)
+        one_minus_pval = aggregate_quantiles(list_one_minus_pval, gamma_min)
+        one_minus_pval_corr = \
+            aggregate_quantiles(list_one_minus_pval_corr, gamma_min)
 
     elif method == 'medians':
 
-        sf = aggregate_medians(list_sf)
-        sf_corr = aggregate_medians(list_sf_corr)
-        cdf = aggregate_medians(list_cdf)
-        cdf_corr = aggregate_medians(list_cdf_corr)
+        pval = aggregate_medians(list_pval)
+        pval_corr = aggregate_medians(list_pval_corr)
+        one_minus_pval = aggregate_medians(list_one_minus_pval)
+        one_minus_pval_corr = aggregate_medians(list_one_minus_pval_corr)
 
     else:
 
         raise ValueError("Unknown ensembling method.")
 
-    return beta_hat, sf, sf_corr, cdf, cdf_corr
+    return beta_hat, pval, pval_corr, one_minus_pval, one_minus_pval_corr
 
 
 def ensemble_clustered_inference(X_init, y, ward, n_clusters,
@@ -106,17 +107,21 @@ def ensemble_clustered_inference(X_init, y, ward, n_clusters,
     beta_hat : ndarray, shape (n_features,) or (n_features, n_times)
         Estimated parameter vector or matrix.
 
-    sf : ndarray, shape (n_features,)
-        Survival function values of every feature.
+    pval : ndarray, shape (n_features,)
+        p-values, testing the negativity (low p-values means
+        that we may reject negativity).
 
-    sf_corr : ndarray, shape (n_features,)
-        Corrected survival function values of every feature.
+    pval_corr : ndarray, shape (n_features,)
+        Corrected p-values, testing the negativity (low p-values means
+        that we may reject negativity).
 
-    cdf : ndarray, shape (n_features,)
-        Cumulative distribution function values of every feature.
+    one_minus_pval : ndarray, shape (n_features,)
+        p-values, testing the positivity (low p-values means
+        that we may reject positivity).
 
-    cdf_corr : ndarray, shape (n_features,)
-        Corrected cumulative distribution function values of every feature.
+    one_minus_pval_corr : ndarray, shape (n_features,)
+        Corrected p-values, testing the positivity (low p-values means
+        that we may reject positivity).
 
     References
     ----------
@@ -141,15 +146,15 @@ def ensemble_clustered_inference(X_init, y, ward, n_clusters,
     # Collecting results
     results = np.asarray(results)
     list_beta_hat = results[:, 0, :]
-    list_sf = results[:, 1, :]
-    list_sf_corr = results[:, 2, :]
-    list_cdf = results[:, 3, :]
-    list_cdf_corr = results[:, 4, :]
+    list_pval = results[:, 1, :]
+    list_pval_corr = results[:, 2, :]
+    list_one_minus_pval = results[:, 3, :]
+    list_one_minus_pval_corr = results[:, 4, :]
 
     # Ensembling
-    beta_hat, sf, sf_corr, cdf, cdf_corr = \
-        _ensembling(list_beta_hat, list_sf, list_sf_corr, list_cdf,
-                    list_cdf_corr, method=ensembling_method,
-                    gamma_min=gamma_min)
+    beta_hat, pval, pval_corr, one_minus_pval, one_minus_pval_corr = \
+        _ensembling(list_beta_hat, list_pval, list_pval_corr,
+                    list_one_minus_pval, list_one_minus_pval_corr,
+                    method=ensembling_method, gamma_min=gamma_min)
 
-    return beta_hat, sf, sf_corr, cdf, cdf_corr
+    return beta_hat, pval, pval_corr, one_minus_pval, one_minus_pval_corr
