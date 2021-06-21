@@ -3,12 +3,14 @@ Test the multi_sample_split module
 """
 
 import numpy as np
-from numpy.testing import assert_almost_equal
+from numpy.testing import assert_almost_equal, assert_equal
 
 from hidimstat.multi_sample_split import aggregate_medians, aggregate_quantiles
 
 
 def test_aggregate_medians():
+    '''Aggregated p-values is twice the median p-value. All p-values should
+    be close to 0.04 and decreasing with respect to feature position.'''
 
     n_iter, n_features = 20, 5
     list_pval = (1.0 / (np.arange(n_iter * n_features) + 1))
@@ -19,9 +21,12 @@ def test_aggregate_medians():
     expected = 0.04 * np.ones(n_features)
 
     assert_almost_equal(pval, expected, decimal=2)
+    assert_equal(pval[-2] >= pval[-1], True)
 
 
 def test_aggregate_quantiles():
+    '''Aggregated p-values from adaptive quantiles formula. All p-values should
+    be close to 0.04 and decreasing with respect to feature position.'''
 
     n_iter, n_features = 20, 5
     list_pval = (1.0 / (np.arange(n_iter * n_features) + 1))
@@ -32,3 +37,4 @@ def test_aggregate_quantiles():
     expected = 0.03 * np.ones(n_features)
 
     assert_almost_equal(pval, expected, decimal=2)
+    assert_equal(pval[-2] >= pval[-1], True)

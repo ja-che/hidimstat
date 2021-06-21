@@ -11,6 +11,9 @@ from hidimstat.standardized_svr import standardized_svr
 
 
 def test_standardized_svr():
+    '''Testing the procedure on a simulation with no structure and a support
+    of size 1. Computing p-values that test negativity, we want a low p-value
+    for the first feature and p-values close to 0.5 for the others.'''
 
     n_samples, n_features = 20, 50
     support_size = 1

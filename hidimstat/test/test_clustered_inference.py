@@ -13,9 +13,17 @@ from hidimstat.clustered_inference import clustered_inference
 
 
 def test_clustered_inference():
+    '''Testing the procedure on two simulations with a 1D data structure and
+    with n << p: the first test has no temporal dimension, the second has a
+    temporal dimension. The support is connected and of size 10, it must be
+    recovered with a small spatial tolerance parametrized by `margin_size`.
+    Computing p-values that test negativity, we want low p-values for the
+    features of the support and p-values close to 0.5 for the others.'''
 
+    # Scenario 1: data with no temporal dimension
+    # ###########################################
     n_samples, n_features = 100, 2000
-    support_size = 15
+    support_size = 10
     sigma = 5.0
     rho = 0.95
     n_clusters = 200
@@ -48,13 +56,15 @@ def test_clustered_inference():
                         expected[extended_support:200],
                         decimal=1)
 
-    n_samples, n_features, n_times = 100, 2000, 10
-    support_size = 15
+    # Scenario 2: temporal data
+    # #########################
+    n_samples, n_features, n_times = 200, 2000, 10
+    support_size = 10
     sigma = 5.0
     rho_noise = 0.9
-    rho_data = 0.95
+    rho_data = 0.9
     n_clusters = 200
-    margin_size = 7
+    margin_size = 5
     interior_support = support_size - margin_size
     extended_support = support_size + margin_size
 
@@ -81,7 +91,8 @@ def test_clustered_inference():
     expected[:support_size] = 0.0
 
     assert_almost_equal(pval_corr[:interior_support],
-                        expected[:interior_support])
-    assert_almost_equal(pval_corr[extended_support:200],
-                        expected[extended_support:200],
+                        expected[:interior_support],
+                        decimal=3)
+    assert_almost_equal(pval_corr[extended_support:],
+                        expected[extended_support:],
                         decimal=1)
