@@ -252,12 +252,20 @@ def empirical_snr(X, y, beta, noise=None):
     -----------
     X : ndarray or scipy.sparse matrix, shape (n_samples, n_features)
         Data.
+
     y : ndarray, shape (n_samples,)
         Target.
+
     beta : ndarray, shape (n_features,)
         True parameter vector.
+
     noise : ndarray, shape (n_samples,), optional (default=None)
         True error vector.
+
+    Returns
+    -------
+    snr_hat : float
+        Empirical signal-to-noise ratio.
     """
     X = np.asarray(X)
 
