@@ -31,12 +31,12 @@ def pval_corr_from_pval(one_sided_pval):
     Parameters
     ----------
     one_sided_pval : ndarray, shape (n_features,)
-        p-values, testing the negativity or positivity.
+        One-sided p-values.
 
     Returns
     -------
     one_sided_pval_corr : ndarray, shape (n_features,)
-        Corrected p-values, testing the negativity or positivity.
+        Corrected one-sided p-values.
      """
 
     n_features = one_sided_pval.size
@@ -66,10 +66,11 @@ def pval_from_scale(beta, scale, testing_sign, eps=1e-14):
     scale : ndarray, shape (n_features,)
         Value of the standard deviation of the parameters.
 
-    testing_sign : {'minus', 'plus'}
-        If 'minus', testing for negativity (low p-values means we may
-        reject negativity). If 'plus', testing for positivity (low p-values
-        means we may reject positivity).
+    testing_sign : {'plus', 'minus'}
+        Sign tested in the alternative hypothesis of the statistical tests
+        to compute the one-sided p-values (`one_sided_pval`).
+        If 'plus', low p-values characterize positive effect sizes.
+        If 'minus', low p-values characterize negative effect sizes.
 
     eps : float, optional
         Machine-precision regularization in the computation of the p-values.
@@ -77,10 +78,10 @@ def pval_from_scale(beta, scale, testing_sign, eps=1e-14):
     Returns
     -------
     one_sided_pval : ndarray, shape (n_features,)
-        p-values, testing the negativity or positivity.
+        One-sided p-values (test the null, alternative hypothesis is signed).
 
     one_sided_pval_corr : ndarray, shape (n_features,)
-        Corrected p-values, testing the negativity or positivity.
+        Corrected one-sided p-values.
     """
 
     n_features = beta.size
@@ -89,14 +90,14 @@ def pval_from_scale(beta, scale, testing_sign, eps=1e-14):
 
     one_sided_pval = np.zeros(n_features) + 0.5
 
-    if testing_sign == 'minus':
+    if testing_sign == 'plus':
         one_sided_pval[index_no_nan] = \
             norm.sf(beta[index_no_nan], scale=scale[index_no_nan])
-    elif testing_sign == 'plus':
+    elif testing_sign == 'minus':
         one_sided_pval[index_no_nan] = \
             norm.cdf(beta[index_no_nan], scale=scale[index_no_nan])
     else:
-        raise ValueError("testing_sign must be either 'plus' or 'minus'.")
+        raise ValueError("testing_sign must be either 'minus' or 'plus'.")
 
     one_sided_pval[one_sided_pval > 1 - eps] = 1 - eps
     one_sided_pval_corr = pval_corr_from_pval(one_sided_pval)
@@ -151,10 +152,11 @@ def pval_from_cb(cb_min, cb_max, testing_sign, confidence=0.95,
     cb_max : ndarray, shape (n_features,)
         Value of the superior confidence bound.
 
-    testing_sign : {'minus', 'plus'}
-        If 'minus', testing for negativity (low p-values means we may
-        reject negativity). If 'plus', testing for positivity (low p-values
-        means we may reject positivity).
+    testing_sign : {'plus', 'minus'}
+        Sign tested in the alternative hypothesis of the statistical tests
+        to compute the one-sided p-values (`one_sided_pval`).
+        If 'plus', low p-values characterize positive effect sizes.
+        If 'minus', low p-values characterize negative effect sizes.
 
     confidence : float, optional (default=0.95)
         Confidence level used to compute the confidence intervals.
@@ -170,28 +172,28 @@ def pval_from_cb(cb_min, cb_max, testing_sign, confidence=0.95,
     Returns
     -------
     one_sided_pval : ndarray, shape (n_features,)
-        p-values, testing the negativity or positivity.
+        One-sided p-values (test the null, alternative hypothesis is signed).
 
     one_sided_pval_corr : ndarray, shape (n_features,)
-        Corrected p-values, testing the negativity or positivity.
+        Corrected one-sided p-values.
     """
 
     zscore = \
         zscore_from_cb(cb_min, cb_max, confidence=confidence, distrib=distrib)
 
-    if testing_sign == 'minus':
+    if testing_sign == 'plus':
 
         if distrib == 'norm':
             one_sided_pval = norm.sf(zscore)
 
-    elif testing_sign == 'plus':
+    elif testing_sign == 'minus':
 
         if distrib == 'norm':
             one_sided_pval = norm.cdf(zscore)
 
     else:
 
-        raise ValueError("testing_sign must be either 'plus' or 'minus'.")
+        raise ValueError("testing_sign must be either 'minus' or 'plus'.")
 
     one_sided_pval[one_sided_pval > 1 - eps] = 1 - eps
     one_sided_pval_corr = pval_corr_from_pval(one_sided_pval)
@@ -217,7 +219,7 @@ def two_sided_pval_from_zscore(zscore, distrib='norm'):
         Two-sided p-values (testing the null).
 
     two_sided_pval_corr : ndarray, shape (n_features,)
-        Two-sided p-values (testing the null) corrected for multiple testing.
+        Two-sided p-values corrected for multiple testing.
     """
     n_features = zscore.size
 
@@ -254,7 +256,7 @@ def two_sided_pval_from_cb(cb_min, cb_max, confidence=0.95, distrib='norm'):
         Two-sided p-values (testing the null).
 
     two_sided_pval_corr : ndarray, shape (n_features,)
-        Two-sided p-values (testing the null) corrected for multiple testing.
+        Two-sided p-values corrected for multiple testing.
     """
     zscore = \
         zscore_from_cb(cb_min, cb_max, confidence=confidence, distrib=distrib)
@@ -271,13 +273,13 @@ def zscore_from_pval(one_sided_pval, testing_sign, distrib='norm'):
     Parameters
     -----------
     one_sided_pval : ndarray, shape (n_features,)
-        p-values, testing the negativity or positivity.
+        One-sided p-values (test the null, alternative hypothesis is signed).
 
-    testing_sign : {'minus', 'plus'}
-        If 'minus', `one_sided_pval` refers to p-values testing for
-        negativity (low p-values means that we may reject negativity).
-        If 'plus', `one_sided_pval` refers to p-values testing for
-        positivity (low p-values means that we may reject positivity).
+    testing_sign : {'plus', 'minus'}
+        Sign tested in the alternative hypothesis of the statistical tests
+        to compute the one-sided p-values (`one_sided_pval`).
+        If 'plus', low p-values characterize positive effect sizes.
+        If 'minus', low p-values characterize negative effect sizes.
 
     distrib : str, opitonal (default='norm')
         Type of distribution assumed for the underlying estimator.
@@ -289,19 +291,19 @@ def zscore_from_pval(one_sided_pval, testing_sign, distrib='norm'):
         z-scores.
     """
 
-    if testing_sign == 'minus':
+    if testing_sign == 'plus':
 
         if distrib == 'norm':
             zscore = norm.isf(one_sided_pval)
 
-    elif testing_sign == 'plus':
+    elif testing_sign == 'minus':
 
         if distrib == 'norm':
             zscore = norm.ppf(one_sided_pval)
 
     else:
 
-        raise ValueError("testing_sign must be either 'plus' or 'minus'.")
+        raise ValueError("testing_sign must be either 'minus' or 'plus'.")
 
     return zscore
 
@@ -313,12 +315,10 @@ def zscore_from_one_sided_pvals(pval, one_minus_pval, distrib='norm'):
     Parameters
     -----------
     pval : ndarray, shape (n_features,)
-        One-sided p-values, testing the negativity (low p-values means
-        that we may reject negativity).
+        One-sided p-values, low p-values characterize positive effect sizes.
 
     one_minus_pval : ndarray, shape (n_features,)
-        One-sided p-values, testing the positivity (low p-values means
-        that we may reject positivity).
+        One-sided p-values, low p-values characterize negative effect sizes.
 
     distrib : str, opitonal (default='norm')
         Type of distribution assumed for the underlying estimator.
@@ -332,10 +332,10 @@ def zscore_from_one_sided_pvals(pval, one_minus_pval, distrib='norm'):
     ind = (pval < 0.5)
 
     zscore = \
-        zscore_from_pval(one_minus_pval, testing_sign='plus', distrib=distrib)
+        zscore_from_pval(one_minus_pval, testing_sign='minus', distrib=distrib)
 
     zscore[ind] = \
-        zscore_from_pval(pval, testing_sign='minus', distrib=distrib)[ind]
+        zscore_from_pval(pval, testing_sign='plus', distrib=distrib)[ind]
 
     zscore = _replace_infinity(zscore, replace_val=40, method='plus-one')
 
@@ -355,11 +355,11 @@ def pval_from_two_sided_pval_and_sign(two_sided_pval, parameter_sign,
     parameter_sign : ndarray, shape (n_features,)
         Estimated signs for the parameters.
 
-    testing_sign : {'minus', 'plus'}
-        If 'minus', the function returns one-sided p-values testing
-        for negativity (low p-values means that we may reject negativity).
-        If 'plus', the function returns one-sided p-values testing
-        for positivity (low p-values means that we may reject positivity).
+    testing_sign : {'plus', 'minus'}
+        Sign tested in the alternative hypothesis of the statistical tests
+        to compute the one-sided p-values (`one_sided_pval`).
+        If 'plus', low p-values characterize positive effect sizes.
+        If 'minus', low p-values characterize negative effect sizes.
 
     eps : float, optional
         Machine-precision regularization in the computation of the p-values.
@@ -367,13 +367,13 @@ def pval_from_two_sided_pval_and_sign(two_sided_pval, parameter_sign,
     Returns
     -------
     one_sided_pval : ndarray, shape (n_features,)
-        p-values, testing the negativity or positivity.
+        One-sided p-values (test the null, alternative hypothesis is signed).
     """
 
     n_features = two_sided_pval.size
     one_sided_pval = 0.5 * np.ones(n_features)
 
-    if testing_sign == 'minus':
+    if testing_sign == 'plus':
 
         one_sided_pval[parameter_sign > 0] = \
             two_sided_pval[parameter_sign > 0] / 2
@@ -381,7 +381,7 @@ def pval_from_two_sided_pval_and_sign(two_sided_pval, parameter_sign,
         one_sided_pval[parameter_sign < 0] = \
             1 - two_sided_pval[parameter_sign < 0] / 2
 
-    elif testing_sign == 'plus':
+    elif testing_sign == 'minus':
 
         one_sided_pval[parameter_sign > 0] = \
             1 - two_sided_pval[parameter_sign > 0] / 2
@@ -391,7 +391,7 @@ def pval_from_two_sided_pval_and_sign(two_sided_pval, parameter_sign,
 
     else:
 
-        raise ValueError("testing_sign must be either 'plus' or 'minus'.")
+        raise ValueError("testing_sign must be either 'minus' or 'plus'.")
 
     one_sided_pval[one_sided_pval > 1 - eps] = 1 - eps
 
@@ -417,27 +417,23 @@ def one_sided_pvals_from_two_sided_pval_and_sign(two_sided_pval,
     Returns
     -------
     pval : ndarray, shape (n_features,)
-        p-values, testing the negativity (low p-values means
-        that we may reject negativity).
+        One-sided p-values, low p-values characterize positive effect sizes.
 
     pval_corr : ndarray, shape (n_features,)
-        Corrected p-values, testing the negativity (low p-values means
-        that we may reject negativity).
+        Corrected p-values, low p-values characterize positive effect sizes.
 
     one_minus_pval : ndarray, shape (n_features,)
-        p-values, testing the positivity (low p-values means
-        that we may reject positivity).
+        One-sided p-values, low p-values characterize negative effect sizes.
 
     one_minus_pval_corr : ndarray, shape (n_features,)
-        Corrected p-values, testing the positivity (low p-values means
-        that we may reject positivity).
+        Corrected p-values, low p-values characterize negative effect sizes.
     """
 
     pval = pval_from_two_sided_pval_and_sign(two_sided_pval, parameter_sign,
-                                             testing_sign='minus', eps=eps)
+                                             testing_sign='plus', eps=eps)
     one_minus_pval = \
         pval_from_two_sided_pval_and_sign(two_sided_pval, parameter_sign,
-                                          testing_sign='plus', eps=eps)
+                                          testing_sign='minus', eps=eps)
 
     pval_corr = pval_corr_from_pval(pval)
     one_minus_pval_corr = pval_corr_from_pval(one_minus_pval)
@@ -452,13 +448,13 @@ def two_sided_pval_from_pval(one_sided_pval, testing_sign, distrib='norm'):
     Parameters
     ----------
     one_sided_pval : ndarray, shape (n_features,)
-        p-values, testing the negativity or positivity.
+        One-sided p-values (test the null, alternative hypothesis is signed).
 
-    testing_sign : {'minus', 'plus'}
-        If 'minus', `one_sided_pval` refers to p-values testing for
-        negativity (low p-values means that we may reject negativity).
-        If 'plus', `one_sided_pval` refers to p-values testing for
-        positivity (low p-values means that we may reject positivity).
+    testing_sign : {'plus', 'minus'}
+        Sign tested in the alternative hypothesis of the statistical tests
+        to compute the one-sided p-values (`one_sided_pval`).
+        If 'plus', low p-values characterize positive effect sizes.
+        If 'minus', low p-values characterize negative effect sizes.
 
     distrib : str, opitonal (default='norm')
         Type of distribution assumed for the underlying estimator.
@@ -470,7 +466,7 @@ def two_sided_pval_from_pval(one_sided_pval, testing_sign, distrib='norm'):
         Two-sided p-values (testing the null).
 
     two_sided_pval_corr : ndarray, shape (n_features,)
-        Two-sided p-values (testing the null) corrected for multiple testing.
+        Two-sided p-values corrected for multiple testing.
     """
 
     zscore = \
@@ -490,12 +486,10 @@ def two_sided_pval_from_one_sided_pvals(pval, one_minus_pval, distrib='norm'):
     Parameters
     ----------
     pval : ndarray, shape (n_features,)
-        One-sided p-values, testing the negativity (low p-values means
-        that we may reject negativity).
+        One-sided p-values, low p-values characterize positive effect sizes.
 
     one_minus_pval : ndarray, shape (n_features,)
-        One-sided p-values, testing the positivity (low p-values means
-        that we may reject positivity).
+        One-sided p-values, low p-values characterize negative effect sizes.
 
     distrib : str, opitonal (default='norm')
         Type of distribution assumed for the underlying estimator.
@@ -507,7 +501,7 @@ def two_sided_pval_from_one_sided_pvals(pval, one_minus_pval, distrib='norm'):
         Two-sided p-values (testing the null).
 
     two_sided_pval_corr : ndarray, shape (n_features,)
-        Two-sided p-values (testing the null) corrected for multiple testing.
+        Two-sided p-values corrected for multiple testing.
     """
 
     zscore = \

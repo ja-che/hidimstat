@@ -57,7 +57,7 @@ def test_pval_from_scale():
     scale = np.asarray([0.25, 0.5, 0.5])
 
     # Testing negativity: low p-value means that we may reject negativity.
-    pval, pval_corr = pval_from_scale(beta, scale, testing_sign='minus')
+    pval, pval_corr = pval_from_scale(beta, scale, testing_sign='plus')
     expected = np.asarray([[1.0, 0.022, 0.5], [1.0, 0.068, 0.5]])
 
     assert_almost_equal(pval, expected[0], decimal=2)
@@ -65,13 +65,13 @@ def test_pval_from_scale():
 
     # Testing positivity: low p-value means that we may reject positivity.
     one_minus_pval, one_minus_pval_corr = \
-        pval_from_scale(beta, scale, testing_sign='plus')
+        pval_from_scale(beta, scale, testing_sign='minus')
     expected = np.asarray([[0.0, 0.978, 0.5], [0.0, 0.932, 0.5]])
 
     assert_almost_equal(one_minus_pval, expected[0], decimal=2)
     assert_almost_equal(one_minus_pval_corr, expected[1], decimal=2)
 
-    # Testing error message: testing_sign must be 'plus' or 'minus'
+    # Testing error message: testing_sign must be 'minus' or 'plus'
     np.testing.assert_raises(ValueError, pval_from_scale, beta=beta,
                              scale=scale, testing_sign=None)
 
@@ -94,7 +94,7 @@ def test_pval_from_cb():
     cb_max = np.asarray([-1, 2, 1])
 
     # Testing negativity: low p-value means that we may reject negativity.
-    pval, pval_corr = pval_from_cb(cb_min, cb_max, testing_sign='minus')
+    pval, pval_corr = pval_from_cb(cb_min, cb_max, testing_sign='plus')
     expected = np.asarray([[1.0, 0.025, 0.5], [1.0, 0.075, 0.5]])
 
     assert_almost_equal(pval, expected[0], decimal=2)
@@ -102,13 +102,13 @@ def test_pval_from_cb():
 
     # Testing positivity: low p-value means that we may reject positivity.
     one_minus_pval, one_minus_pval_corr = \
-        pval_from_cb(cb_min, cb_max, testing_sign='plus')
+        pval_from_cb(cb_min, cb_max, testing_sign='minus')
     expected = np.asarray([[0.0, 0.975, 0.5], [0.0, 0.925, 0.5]])
 
     assert_almost_equal(one_minus_pval, expected[0], decimal=2)
     assert_almost_equal(one_minus_pval_corr, expected[1], decimal=2)
 
-    # Testing error message: testing_sign must be 'plus' or 'minus'
+    # Testing error message: testing_sign must be 'minus' or 'plus'
     np.testing.assert_raises(ValueError, pval_from_cb, cb_min=cb_min,
                              cb_max=cb_max, testing_sign=None)
 
@@ -144,7 +144,7 @@ def test_zscore_from_pval():
     pval = np.asarray([1.0, 0.025, 0.5])
 
     # Computing z-scores from p-value testing negativity
-    zscore = zscore_from_pval(pval, testing_sign='minus')
+    zscore = zscore_from_pval(pval, testing_sign='plus')
     expected = np.asarray([-np.inf, 1.96, 0])
 
     assert_almost_equal(zscore, expected, decimal=2)
@@ -152,12 +152,12 @@ def test_zscore_from_pval():
     one_minus_pval = np.asarray([0.0, 0.975, 0.5])
 
     # Computing z-scores from p-value testing positivity
-    zscore = zscore_from_pval(one_minus_pval, testing_sign='plus')
+    zscore = zscore_from_pval(one_minus_pval, testing_sign='minus')
     expected = np.asarray([-np.inf, 1.96, 0])
 
     assert_almost_equal(zscore, expected, decimal=2)
 
-    # Testing error message: testing_sign must be 'plus' or 'minus'
+    # Testing error message: testing_sign must be 'minus' or 'plus'
     np.testing.assert_raises(ValueError, zscore_from_pval,
                              one_sided_pval=pval, testing_sign=None)
 
@@ -182,7 +182,7 @@ def test_pval_from_two_sided_pval_and_sign():
 
     # One-sided p-value testing negativity from two-sided p-value and sign.
     pval = pval_from_two_sided_pval_and_sign(two_sided_pval, parameter_sign,
-                                             testing_sign='minus')
+                                             testing_sign='plus')
     expected = np.asarray([0.9875, 0.025, 0.75])
 
     assert_equal(pval, expected)
@@ -190,12 +190,12 @@ def test_pval_from_two_sided_pval_and_sign():
     # One-sided p-value testing positivity from two-sided p-value and sign.
     one_minus_pval = \
         pval_from_two_sided_pval_and_sign(two_sided_pval, parameter_sign,
-                                          testing_sign='plus')
+                                          testing_sign='minus')
     expected = np.asarray([0.0125, 0.975, 0.25])
 
     assert_equal(one_minus_pval, expected)
 
-    # Testing error message: testing_sign must be 'plus' or 'minus'
+    # Testing error message: testing_sign must be 'minus' or 'plus'
     np.testing.assert_raises(ValueError, pval_from_two_sided_pval_and_sign,
                              two_sided_pval=two_sided_pval,
                              parameter_sign=parameter_sign,
@@ -226,7 +226,7 @@ def test_two_sided_pval_from_pval():
 
     # Two-sided p-value from one-sided p-value testing negativity.
     two_sided_pval, two_sided_pval_corr = \
-        two_sided_pval_from_pval(pval, testing_sign='minus')
+        two_sided_pval_from_pval(pval, testing_sign='plus')
     expected = np.asarray([[0.0, 0.05, 1.0], [0.0, 0.15, 1.0]])
 
     assert_almost_equal(two_sided_pval, expected[0], decimal=2)
@@ -236,13 +236,13 @@ def test_two_sided_pval_from_pval():
 
     # Two-sided p-value from one-sided p-value testing positivity.
     two_sided_pval, two_sided_pval_corr = \
-        two_sided_pval_from_pval(one_minus_pval, testing_sign='plus')
+        two_sided_pval_from_pval(one_minus_pval, testing_sign='minus')
     expected = np.asarray([[0.0, 0.05, 1.0], [0.0, 0.15, 1.0]])
 
     assert_almost_equal(two_sided_pval, expected[0], decimal=2)
     assert_almost_equal(two_sided_pval_corr, expected[1], decimal=2)
 
-    # Testing error message: testing_sign must be 'plus' or 'minus'
+    # Testing error message: testing_sign must be 'minus' or 'plus'
     np.testing.assert_raises(ValueError, two_sided_pval_from_pval,
                              one_sided_pval=pval, testing_sign=None)
 

@@ -30,8 +30,7 @@ def test_standardized_svr():
 
     beta_hat, scale_hat = standardized_svr(X_init, y)
 
-    pval, pval_corr = pval_from_scale(beta_hat, scale_hat,
-                                      testing_sign='minus')
+    pval, pval_corr = pval_from_scale(beta_hat, scale_hat, testing_sign='plus')
 
     expected = 0.5 * np.ones(n_features)
     expected[:support_size] = 0.0

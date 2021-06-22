@@ -7,12 +7,12 @@ def aggregate_medians(list_one_sided_pval):
     Parameters
     -----------
     list_one_sided_pval : ndarray, shape (n_iter, n_features)
-        List of p-values, testing the negativity or positivity.
+        List of one-sided p-values.
 
     Returns
     -------
     one_sided_pval : ndarray, shape (n_features,)
-        p-values, testing the negativity or positivity (same testing as input).
+        Aggregated one-sided p-values.
 
     References
     ----------
@@ -38,7 +38,7 @@ def aggregate_quantiles(list_one_sided_pval, gamma_min=0.2):
     Parameters
     -----------
     list_one_sided_pval : ndarray, shape (n_iter, n_features)
-        List of p-values, testing the negativity or positivity.
+        List of one-sided p-values.
 
     gamma_min : float, optional (default=0.2)
         Lowest gamma-quantile being considered to compute the adaptive
@@ -47,7 +47,7 @@ def aggregate_quantiles(list_one_sided_pval, gamma_min=0.2):
     Returns
     -------
     one_sided_pval : ndarray, shape (n_features,)
-        p-values, testing the negativity or positivity (same testing as input).
+        Aggregated one-sided p-values.
 
     References
     ----------

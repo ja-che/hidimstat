@@ -52,12 +52,10 @@ def permutation_test_cv(X, y, n_permutations=1000,
     Returns
     -------
     pval_corr : ndarray, shape (n_features,)
-        Corrected p-values, testing the negativity (low p-values means
-        that we may reject negativity).
+        Corrected p-values, low p-values characterize positive effect sizes.
 
     one_minus_pval_corr : ndarray, shape (n_features,)
-        Corrected p-values, testing the positivity (low p-values means
-        that we may reject positivity).
+        Corrected p-values, low p-values characterize negative effect sizes.
     """
 
     if C is None:
@@ -111,12 +109,10 @@ def permutation_test(X, y, estimator, n_permutations=1000,
     Returns
     -------
     pval_corr : ndarray, shape (n_features,)
-        Corrected p-values, testing the negativity (low p-values means
-        that we may reject negativity).
+        Corrected p-values, low p-values characterize positive effect sizes.
 
     one_minus_pval_corr : ndarray, shape (n_features,)
-        Corrected p-values, testing the positivity (low p-values means
-        that we may reject positivity).
+        Corrected p-values, low p-values characterize negative effect sizes.
     """
 
     rng = np.random.default_rng(seed)
@@ -136,10 +132,10 @@ def permutation_test(X, y, estimator, n_permutations=1000,
 
     pval_corr = \
         pval_from_two_sided_pval_and_sign(two_sided_pval_corr, stat_sign,
-                                          testing_sign='minus')
+                                          testing_sign='plus')
     one_minus_pval_corr = \
         pval_from_two_sided_pval_and_sign(two_sided_pval_corr, stat_sign,
-                                          testing_sign='plus')
+                                          testing_sign='minus')
 
     return pval_corr, one_minus_pval_corr
 
@@ -170,7 +166,7 @@ def step_down_max_T(stat, permutation_stats):
     Returns
     -------
     two_sided_pval_corr : ndarray, shape (n_features,)
-        Two-sided p-values (testing the null) corrected for multiple testing.
+        Two-sided p-values corrected for multiple testing.
 
     References
     ----------
