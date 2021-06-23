@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>hidimstat.gaonkar &#8212; hidimstat 0.0.5 documentation</title>
+    <title>hidimstat.group_reid &#8212; hidimstat 0.0.5 documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/style.css" />
@@ -18,8 +18,8 @@
     <script src="../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="hidimstat.group_reid" href="hidimstat.group_reid.html" />
-    <link rel="prev" title="hidimstat.ensemble_clustered_inference" href="hidimstat.ensemble_clustered_inference.html" />
+    <link rel="next" title="hidimstat.multivariate_1D_simulation" href="hidimstat.multivariate_1D_simulation.html" />
+    <link rel="prev" title="hidimstat.gaonkar" href="hidimstat.gaonkar.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -92,41 +92,69 @@
   <div class="row">
     <div class="body col-md-12 content" role="main">
       
-  <div class="section" id="hidimstat-gaonkar">
-<h1>hidimstat.gaonkar<a class="headerlink" href="#hidimstat-gaonkar" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="hidimstat-group-reid">
+<h1>hidimstat.group_reid<a class="headerlink" href="#hidimstat-group-reid" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
-<dt id="hidimstat.gaonkar">
-<code class="sig-prename descclassname">hidimstat.</code><code class="sig-name descname">gaonkar</code><span class="sig-paren">(</span><em class="sig-param">X</em>, <em class="sig-param">y</em>, <em class="sig-param">rcond=0.001</em><span class="sig-paren">)</span><a class="headerlink" href="#hidimstat.gaonkar" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gaonkar 2013 procedure</p>
+<dt id="hidimstat.group_reid">
+<code class="sig-prename descclassname">hidimstat.</code><code class="sig-name descname">group_reid</code><span class="sig-paren">(</span><em class="sig-param">X</em>, <em class="sig-param">Y</em>, <em class="sig-param">fit_Y=True</em>, <em class="sig-param">stationary=True</em>, <em class="sig-param">method='simple'</em>, <em class="sig-param">order=1</em>, <em class="sig-param">eps=0.01</em>, <em class="sig-param">tol=0.0001</em>, <em class="sig-param">max_iter=10000.0</em>, <em class="sig-param">n_jobs=1</em>, <em class="sig-param">seed=0</em><span class="sig-paren">)</span><a class="headerlink" href="#hidimstat.group_reid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Estimation of the covariance matrix using group Reid procedure</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
 <dt><strong>X</strong><span class="classifier">ndarray, shape (n_samples, n_features)</span></dt><dd><p>Data.</p>
 </dd>
-<dt><strong>y</strong><span class="classifier">ndarray, shape (n_samples,)</span></dt><dd><p>Target.</p>
+<dt><strong>Y</strong><span class="classifier">ndarray, shape (n_samples, n_times)</span></dt><dd><p>Target.</p>
 </dd>
-<dt><strong>rcond</strong><span class="classifier">float, optional (default=1e-3)</span></dt><dd><p>Cutoff for small singular values. Singular values smaller
-than <cite>rcond</cite> * largest_singular_value are set to zero.</p>
+<dt><strong>fit_Y</strong><span class="classifier">bool, optional (default=True)</span></dt><dd><p>If True, Y will be regressed against X by MultiTaskLassoCV
+and the covariance matrix is estimated on the residuals.
+Otherwise, covariance matrix is estimated directly on Y.</p>
+</dd>
+<dt><strong>stationary</strong><span class="classifier">bool, optional (default=True)</span></dt><dd><p>If True, noise is considered to have the same magnitude for each
+time step. Otherwise, magnitude of the noise is not constant.</p>
+</dd>
+<dt><strong>method</strong><span class="classifier">str, optional (default=’simple’)</span></dt><dd><p>If ‘simple’, the correlation matrix is estimated by taking the
+median of the correlation between two consecutive time steps
+and the noise standard deviation for each time step is estimated
+by taking the median of the standard deviations for every time step.
+If ‘AR’, the order of the AR model is given by <cite>order</cite> and
+Yule-Walker method is used to estimate the covariance matrix.</p>
+</dd>
+<dt><strong>order</strong><span class="classifier">int, optional (default=1)</span></dt><dd><p>If <cite>stationary=True</cite> and <cite>method=AR</cite>, <cite>order</cite> gives the
+order of the estimated autoregressive model. <cite>order</cite> must
+be smaller than the number of time steps.</p>
+</dd>
+<dt><strong>eps</strong><span class="classifier">float, optional (default=1e-2)</span></dt><dd><p>Length of the cross-validation path.
+eps=1e-2 means that alpha_min / alpha_max = 1e-2.</p>
+</dd>
+<dt><strong>tol</strong><span class="classifier">float, optional (default=1e-4)</span></dt><dd><p>The tolerance for the optimization: if the updates are smaller
+than <cite>tol</cite>, the optimization code checks the dual gap for optimality
+and continues until it is smaller than <cite>tol</cite>.</p>
+</dd>
+<dt><strong>max_iter</strong><span class="classifier">int, optional (default=1e4)</span></dt><dd><p>The maximum number of iterations.</p>
+</dd>
+<dt><strong>n_jobs</strong><span class="classifier">int or None, optional (default=1)</span></dt><dd><p>Number of CPUs to use during the cross validation.</p>
+</dd>
+<dt><strong>seed: int, optional (default=0)</strong></dt><dd><p>Seed passed in the KFold object which is used to cross-validate
+LassoCV. This seed controls also the partitioning randomness.</p>
 </dd>
 </dl>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><dl class="simple">
-<dt><strong>beta_hat</strong><span class="classifier">array, shape (n_features,)</span></dt><dd><p>Estimated parameter vector.</p>
+<dt><strong>cov_hat</strong><span class="classifier">ndarray, shape (n_times, n_times)</span></dt><dd><p>Estimated covariance matrix.</p>
 </dd>
-<dt><strong>scale</strong><span class="classifier">ndarray, shape (n_features,)</span></dt><dd><p>Value of the standard deviation of the parameters.</p>
+<dt><strong>beta_hat</strong><span class="classifier">ndarray, shape (n_features, n_times)</span></dt><dd><p>Estimated parameter matrix.</p>
 </dd>
 </dl>
 </dd>
 </dl>
 <p class="rubric">References</p>
 <dl class="citation">
-<dt class="label" id="re5f932fc9454-1"><span class="brackets">1</span></dt>
-<dd><p>Gaonkar, B., &amp; Davatzikos, C. (2012, October). Deriving statistical
-significance maps for SVM based image classification and group
-comparisons. In International Conference on Medical Image Computing
-and Computer-Assisted Intervention (pp. 723-730). Springer, Berlin,
-Heidelberg.</p>
+<dt class="label" id="rc438b0ba1368-1"><span class="brackets">1</span></dt>
+<dd><p>Chevalier, J. A., Gramfort, A., Salmon, J., &amp; Thirion, B. (2020).
+Statistical control for spatio-temporal MEG/EEG source imaging with
+desparsified multi-task Lasso. In NeurIPS 2020-34h Conference on
+Neural Information Processing Systems.</p>
 </dd>
 </dl>
 </dd></dl>
