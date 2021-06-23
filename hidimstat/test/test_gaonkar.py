@@ -30,7 +30,7 @@ def test_gaonkar():
 
     beta_hat, scale_hat = gaonkar(X_init, y)
 
-    pval, pval_corr = pval_from_scale(beta_hat, scale_hat, testing_sign='plus')
+    pval, pval_corr, _, _ = pval_from_scale(beta_hat, scale_hat)
 
     expected = 0.5 * np.ones(n_features)
     expected[:support_size] = 0.0

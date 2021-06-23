@@ -7,7 +7,7 @@ from sklearn.utils.validation import check_memory
 from sklearn.linear_model import Lasso
 
 from .noise_std import reid, group_reid
-from .stat_tools import one_sided_pvals_from_two_sided_pval_and_sign
+from .stat_tools import pval_from_two_sided_pval_and_sign
 
 
 def _compute_all_residuals(X, alphas, gram, max_iter=5000, tol=1e-3,
@@ -286,17 +286,18 @@ def desparsified_group_lasso(X, Y, cov=None, test='chi2',
         Estimated parameter matrix.
 
     pval : ndarray, shape (n_features,)
-        One-sided p-values, low p-values characterize positive effect sizes.
+        p-value, with numerically accurate values for
+        positive effects (ie., for p-value close to zero).
 
     pval_corr : ndarray, shape (n_features,)
-        Corrected p-values, low p-values characterize positive effect sizes.
+        p-value corrected for multiple testing.
 
     one_minus_pval : ndarray, shape (n_features,)
-        One-sided p-values, low p-values characterize negative effect sizes.
+        One minus the p-value, with numerically accurate values
+        for negative effects (ie., for p-value close to one).
 
     one_minus_pval_corr : ndarray, shape (n_features,)
-        Corrected p-values, low p-values characterize negative effect sizes.
-
+        One minus the p-value corrected for multiple testing.
     Notes
     -----
     The columns of `X` and the matrix `Y` are always centered, this ensures
@@ -376,6 +377,6 @@ def desparsified_group_lasso(X, Y, cov=None, test='chi2',
 
     sign_beta = np.sign(np.sum(beta_hat, axis=1))
     pval, pval_corr, one_minus_pval, one_minus_pval_corr = \
-        one_sided_pvals_from_two_sided_pval_and_sign(two_sided_pval, sign_beta)
+        pval_from_two_sided_pval_and_sign(two_sided_pval, sign_beta)
 
     return beta_hat, pval, pval_corr, one_minus_pval, one_minus_pval_corr

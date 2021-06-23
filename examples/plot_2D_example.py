@@ -11,8 +11,7 @@ from sklearn.feature_extraction import image
 from sklearn.cluster import FeatureAgglomeration
 
 from hidimstat.scenario import multivariate_simulation
-from hidimstat.stat_tools import zscore_from_one_sided_pvals, pval_from_cb
-from hidimstat.stat_tools import zscore_from_pval
+from hidimstat.stat_tools import zscore_from_pval, pval_from_cb
 from hidimstat.desparsified_lasso import desparsified_lasso
 from hidimstat.clustered_inference import clustered_inference
 from hidimstat.ensemble_clustered_inference import ensemble_clustered_inference
@@ -111,10 +110,8 @@ def main():
     # computing the thresholds for feature selection
     correction_no_cluster = 1. / n_features
     correction_cluster = 1. / n_clusters
-    thr_c = zscore_from_pval((fwer_target / 2) * correction_cluster,
-                             testing_sign='minus')
-    thr_nc = zscore_from_pval((fwer_target / 2) * correction_no_cluster,
-                              testing_sign='minus')
+    thr_c = zscore_from_pval((fwer_target / 2) * correction_cluster)
+    thr_nc = zscore_from_pval((fwer_target / 2) * correction_no_cluster)
 
     X_init, y, beta, epsilon, _, _ = \
         multivariate_simulation(n_samples, shape, roi_size, sigma, smooth_X,
@@ -125,12 +122,10 @@ def main():
     beta_extended = weight_map_2D_extended(shape, roi_size, delta)
 
     # desparsified lasso
-    beta_hat, cb_min, cb_max = \
-        desparsified_lasso(X_init, y, n_jobs=n_jobs)
-    pval, pval_corr = pval_from_cb(cb_min, cb_max, testing_sign='minus')
-    one_minus_pval, one_minus_pval_corr = \
-        pval_from_cb(cb_min, cb_max, testing_sign='plus')
-    zscore = zscore_from_one_sided_pvals(pval, one_minus_pval)
+    beta_hat, cb_min, cb_max = desparsified_lasso(X_init, y, n_jobs=n_jobs)
+    pval, pval_corr, one_minus_pval, one_minus_pval_corr = \
+        pval_from_cb(cb_min, cb_max)
+    zscore = zscore_from_pval(pval, one_minus_pval)
     selected_dl = zscore > thr_nc
     selected_dl = np.logical_or(pval_corr < fwer_target / 2,
                                 one_minus_pval_corr < fwer_target / 2)
@@ -143,7 +138,7 @@ def main():
                                 linkage='ward')
     beta_hat, pval, pval_corr, one_minus_pval, one_minus_pval_corr = \
         clustered_inference(X_init, y, ward, n_clusters)
-    zscore = zscore_from_one_sided_pvals(pval, one_minus_pval)
+    zscore = zscore_from_pval(pval, one_minus_pval)
     selected_cdl = zscore > thr_c
     selected_cdl = np.logical_or(pval_corr < fwer_target / 2,
                                  one_minus_pval_corr < fwer_target / 2)
@@ -151,8 +146,8 @@ def main():
     # ensemble of clustered desparsified lasso (EnCluDL)
     beta_hat, pval, pval_corr, one_minus_pval, one_minus_pval_corr = \
         ensemble_clustered_inference(X_init, y, ward,
-                                     n_clusters, train_size=0.1)
-    zscore = zscore_from_one_sided_pvals(pval, one_minus_pval)
+                                     n_clusters, train_size=0.3)
+    zscore = zscore_from_pval(pval, one_minus_pval)
     selected_ecdl = zscore > thr_c
     selected_ecdl = np.logical_or(pval_corr < fwer_target / 2,
                                   one_minus_pval_corr < fwer_target / 2)

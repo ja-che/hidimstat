@@ -108,16 +108,18 @@ def ensemble_clustered_inference(X_init, y, ward, n_clusters,
         Estimated parameter vector or matrix.
 
     pval : ndarray, shape (n_features,)
-        One-sided p-values, low p-values characterize positive effect sizes.
+        p-value, with numerically accurate values for
+        positive effects (ie., for p-value close to zero).
 
     pval_corr : ndarray, shape (n_features,)
-        Corrected p-values, low p-values characterize positive effect sizes.
+        p-value corrected for multiple testing.
 
     one_minus_pval : ndarray, shape (n_features,)
-        One-sided p-values, low p-values characterize negative effect sizes.
+        One minus the p-value, with numerically accurate values
+        for negative effects (ie., for p-value close to one).
 
     one_minus_pval_corr : ndarray, shape (n_features,)
-        Corrected p-values, low p-values characterize negative effect sizes.
+        One minus the p-value corrected for multiple testing.
 
     References
     ----------

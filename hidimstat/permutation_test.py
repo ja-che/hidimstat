@@ -52,10 +52,12 @@ def permutation_test_cv(X, y, n_permutations=1000,
     Returns
     -------
     pval_corr : ndarray, shape (n_features,)
-        Corrected p-values, low p-values characterize positive effect sizes.
+        p-value corrected for multiple testing, with numerically accurate
+        values for positive effects (ie., for p-value close to zero).
 
     one_minus_pval_corr : ndarray, shape (n_features,)
-        Corrected p-values, low p-values characterize negative effect sizes.
+        One minus the corrected p-value, with numerically accurate
+        values for negative effects (ie., for p-value close to one).
     """
 
     if C is None:
@@ -109,10 +111,12 @@ def permutation_test(X, y, estimator, n_permutations=1000,
     Returns
     -------
     pval_corr : ndarray, shape (n_features,)
-        Corrected p-values, low p-values characterize positive effect sizes.
+        p-value corrected for multiple testing, with numerically accurate
+        values for positive effects (ie., for p-value close to zero).
 
     one_minus_pval_corr : ndarray, shape (n_features,)
-        Corrected p-values, low p-values characterize negative effect sizes.
+        One minus the corrected p-value, with numerically accurate
+        values for negative effects (ie., for p-value close to one).
     """
 
     rng = np.random.default_rng(seed)
@@ -130,12 +134,8 @@ def permutation_test(X, y, estimator, n_permutations=1000,
 
     stat_sign = np.sign(stat)
 
-    pval_corr = \
-        pval_from_two_sided_pval_and_sign(two_sided_pval_corr, stat_sign,
-                                          testing_sign='plus')
-    one_minus_pval_corr = \
-        pval_from_two_sided_pval_and_sign(two_sided_pval_corr, stat_sign,
-                                          testing_sign='minus')
+    pval_corr, _, one_minus_pval_corr, _ = \
+        pval_from_two_sided_pval_and_sign(two_sided_pval_corr, stat_sign)
 
     return pval_corr, one_minus_pval_corr
 

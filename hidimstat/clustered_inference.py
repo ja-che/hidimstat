@@ -43,11 +43,10 @@ def _hd_inference(X, y, method, n_jobs=1, memory=None, verbose=0, **kwargs):
     if method == 'desparsified-lasso':
 
         beta_hat, cb_min, cb_max = \
-            desparsified_lasso(X, y, n_jobs=n_jobs, memory=memory,
-                               verbose=verbose, **kwargs)
-        pval, pval_corr = pval_from_cb(cb_min, cb_max, testing_sign='plus')
-        one_minus_pval, one_minus_pval_corr = \
-            pval_from_cb(cb_min, cb_max, testing_sign='minus')
+            desparsified_lasso(X, y, confidence=0.95, n_jobs=n_jobs,
+                               memory=memory, verbose=verbose, **kwargs)
+        pval, pval_corr, one_minus_pval, one_minus_pval_corr = \
+            pval_from_cb(cb_min, cb_max, confidence=0.95)
 
     elif method == 'desparsified-group-lasso':
 
@@ -157,16 +156,18 @@ def clustered_inference(X_init, y, ward, n_clusters, train_size=0.3,
         Estimated parameter vector or matrix.
 
     pval : ndarray, shape (n_features,)
-        One-sided p-values, low p-values characterize positive effect sizes.
+        p-value, with numerically accurate values for
+        positive effects (ie., for p-value close to zero).
 
     pval_corr : ndarray, shape (n_features,)
-        Corrected p-values, low p-values characterize positive effect sizes.
+        p-value corrected for multiple testing.
 
     one_minus_pval : ndarray, shape (n_features,)
-        One-sided p-values, low p-values characterize negative effect sizes.
+        One minus the p-value, with numerically accurate values
+        for negative effects (ie., for p-value close to one).
 
     one_minus_pval_corr : ndarray, shape (n_features,)
-        Corrected p-values, low p-values characterize negative effect sizes.
+        One minus the p-value corrected for multiple testing.
 
     References
     ----------
