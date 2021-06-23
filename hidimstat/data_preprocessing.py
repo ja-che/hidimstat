@@ -36,17 +36,19 @@ def preprocess_meg_eeg_data(evoked, forward, noise_cov, loose=0., depth=0.,
     rank : None or int
         Rank reduction of the whitener. If None rank is estimated from data.
 
-
-
     Returns
     -------
+    G : array, shape (n_channels, n_dipoles)
+        The preprocessed gain matrix.
 
+    M : array, shape (n_channels, n_times)
+        The whitened MEG/EEG measurements.
     """
 
     all_ch_names = evoked.ch_names
 
     # Handle depth weighting and whitening (here is no weights)
-    forward, gain, gain_info, whitener, source_weighting, mask = \
+    forward, G, gain_info, whitener, source_weighting, mask = \
         _prepare_gain(forward, evoked.info, noise_cov, pca=pca, depth=depth,
                       loose=loose, weights=None, weights_min=None, rank=rank)
 
@@ -56,4 +58,4 @@ def preprocess_meg_eeg_data(evoked, forward, noise_cov, loose=0., depth=0.,
     M = evoked.data[sel]
     M = np.dot(whitener, M)
 
-    return gain, M
+    return G, M
