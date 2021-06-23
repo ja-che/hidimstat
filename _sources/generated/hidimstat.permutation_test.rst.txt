@@ -1,6 +1,24 @@
 hidimstat.permutation\_test
 ===========================
 
-.. currentmodule:: hidimstat
+.. automodule:: hidimstat.permutation_test
 
-.. autofunction:: permutation_test
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      permutation_test
+      permutation_test_cv
+      step_down_max_T
+   
+   
+
+   
+   
+   
+
+   
+   
+   
