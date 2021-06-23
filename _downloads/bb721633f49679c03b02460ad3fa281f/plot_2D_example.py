@@ -11,12 +11,10 @@ from sklearn.feature_extraction import image
 from sklearn.cluster import FeatureAgglomeration
 
 from hidimstat.scenario import multivariate_simulation
-from hidimstat.stat_tools import zscore_from_sf_and_cdf
+from hidimstat.stat_tools import zscore_from_pval, pval_from_cb
 from hidimstat.desparsified_lasso import desparsified_lasso
-from hidimstat.stat_tools import sf_from_cb, cdf_from_cb
 from hidimstat.clustered_inference import clustered_inference
 from hidimstat.ensemble_clustered_inference import ensemble_clustered_inference
-from hidimstat.stat_tools import zscore_from_sf
 from hidimstat.noise_std import empirical_snr
 
 
@@ -112,25 +110,25 @@ def main():
     # computing the thresholds for feature selection
     correction_no_cluster = 1. / n_features
     correction_cluster = 1. / n_clusters
-    thr_c = zscore_from_sf((fwer_target / 2) * correction_cluster)
-    thr_nc = zscore_from_sf((fwer_target / 2) * correction_no_cluster)
+    thr_c = zscore_from_pval((fwer_target / 2) * correction_cluster)
+    thr_nc = zscore_from_pval((fwer_target / 2) * correction_no_cluster)
 
     X_init, y, beta, epsilon, _, _ = \
-        multivariate_simulation(n_samples, shape, roi_size, sigma, smooth_X)
+        multivariate_simulation(n_samples, shape, roi_size, sigma, smooth_X,
+                                seed=1)
 
     empirical_snr(X_init, y, beta, epsilon)
 
     beta_extended = weight_map_2D_extended(shape, roi_size, delta)
 
     # desparsified lasso
-    beta_hat, cb_min, cb_max = \
-        desparsified_lasso(X_init, y, n_jobs=n_jobs)
-    sf, sf_corr = sf_from_cb(cb_min, cb_max)
-    cdf, cdf_corr = cdf_from_cb(cb_min, cb_max)
-    zscore = zscore_from_sf_and_cdf(sf, cdf)
+    beta_hat, cb_min, cb_max = desparsified_lasso(X_init, y, n_jobs=n_jobs)
+    pval, pval_corr, one_minus_pval, one_minus_pval_corr = \
+        pval_from_cb(cb_min, cb_max)
+    zscore = zscore_from_pval(pval, one_minus_pval)
     selected_dl = zscore > thr_nc
-    selected_dl = np.logical_or(sf_corr < fwer_target / 2,
-                                cdf_corr < fwer_target / 2)
+    selected_dl = np.logical_or(pval_corr < fwer_target / 2,
+                                one_minus_pval_corr < fwer_target / 2)
 
     # clustered desparsified lasso (CluDL)
     connectivity = image.grid_to_graph(n_x=shape[0],
@@ -138,21 +136,21 @@ def main():
     ward = FeatureAgglomeration(n_clusters=n_clusters,
                                 connectivity=connectivity,
                                 linkage='ward')
-    beta_hat, sf, sf_corr, cdf, cdf_corr = \
+    beta_hat, pval, pval_corr, one_minus_pval, one_minus_pval_corr = \
         clustered_inference(X_init, y, ward, n_clusters)
-    zscore = zscore_from_sf_and_cdf(sf, cdf)
+    zscore = zscore_from_pval(pval, one_minus_pval)
     selected_cdl = zscore > thr_c
-    selected_cdl = np.logical_or(sf_corr < fwer_target / 2,
-                                 cdf_corr < fwer_target / 2)
+    selected_cdl = np.logical_or(pval_corr < fwer_target / 2,
+                                 one_minus_pval_corr < fwer_target / 2)
 
     # ensemble of clustered desparsified lasso (EnCluDL)
-    beta_hat, sf, sf_corr, cdf, cdf_corr = \
+    beta_hat, pval, pval_corr, one_minus_pval, one_minus_pval_corr = \
         ensemble_clustered_inference(X_init, y, ward,
-                                     n_clusters, train_size=0.1)
-    zscore = zscore_from_sf_and_cdf(sf, cdf)
+                                     n_clusters, train_size=0.3)
+    zscore = zscore_from_pval(pval, one_minus_pval)
     selected_ecdl = zscore > thr_c
-    selected_ecdl = np.logical_or(sf_corr < fwer_target / 2,
-                                  cdf_corr < fwer_target / 2)
+    selected_ecdl = np.logical_or(pval_corr < fwer_target / 2,
+                                  one_minus_pval_corr < fwer_target / 2)
 
     maps = []
     titles = []

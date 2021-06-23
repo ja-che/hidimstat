@@ -129,11 +129,11 @@ The frequency of the messages increases with the verbosity level.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><dl class="simple">
-<dt><strong>sf_corr</strong><span class="classifier">ndarray, shape (n_features,)</span></dt><dd><p>Corrected survival function values with respect to the
-coefficients of the parameter vector</p>
+<dt><strong>pval_corr</strong><span class="classifier">ndarray, shape (n_features,)</span></dt><dd><p>p-value corrected for multiple testing, with numerically accurate
+values for positive effects (ie., for p-value close to zero).</p>
 </dd>
-<dt><strong>cdf_corr</strong><span class="classifier">ndarray, shape (n_features,)</span></dt><dd><p>Corrected cumulative distribution function values with respect to the
-coefficients of the parameter vector</p>
+<dt><strong>one_minus_pval_corr</strong><span class="classifier">ndarray, shape (n_features,)</span></dt><dd><p>One minus the corrected p-value, with numerically accurate
+values for negative effects (ie., for p-value close to one).</p>
 </dd>
 </dl>
 </dd>

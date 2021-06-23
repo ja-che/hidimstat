@@ -101,31 +101,31 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>n_samples</strong><span class="classifier">int</span></dt><dd><p>Number of samples</p>
+<dt><strong>n_samples</strong><span class="classifier">int</span></dt><dd><p>Number of samples.</p>
 </dd>
-<dt><strong>n_features</strong><span class="classifier">int</span></dt><dd><p>Number of features</p>
+<dt><strong>n_features</strong><span class="classifier">int</span></dt><dd><p>Number of features.</p>
 </dd>
-<dt><strong>support_size</strong><span class="classifier">int</span></dt><dd><p>Size of the support</p>
+<dt><strong>support_size</strong><span class="classifier">int</span></dt><dd><p>Size of the support.</p>
 </dd>
-<dt><strong>sigma</strong><span class="classifier">float</span></dt><dd><p>Standard deviation of the additive White Gaussian noise</p>
+<dt><strong>sigma</strong><span class="classifier">float</span></dt><dd><p>Standard deviation of the additive White Gaussian noise.</p>
 </dd>
-<dt><strong>rho: float</strong></dt><dd><p>Level of correlation between neighboring features (if not <cite>shuffle</cite>)</p>
+<dt><strong>rho: float</strong></dt><dd><p>Level of correlation between neighboring features (if not <cite>shuffle</cite>).</p>
 </dd>
-<dt><strong>shuffle</strong><span class="classifier">bool</span></dt><dd><p>Shuffle the features (changing data structure) if True.</p>
+<dt><strong>shuffle</strong><span class="classifier">bool</span></dt><dd><p>Shuffle the features (breaking 1D data structure) if True.</p>
 </dd>
-<dt><strong>seed</strong><span class="classifier">int</span></dt><dd><p>Seed used for generating design matrix and noise</p>
+<dt><strong>seed</strong><span class="classifier">int</span></dt><dd><p>Seed used for generating design matrix and noise.</p>
 </dd>
 </dl>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><dl class="simple">
-<dt><strong>X</strong><span class="classifier">ndarray, shape (n_samples, n_features)</span></dt><dd><p>Design matrix</p>
+<dt><strong>X</strong><span class="classifier">ndarray, shape (n_samples, n_features)</span></dt><dd><p>Design matrix.</p>
 </dd>
-<dt><strong>y</strong><span class="classifier">ndarray, shape (n_samples,)</span></dt><dd><p>Target</p>
+<dt><strong>y</strong><span class="classifier">ndarray, shape (n_samples,)</span></dt><dd><p>Target.</p>
 </dd>
-<dt><strong>beta</strong><span class="classifier">ndarray, shape (n_features,)</span></dt><dd><p>Parameter vector</p>
+<dt><strong>beta</strong><span class="classifier">ndarray, shape (n_features,)</span></dt><dd><p>Parameter vector.</p>
 </dd>
-<dt><strong>noise</strong><span class="classifier">ndarray, shape (n_samples,)</span></dt><dd><p>Additive white Gaussian noise</p>
+<dt><strong>noise</strong><span class="classifier">ndarray, shape (n_samples,)</span></dt><dd><p>Additive white Gaussian noise.</p>
 </dd>
 </dl>
 </dd>

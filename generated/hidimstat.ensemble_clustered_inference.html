@@ -152,13 +152,15 @@ runing the clustered inference.</p>
 <dd class="field-even"><dl class="simple">
 <dt><strong>beta_hat</strong><span class="classifier">ndarray, shape (n_features,) or (n_features, n_times)</span></dt><dd><p>Estimated parameter vector or matrix.</p>
 </dd>
-<dt><strong>sf</strong><span class="classifier">ndarray, shape (n_features,)</span></dt><dd><p>Survival function values of every feature.</p>
+<dt><strong>pval</strong><span class="classifier">ndarray, shape (n_features,)</span></dt><dd><p>p-value, with numerically accurate values for
+positive effects (ie., for p-value close to zero).</p>
 </dd>
-<dt><strong>sf_corr</strong><span class="classifier">ndarray, shape (n_features,)</span></dt><dd><p>Corrected survival function values of every feature.</p>
+<dt><strong>pval_corr</strong><span class="classifier">ndarray, shape (n_features,)</span></dt><dd><p>p-value corrected for multiple testing.</p>
 </dd>
-<dt><strong>cdf</strong><span class="classifier">ndarray, shape (n_features,)</span></dt><dd><p>Cumulative distribution function values of every feature.</p>
+<dt><strong>one_minus_pval</strong><span class="classifier">ndarray, shape (n_features,)</span></dt><dd><p>One minus the p-value, with numerically accurate values
+for negative effects (ie., for p-value close to one).</p>
 </dd>
-<dt><strong>cdf_corr</strong><span class="classifier">ndarray, shape (n_features,)</span></dt><dd><p>Corrected cumulative distribution function values of every feature.</p>
+<dt><strong>one_minus_pval_corr</strong><span class="classifier">ndarray, shape (n_features,)</span></dt><dd><p>One minus the p-value corrected for multiple testing.</p>
 </dd>
 </dl>
 </dd>

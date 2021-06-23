@@ -21,7 +21,7 @@
 Support recovery on structured data (2D)
 ========================================
 
-.. GENERATED FROM PYTHON SOURCE LINES 7-183
+.. GENERATED FROM PYTHON SOURCE LINES 7-181
 
 
 
@@ -36,86 +36,86 @@ Support recovery on structured data (2D)
 
  .. code-block:: none
 
-    /usr/local/lib/python3.8/site-packages/numpy/core/_asarray.py:102: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
-      return array(a, dtype, copy=False, order=order)
+    /usr/local/lib/python3.8/site-packages/hidimstat/desparsified_lasso.py:32: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
+      results = np.asarray(results)
     Clustered inference: n_clusters = 200, inference method = desparsified-lasso, seed = 0
-    /usr/local/lib/python3.8/site-packages/numpy/core/_asarray.py:102: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
-      return array(a, dtype, copy=False, order=order)
+    /usr/local/lib/python3.8/site-packages/hidimstat/desparsified_lasso.py:32: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
+      results = np.asarray(results)
     Clustered inference: n_clusters = 200, inference method = desparsified-lasso, seed = 0
-    /usr/local/lib/python3.8/site-packages/numpy/core/_asarray.py:102: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
-      return array(a, dtype, copy=False, order=order)
+    /usr/local/lib/python3.8/site-packages/hidimstat/desparsified_lasso.py:32: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
+      results = np.asarray(results)
     Clustered inference: n_clusters = 200, inference method = desparsified-lasso, seed = 1
-    /usr/local/lib/python3.8/site-packages/numpy/core/_asarray.py:102: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
-      return array(a, dtype, copy=False, order=order)
+    /usr/local/lib/python3.8/site-packages/hidimstat/desparsified_lasso.py:32: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
+      results = np.asarray(results)
     Clustered inference: n_clusters = 200, inference method = desparsified-lasso, seed = 2
-    /usr/local/lib/python3.8/site-packages/numpy/core/_asarray.py:102: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
-      return array(a, dtype, copy=False, order=order)
+    /usr/local/lib/python3.8/site-packages/hidimstat/desparsified_lasso.py:32: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
+      results = np.asarray(results)
     Clustered inference: n_clusters = 200, inference method = desparsified-lasso, seed = 3
-    /usr/local/lib/python3.8/site-packages/numpy/core/_asarray.py:102: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
-      return array(a, dtype, copy=False, order=order)
+    /usr/local/lib/python3.8/site-packages/hidimstat/desparsified_lasso.py:32: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
+      results = np.asarray(results)
     Clustered inference: n_clusters = 200, inference method = desparsified-lasso, seed = 4
-    /usr/local/lib/python3.8/site-packages/numpy/core/_asarray.py:102: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
-      return array(a, dtype, copy=False, order=order)
+    /usr/local/lib/python3.8/site-packages/hidimstat/desparsified_lasso.py:32: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
+      results = np.asarray(results)
     Clustered inference: n_clusters = 200, inference method = desparsified-lasso, seed = 5
-    /usr/local/lib/python3.8/site-packages/numpy/core/_asarray.py:102: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
-      return array(a, dtype, copy=False, order=order)
+    /usr/local/lib/python3.8/site-packages/hidimstat/desparsified_lasso.py:32: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
+      results = np.asarray(results)
     Clustered inference: n_clusters = 200, inference method = desparsified-lasso, seed = 6
-    /usr/local/lib/python3.8/site-packages/numpy/core/_asarray.py:102: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
-      return array(a, dtype, copy=False, order=order)
+    /usr/local/lib/python3.8/site-packages/hidimstat/desparsified_lasso.py:32: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
+      results = np.asarray(results)
     Clustered inference: n_clusters = 200, inference method = desparsified-lasso, seed = 7
-    /usr/local/lib/python3.8/site-packages/numpy/core/_asarray.py:102: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
-      return array(a, dtype, copy=False, order=order)
+    /usr/local/lib/python3.8/site-packages/hidimstat/desparsified_lasso.py:32: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
+      results = np.asarray(results)
     Clustered inference: n_clusters = 200, inference method = desparsified-lasso, seed = 8
-    /usr/local/lib/python3.8/site-packages/numpy/core/_asarray.py:102: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
-      return array(a, dtype, copy=False, order=order)
+    /usr/local/lib/python3.8/site-packages/hidimstat/desparsified_lasso.py:32: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
+      results = np.asarray(results)
     Clustered inference: n_clusters = 200, inference method = desparsified-lasso, seed = 9
-    /usr/local/lib/python3.8/site-packages/numpy/core/_asarray.py:102: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
-      return array(a, dtype, copy=False, order=order)
+    /usr/local/lib/python3.8/site-packages/hidimstat/desparsified_lasso.py:32: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
+      results = np.asarray(results)
     Clustered inference: n_clusters = 200, inference method = desparsified-lasso, seed = 10
-    /usr/local/lib/python3.8/site-packages/numpy/core/_asarray.py:102: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
-      return array(a, dtype, copy=False, order=order)
+    /usr/local/lib/python3.8/site-packages/hidimstat/desparsified_lasso.py:32: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
+      results = np.asarray(results)
     Clustered inference: n_clusters = 200, inference method = desparsified-lasso, seed = 11
-    /usr/local/lib/python3.8/site-packages/numpy/core/_asarray.py:102: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
-      return array(a, dtype, copy=False, order=order)
+    /usr/local/lib/python3.8/site-packages/hidimstat/desparsified_lasso.py:32: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
+      results = np.asarray(results)
     Clustered inference: n_clusters = 200, inference method = desparsified-lasso, seed = 12
-    /usr/local/lib/python3.8/site-packages/numpy/core/_asarray.py:102: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
-      return array(a, dtype, copy=False, order=order)
+    /usr/local/lib/python3.8/site-packages/hidimstat/desparsified_lasso.py:32: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
+      results = np.asarray(results)
     Clustered inference: n_clusters = 200, inference method = desparsified-lasso, seed = 13
-    /usr/local/lib/python3.8/site-packages/numpy/core/_asarray.py:102: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
-      return array(a, dtype, copy=False, order=order)
+    /usr/local/lib/python3.8/site-packages/hidimstat/desparsified_lasso.py:32: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
+      results = np.asarray(results)
     Clustered inference: n_clusters = 200, inference method = desparsified-lasso, seed = 14
-    /usr/local/lib/python3.8/site-packages/numpy/core/_asarray.py:102: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
-      return array(a, dtype, copy=False, order=order)
+    /usr/local/lib/python3.8/site-packages/hidimstat/desparsified_lasso.py:32: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
+      results = np.asarray(results)
     Clustered inference: n_clusters = 200, inference method = desparsified-lasso, seed = 15
-    /usr/local/lib/python3.8/site-packages/numpy/core/_asarray.py:102: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
-      return array(a, dtype, copy=False, order=order)
+    /usr/local/lib/python3.8/site-packages/hidimstat/desparsified_lasso.py:32: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
+      results = np.asarray(results)
     Clustered inference: n_clusters = 200, inference method = desparsified-lasso, seed = 16
-    /usr/local/lib/python3.8/site-packages/numpy/core/_asarray.py:102: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
-      return array(a, dtype, copy=False, order=order)
+    /usr/local/lib/python3.8/site-packages/hidimstat/desparsified_lasso.py:32: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
+      results = np.asarray(results)
     Clustered inference: n_clusters = 200, inference method = desparsified-lasso, seed = 17
-    /usr/local/lib/python3.8/site-packages/numpy/core/_asarray.py:102: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
-      return array(a, dtype, copy=False, order=order)
+    /usr/local/lib/python3.8/site-packages/hidimstat/desparsified_lasso.py:32: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
+      results = np.asarray(results)
     Clustered inference: n_clusters = 200, inference method = desparsified-lasso, seed = 18
-    /usr/local/lib/python3.8/site-packages/numpy/core/_asarray.py:102: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
-      return array(a, dtype, copy=False, order=order)
+    /usr/local/lib/python3.8/site-packages/hidimstat/desparsified_lasso.py:32: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
+      results = np.asarray(results)
     Clustered inference: n_clusters = 200, inference method = desparsified-lasso, seed = 19
-    /usr/local/lib/python3.8/site-packages/numpy/core/_asarray.py:102: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
-      return array(a, dtype, copy=False, order=order)
+    /usr/local/lib/python3.8/site-packages/hidimstat/desparsified_lasso.py:32: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
+      results = np.asarray(results)
     Clustered inference: n_clusters = 200, inference method = desparsified-lasso, seed = 20
-    /usr/local/lib/python3.8/site-packages/numpy/core/_asarray.py:102: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
-      return array(a, dtype, copy=False, order=order)
+    /usr/local/lib/python3.8/site-packages/hidimstat/desparsified_lasso.py:32: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
+      results = np.asarray(results)
     Clustered inference: n_clusters = 200, inference method = desparsified-lasso, seed = 21
-    /usr/local/lib/python3.8/site-packages/numpy/core/_asarray.py:102: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
-      return array(a, dtype, copy=False, order=order)
+    /usr/local/lib/python3.8/site-packages/hidimstat/desparsified_lasso.py:32: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
+      results = np.asarray(results)
     Clustered inference: n_clusters = 200, inference method = desparsified-lasso, seed = 22
-    /usr/local/lib/python3.8/site-packages/numpy/core/_asarray.py:102: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
-      return array(a, dtype, copy=False, order=order)
+    /usr/local/lib/python3.8/site-packages/hidimstat/desparsified_lasso.py:32: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
+      results = np.asarray(results)
     Clustered inference: n_clusters = 200, inference method = desparsified-lasso, seed = 23
-    /usr/local/lib/python3.8/site-packages/numpy/core/_asarray.py:102: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
-      return array(a, dtype, copy=False, order=order)
+    /usr/local/lib/python3.8/site-packages/hidimstat/desparsified_lasso.py:32: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
+      results = np.asarray(results)
     Clustered inference: n_clusters = 200, inference method = desparsified-lasso, seed = 24
-    /usr/local/lib/python3.8/site-packages/numpy/core/_asarray.py:102: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
-      return array(a, dtype, copy=False, order=order)
+    /usr/local/lib/python3.8/site-packages/hidimstat/desparsified_lasso.py:32: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
+      results = np.asarray(results)
 
 
 
@@ -133,12 +133,10 @@ Support recovery on structured data (2D)
     from sklearn.cluster import FeatureAgglomeration
 
     from hidimstat.scenario import multivariate_simulation
-    from hidimstat.stat_tools import zscore_from_sf_and_cdf
+    from hidimstat.stat_tools import zscore_from_pval, pval_from_cb
     from hidimstat.desparsified_lasso import desparsified_lasso
-    from hidimstat.stat_tools import sf_from_cb, cdf_from_cb
     from hidimstat.clustered_inference import clustered_inference
     from hidimstat.ensemble_clustered_inference import ensemble_clustered_inference
-    from hidimstat.stat_tools import zscore_from_sf
     from hidimstat.noise_std import empirical_snr
 
 
@@ -234,25 +232,25 @@ Support recovery on structured data (2D)
         # computing the thresholds for feature selection
         correction_no_cluster = 1. / n_features
         correction_cluster = 1. / n_clusters
-        thr_c = zscore_from_sf((fwer_target / 2) * correction_cluster)
-        thr_nc = zscore_from_sf((fwer_target / 2) * correction_no_cluster)
+        thr_c = zscore_from_pval((fwer_target / 2) * correction_cluster)
+        thr_nc = zscore_from_pval((fwer_target / 2) * correction_no_cluster)
 
         X_init, y, beta, epsilon, _, _ = \
-            multivariate_simulation(n_samples, shape, roi_size, sigma, smooth_X)
+            multivariate_simulation(n_samples, shape, roi_size, sigma, smooth_X,
+                                    seed=1)
 
         empirical_snr(X_init, y, beta, epsilon)
 
         beta_extended = weight_map_2D_extended(shape, roi_size, delta)
 
         # desparsified lasso
-        beta_hat, cb_min, cb_max = \
-            desparsified_lasso(X_init, y, n_jobs=n_jobs)
-        sf, sf_corr = sf_from_cb(cb_min, cb_max)
-        cdf, cdf_corr = cdf_from_cb(cb_min, cb_max)
-        zscore = zscore_from_sf_and_cdf(sf, cdf)
+        beta_hat, cb_min, cb_max = desparsified_lasso(X_init, y, n_jobs=n_jobs)
+        pval, pval_corr, one_minus_pval, one_minus_pval_corr = \
+            pval_from_cb(cb_min, cb_max)
+        zscore = zscore_from_pval(pval, one_minus_pval)
         selected_dl = zscore > thr_nc
-        selected_dl = np.logical_or(sf_corr < fwer_target / 2,
-                                    cdf_corr < fwer_target / 2)
+        selected_dl = np.logical_or(pval_corr < fwer_target / 2,
+                                    one_minus_pval_corr < fwer_target / 2)
 
         # clustered desparsified lasso (CluDL)
         connectivity = image.grid_to_graph(n_x=shape[0],
@@ -260,21 +258,21 @@ Support recovery on structured data (2D)
         ward = FeatureAgglomeration(n_clusters=n_clusters,
                                     connectivity=connectivity,
                                     linkage='ward')
-        beta_hat, sf, sf_corr, cdf, cdf_corr = \
+        beta_hat, pval, pval_corr, one_minus_pval, one_minus_pval_corr = \
             clustered_inference(X_init, y, ward, n_clusters)
-        zscore = zscore_from_sf_and_cdf(sf, cdf)
+        zscore = zscore_from_pval(pval, one_minus_pval)
         selected_cdl = zscore > thr_c
-        selected_cdl = np.logical_or(sf_corr < fwer_target / 2,
-                                     cdf_corr < fwer_target / 2)
+        selected_cdl = np.logical_or(pval_corr < fwer_target / 2,
+                                     one_minus_pval_corr < fwer_target / 2)
 
         # ensemble of clustered desparsified lasso (EnCluDL)
-        beta_hat, sf, sf_corr, cdf, cdf_corr = \
+        beta_hat, pval, pval_corr, one_minus_pval, one_minus_pval_corr = \
             ensemble_clustered_inference(X_init, y, ward,
-                                         n_clusters, train_size=0.1)
-        zscore = zscore_from_sf_and_cdf(sf, cdf)
+                                         n_clusters, train_size=0.3)
+        zscore = zscore_from_pval(pval, one_minus_pval)
         selected_ecdl = zscore > thr_c
-        selected_ecdl = np.logical_or(sf_corr < fwer_target / 2,
-                                      cdf_corr < fwer_target / 2)
+        selected_ecdl = np.logical_or(pval_corr < fwer_target / 2,
+                                      one_minus_pval_corr < fwer_target / 2)
 
         maps = []
         titles = []
@@ -306,7 +304,7 @@ Support recovery on structured data (2D)
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 1 minutes  52.013 seconds)
+   **Total running time of the script:** ( 1 minutes  25.897 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_2D_example.py:

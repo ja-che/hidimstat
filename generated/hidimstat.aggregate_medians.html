@@ -96,18 +96,18 @@
 <h1>hidimstat.aggregate_medians<a class="headerlink" href="#hidimstat-aggregate-medians" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
 <dt id="hidimstat.aggregate_medians">
-<code class="sig-prename descclassname">hidimstat.</code><code class="sig-name descname">aggregate_medians</code><span class="sig-paren">(</span><em class="sig-param">list_sf</em><span class="sig-paren">)</span><a class="headerlink" href="#hidimstat.aggregate_medians" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">hidimstat.</code><code class="sig-name descname">aggregate_medians</code><span class="sig-paren">(</span><em class="sig-param">list_one_sided_pval</em><span class="sig-paren">)</span><a class="headerlink" href="#hidimstat.aggregate_medians" title="Permalink to this definition">¶</a></dt>
 <dd><p>Aggregation of survival function values taking twice the median</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>list_sf</strong><span class="classifier">ndarray, shape (n_iter, n_features)</span></dt><dd><p>List of survival function values</p>
+<dt><strong>list_one_sided_pval</strong><span class="classifier">ndarray, shape (n_iter, n_features)</span></dt><dd><p>List of one-sided p-values.</p>
 </dd>
 </dl>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><dl class="simple">
-<dt><strong>sf</strong><span class="classifier">ndarray, shape (n_features,)</span></dt><dd><p>Aggregated survival function values</p>
+<dt><strong>one_sided_pval</strong><span class="classifier">ndarray, shape (n_features,)</span></dt><dd><p>Aggregated one-sided p-values.</p>
 </dd>
 </dl>
 </dd>
