@@ -1,4 +1,4 @@
-from .clustered_inference import clustered_inference
+from .clustered_inference import clustered_inference, hd_inference
 from .desparsified_lasso import desparsified_lasso, desparsified_group_lasso
 from .ensemble_clustered_inference import ensemble_clustered_inference
 from .gaonkar import gaonkar
