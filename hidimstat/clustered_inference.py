@@ -37,8 +37,57 @@ def _ward_clustering(X_init, ward, train_index):
     return X_reduced, ward
 
 
-def _hd_inference(X, y, method, n_jobs=1, memory=None, verbose=0, **kwargs):
-    """Wrap-up high-dimensional inference procedures"""
+def hd_inference(X, y, method, n_jobs=1, memory=None, verbose=0, **kwargs):
+    """Wrap-up high-dimensional inference procedures
+
+    Parameters
+    ----------
+    X : ndarray, shape (n_samples, n_features)
+        Data.
+
+    y : ndarray, shape (n_samples,) or (n_samples, n_times)
+        Target.
+
+    method : str, optional (default='desparsified-lasso')
+        Method used for making the inference.
+        Currently the two methods available are 'desparsified-lasso'
+        and 'group-desparsified-lasso'. Use 'desparsified-lasso' for
+        non-temporal data and 'group-desparsified-lasso' for temporal data.
+
+    n_jobs : int or None, optional (default=1)
+        Number of CPUs to use during parallel steps such as inference.
+
+    memory : str or joblib.Memory object, optional (default=None)
+        Used to cache the output of the computation of the clustering
+        and the inference. By default, no caching is done. If a string is
+        given, it is the path to the caching directory.
+
+    verbose: int, optional (default=1)
+        The verbosity level. If `verbose > 0`, we print a message before
+        runing the clustered inference.
+
+    **kwargs:
+        Arguments passed to the statistical inference function.
+
+    Returns
+    -------
+    beta_hat : ndarray, shape (n_features,) or (n_features, n_times)
+        Estimated parameter vector or matrix.
+
+    pval : ndarray, shape (n_features,)
+        p-value, with numerically accurate values for
+        positive effects (ie., for p-value close to zero).
+
+    pval_corr : ndarray, shape (n_features,)
+        p-value corrected for multiple testing.
+
+    one_minus_pval : ndarray, shape (n_features,)
+        One minus the p-value, with numerically accurate values
+        for negative effects (ie., for p-value close to one).
+
+    one_minus_pval_corr : ndarray, shape (n_features,)
+        One minus the p-value corrected for multiple testing.
+    """
 
     if method == 'desparsified-lasso':
 
@@ -197,7 +246,7 @@ def clustered_inference(X_init, y, ward, n_clusters, train_size=0.3,
 
     # Inference: computing reduced parameter vector and stats
     beta_hat_, pval_, pval_corr_, one_minus_pval_, one_minus_pval_corr_ = \
-        _hd_inference(X, y, method, n_jobs=n_jobs, memory=memory, **kwargs)
+        hd_inference(X, y, method, n_jobs=n_jobs, memory=memory, **kwargs)
 
     # De-grouping
     beta_hat, pval, pval_corr, one_minus_pval, one_minus_pval_corr = \
