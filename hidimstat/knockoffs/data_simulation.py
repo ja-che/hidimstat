@@ -35,7 +35,7 @@ def simu_data(n, p, rho=0.25, snr=2.0, sparsity=0.06, effect=1.0, seed=None):
 
     """
     # Setup seed generator
-    rng = np.random.RandomState(seed)
+    rng = np.random.default_rng(seed)
 
     # Number of non-null
     k = int(sparsity * p)
@@ -46,10 +46,10 @@ def simu_data(n, p, rho=0.25, snr=2.0, sparsity=0.06, effect=1.0, seed=None):
     # X = np.dot(np.random.normal(size=(n, p)), cholesky(Sigma))
     X = rng.multivariate_normal(mu, Sigma, size=(n))
     # Generate the response from a linear model
-    non_zero = np.random.choice(p, k)
+    non_zero = rng.choice(p, k)
     beta_true = np.zeros(p)
     beta_true[non_zero] = effect
-    eps = np.random.normal(size=n)
+    eps = rng.standard_normal(size=n)
     prod_temp = np.dot(X, beta_true)
     noise_mag = np.linalg.norm(prod_temp) / (snr * np.linalg.norm(eps))
     y = prod_temp + noise_mag * eps

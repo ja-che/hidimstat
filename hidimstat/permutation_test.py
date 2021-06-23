@@ -7,8 +7,7 @@ from sklearn.svm import LinearSVR
 from sklearn.model_selection import GridSearchCV
 from sklearn.pipeline import Pipeline
 
-from hidimstat.stat_tools import cdf_from_pval_and_sign
-from hidimstat.stat_tools import sf_from_pval_and_sign
+from hidimstat.stat_tools import pval_from_two_sided_pval_and_sign
 
 
 def permutation_test_cv(X, y, n_permutations=1000,
@@ -52,13 +51,13 @@ def permutation_test_cv(X, y, n_permutations=1000,
 
     Returns
     -------
-    sf_corr : ndarray, shape (n_features,)
-        Corrected survival function values with respect to the
-        coefficients of the parameter vector
+    pval_corr : ndarray, shape (n_features,)
+        p-value corrected for multiple testing, with numerically accurate
+        values for positive effects (ie., for p-value close to zero).
 
-    cdf_corr : ndarray, shape (n_features,)
-        Corrected cumulative distribution function values with respect to the
-        coefficients of the parameter vector
+    one_minus_pval_corr : ndarray, shape (n_features,)
+        One minus the corrected p-value, with numerically accurate
+        values for negative effects (ie., for p-value close to one).
     """
 
     if C is None:
@@ -75,13 +74,11 @@ def permutation_test_cv(X, y, n_permutations=1000,
 
         estimator = LinearSVR(C=C)
 
-    sf_corr, cdf_corr = permutation_test(X, y, estimator,
-                                         n_permutations=n_permutations,
-                                         seed=seed,
-                                         n_jobs=n_jobs,
-                                         verbose=verbose)
+    pval_corr, one_minus_pval_corr = \
+        permutation_test(X, y, estimator, n_permutations=n_permutations,
+                         seed=seed, n_jobs=n_jobs, verbose=verbose)
 
-    return sf_corr, cdf_corr
+    return pval_corr, one_minus_pval_corr
 
 
 def permutation_test(X, y, estimator, n_permutations=1000,
@@ -113,13 +110,13 @@ def permutation_test(X, y, estimator, n_permutations=1000,
 
     Returns
     -------
-    sf_corr : ndarray, shape (n_features,)
-        Corrected survival function values with respect to the
-        coefficients of the parameter vector
+    pval_corr : ndarray, shape (n_features,)
+        p-value corrected for multiple testing, with numerically accurate
+        values for positive effects (ie., for p-value close to zero).
 
-    cdf_corr : ndarray, shape (n_features,)
-        Corrected cumulative distribution function values with respect to the
-        coefficients of the parameter vector
+    one_minus_pval_corr : ndarray, shape (n_features,)
+        One minus the corrected p-value, with numerically accurate
+        values for negative effects (ie., for p-value close to one).
     """
 
     rng = np.random.default_rng(seed)
@@ -133,14 +130,14 @@ def permutation_test(X, y, estimator, n_permutations=1000,
             for _ in range(n_permutations))
 
     permutation_stats = np.array(permutation_stats)
-    pval_corr = step_down_max_T(stat, permutation_stats)
+    two_sided_pval_corr = step_down_max_T(stat, permutation_stats)
 
     stat_sign = np.sign(stat)
 
-    sf_corr = sf_from_pval_and_sign(pval_corr, stat_sign)
-    cdf_corr = cdf_from_pval_and_sign(pval_corr, stat_sign)
+    pval_corr, _, one_minus_pval_corr, _ = \
+        pval_from_two_sided_pval_and_sign(two_sided_pval_corr, stat_sign)
 
-    return sf_corr, cdf_corr
+    return pval_corr, one_minus_pval_corr
 
 
 def _permutation_test_stat(estimator, X, y):
@@ -168,9 +165,8 @@ def step_down_max_T(stat, permutation_stats):
 
     Returns
     -------
-    pval_corr : array, shape (n_features,)
-        Adjusted p-values testing the null on the coefficients
-        of the parameter vector.
+    two_sided_pval_corr : ndarray, shape (n_features,)
+        Two-sided p-values corrected for multiple testing.
 
     References
     ----------
@@ -194,13 +190,14 @@ def step_down_max_T(stat, permutation_stats):
             np.maximum(permutation_stats_ordered[:, i - 1],
                        permutation_stats_ordered[:, i])
 
-    pval_corr = \
+    two_sided_pval_corr = \
         (np.sum(np.less_equal(stat_sorted, permutation_stats_ordered), axis=0)
          / n_permutations)
 
     for i in range(n_features - 1)[::-1]:
-        pval_corr[i] = np.maximum(pval_corr[i], pval_corr[i + 1])
+        two_sided_pval_corr[i] = \
+            np.maximum(two_sided_pval_corr[i], two_sided_pval_corr[i + 1])
 
-    pval_corr = np.copy(pval_corr[stat_ranked])
+    two_sided_pval_corr = np.copy(two_sided_pval_corr[stat_ranked])
 
-    return pval_corr
+    return two_sided_pval_corr

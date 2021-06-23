@@ -3,7 +3,7 @@ from sklearn.utils import resample
 from sklearn.preprocessing import StandardScaler
 from sklearn.utils.validation import check_memory
 
-from .stat_tools import sf_from_cb, cdf_from_cb
+from .stat_tools import pval_from_cb
 from .desparsified_lasso import desparsified_lasso, desparsified_group_lasso
 
 
@@ -43,14 +43,14 @@ def _hd_inference(X, y, method, n_jobs=1, memory=None, verbose=0, **kwargs):
     if method == 'desparsified-lasso':
 
         beta_hat, cb_min, cb_max = \
-            desparsified_lasso(X, y, n_jobs=n_jobs, memory=memory,
-                               verbose=verbose, **kwargs)
-        sf, sf_corr = sf_from_cb(cb_min, cb_max)
-        cdf, cdf_corr = cdf_from_cb(cb_min, cb_max)
+            desparsified_lasso(X, y, confidence=0.95, n_jobs=n_jobs,
+                               memory=memory, verbose=verbose, **kwargs)
+        pval, pval_corr, one_minus_pval, one_minus_pval_corr = \
+            pval_from_cb(cb_min, cb_max, confidence=0.95)
 
     elif method == 'desparsified-group-lasso':
 
-        beta_hat, sf, sf_corr, cdf, cdf_corr = \
+        beta_hat, pval, pval_corr, one_minus_pval, one_minus_pval_corr = \
             desparsified_group_lasso(X, y, n_jobs=n_jobs, memory=memory,
                                      verbose=verbose, **kwargs)
 
@@ -58,17 +58,18 @@ def _hd_inference(X, y, method, n_jobs=1, memory=None, verbose=0, **kwargs):
 
         raise ValueError('Unknow method')
 
-    return beta_hat, sf, sf_corr, cdf, cdf_corr
+    return beta_hat, pval, pval_corr, one_minus_pval, one_minus_pval_corr
 
 
-def _degrouping(ward, beta_hat, sf, sf_corr, cdf, cdf_corr):
+def _degrouping(ward, beta_hat, pval, pval_corr,
+                one_minus_pval, one_minus_pval_corr):
     """Assigning cluster-wise stats to features contained in the corresponding
     cluster and rescaling estimated parameter"""
 
-    sf_degrouped = ward.inverse_transform(sf)
-    sf_corr_degrouped = ward.inverse_transform(sf_corr)
-    cdf_degrouped = ward.inverse_transform(cdf)
-    cdf_corr_degrouped = ward.inverse_transform(cdf_corr)
+    pval_degrouped = ward.inverse_transform(pval)
+    pval_corr_degrouped = ward.inverse_transform(pval_corr)
+    one_minus_pval_degrouped = ward.inverse_transform(one_minus_pval)
+    one_minus_pval_corr_degrouped = ward.inverse_transform(one_minus_pval_corr)
 
     labels = ward.labels_
     clusters_size = np.zeros(labels.size)
@@ -83,7 +84,7 @@ def _degrouping(ward, beta_hat, sf, sf_corr, cdf, cdf_corr):
 
     elif len(beta_hat.shape) == 2:
 
-        n_features = sf_degrouped.shape[0]
+        n_features = pval_degrouped.shape[0]
         n_times = beta_hat.shape[1]
         beta_hat_degrouped = np.zeros((n_features, n_times))
 
@@ -92,8 +93,8 @@ def _degrouping(ward, beta_hat, sf, sf_corr, cdf, cdf_corr):
             beta_hat_degrouped[:, i] = \
                 ward.inverse_transform(beta_hat[:, i]) / clusters_size
 
-    return (beta_hat_degrouped, sf_degrouped, sf_corr_degrouped,
-            cdf_degrouped, cdf_corr_degrouped)
+    return (beta_hat_degrouped, pval_degrouped, pval_corr_degrouped,
+            one_minus_pval_degrouped, one_minus_pval_corr_degrouped)
 
 
 def clustered_inference(X_init, y, ward, n_clusters, train_size=0.3,
@@ -154,17 +155,19 @@ def clustered_inference(X_init, y, ward, n_clusters, train_size=0.3,
     beta_hat : ndarray, shape (n_features,) or (n_features, n_times)
         Estimated parameter vector or matrix.
 
-    sf : ndarray, shape (n_features,)
-        Survival function values of every feature.
+    pval : ndarray, shape (n_features,)
+        p-value, with numerically accurate values for
+        positive effects (ie., for p-value close to zero).
 
-    sf_corr : ndarray, shape (n_features,)
-        Corrected survival function values of every feature.
+    pval_corr : ndarray, shape (n_features,)
+        p-value corrected for multiple testing.
 
-    cdf : ndarray, shape (n_features,)
-        Cumulative distribution function values of every feature.
+    one_minus_pval : ndarray, shape (n_features,)
+        One minus the p-value, with numerically accurate values
+        for negative effects (ie., for p-value close to one).
 
-    cdf_corr : ndarray, shape (n_features,)
-        Corrected cumulative distribution function values of every feature.
+    one_minus_pval_corr : ndarray, shape (n_features,)
+        One minus the p-value corrected for multiple testing.
 
     References
     ----------
@@ -193,12 +196,12 @@ def clustered_inference(X_init, y, ward, n_clusters, train_size=0.3,
     y = y - np.mean(y)
 
     # Inference: computing reduced parameter vector and stats
-    beta_hat_red, sf_red, sf_corr_red, cdf_red, cdf_corr_red = \
+    beta_hat_, pval_, pval_corr_, one_minus_pval_, one_minus_pval_corr_ = \
         _hd_inference(X, y, method, n_jobs=n_jobs, memory=memory, **kwargs)
 
     # De-grouping
-    beta_hat, sf, sf_corr, cdf, cdf_corr = \
-        _degrouping(ward, beta_hat_red, sf_red, sf_corr_red, cdf_red,
-                    cdf_corr_red)
+    beta_hat, pval, pval_corr, one_minus_pval, one_minus_pval_corr = \
+        _degrouping(ward, beta_hat_, pval_, pval_corr_, one_minus_pval_,
+                    one_minus_pval_corr_)
 
-    return beta_hat, sf, sf_corr, cdf, cdf_corr
+    return beta_hat, pval, pval_corr, one_minus_pval, one_minus_pval_corr

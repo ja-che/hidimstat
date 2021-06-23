@@ -24,151 +24,118 @@ def _replace_infinity(x, replace_val=None, method='times-two'):
     return x_new
 
 
-def sf_corr_from_sf(sf):
-    """Computing survival function values corrrected for multiple testing
-    from simple testing survival function values.
+def pval_corr_from_pval(one_sided_pval):
+    """Computing one-sided p-values corrrected for multiple testing
+    from simple testing one-sided p-values.
 
     Parameters
     ----------
-    sf : ndarray, shape (n_features,)
-        Survival function values
+    one_sided_pval : ndarray, shape (n_features,)
+        One-sided p-values.
 
     Returns
     -------
-    sf_corr : ndarray, shape (n_features,)
-        Corrected survival function values
+    one_sided_pval_corr : ndarray, shape (n_features,)
+        Corrected one-sided p-values.
      """
 
-    n_features = sf.size
+    n_features = one_sided_pval.size
 
-    sf_corr = np.zeros(n_features) + 0.5
+    one_sided_pval_corr = np.zeros(n_features) + 0.5
 
-    sf_corr[sf < 0.5] = np.minimum(0.5, sf[sf < 0.5] * n_features)
-    sf_corr[sf > 0.5] = np.maximum(0.5, 1 - (1 - sf[sf > 0.5]) * n_features)
+    ind = (one_sided_pval < 0.5)
+    one_sided_pval_corr[ind] = \
+        np.minimum(one_sided_pval[ind] * n_features, 0.5)
 
-    return sf_corr
+    ind = (one_sided_pval > 0.5)
+    one_sided_pval_corr[ind] = \
+        np.maximum(1 - (1 - one_sided_pval[ind]) * n_features, 0.5)
 
-
-def cdf_corr_from_cdf(cdf):
-    """Computing cumulative distribution function values corrrected for
-    multiple testing from simple testing cumulative distribution function
-    values.
-
-    Parameters
-    ----------
-    cdf : ndarray, shape (n_features,)
-        Cumulative distribution function values
-
-    Returns
-    -------
-    cdf_corr : ndarray, shape (n_features,)
-        Corrected cumulative distribution function values
-     """
-
-    n_features = cdf.size
-
-    cdf_corr = np.zeros(n_features) + 0.5
-
-    cdf_corr[cdf < 0.5] = np.minimum(0.5, cdf[cdf < 0.5] * n_features)
-    cdf_corr[cdf > 0.5] = \
-        np.maximum(0.5, 1 - (1 - cdf[cdf > 0.5]) * n_features)
-
-    return cdf_corr
+    return one_sided_pval_corr
 
 
-def sf_from_scale(beta, scale, eps=1e-14):
-    """Survival function values from the value of the parameter and its scale.
-
-    Parameters
-    ----------
-    beta : ndarray, shape (n_features,)
-        Value of the parameters
-    scale : ndarray, shape (n_features,)
-        Value of the standard deviation of the parameters
-    eps : float, optional
-        The machine-precision regularization in the computation of the
-        survival function value
-
-    Returns
-    -------
-    sf : ndarray, shape (n_features,)
-        Survival function values
-    sf_corr : ndarray, shape (n_features,)
-        Corrected survival function values
-    """
-
-    n_features = beta.size
-
-    index_no_nan = tuple([scale != 0.0])
-
-    sf = np.zeros(n_features) + 0.5
-    sf[index_no_nan] = norm.sf(beta[index_no_nan], scale=scale[index_no_nan])
-    sf[sf > 1 - eps] = 1 - eps
-    sf_corr = sf_corr_from_sf(sf)
-
-    return sf, sf_corr
-
-
-def cdf_from_scale(beta, scale, eps=1e-14):
-    """Cumulative distribution function values from the value of the parameter
+def pval_from_scale(beta, scale, distrib='norm', eps=1e-14):
+    """Computing one-sided p-values from the value of the parameter
     and its scale.
 
     Parameters
     ----------
     beta : ndarray, shape (n_features,)
-        Value of the parameters
+        Value of the parameters.
+
     scale : ndarray, shape (n_features,)
-        Value of the standard deviation of the parameters
+        Value of the standard deviation of the parameters.
+
+    distrib : str, opitonal (default='norm')
+        Type of distribution assumed for the underlying estimator.
+        'norm' means normal and is the only value accepted at the moment.
+
     eps : float, optional
-        The machine-precision regularization in the computation of the
-        cumulative distribution function value
+        Machine-precision regularization in the computation of the p-values.
 
     Returns
     -------
-    cdf : ndarray, shape (n_features,)
-        Cumulative distribution function values
-    cdf_corr : ndarray, shape (n_features,)
-        Corrected cumulative distribution function values
+    pval : ndarray, shape (n_features,)
+        p-value, with numerically accurate values for
+        positive effects (ie., for p-value close to zero).
+
+    pval_corr : ndarray, shape (n_features,)
+        p-value corrected for multiple testing.
+
+    one_minus_pval : ndarray, shape (n_features,)
+        One minus the p-value, with numerically accurate values
+        for negative effects (ie., for p-value close to one).
+
+    one_minus_pval_corr : ndarray, shape (n_features,)
+        One minus the p-value corrected for multiple testing.
     """
 
     n_features = beta.size
 
     index_no_nan = tuple([scale != 0.0])
 
-    cdf = np.zeros(n_features) + 0.5
-    cdf[index_no_nan] = norm.cdf(beta[index_no_nan],
-                                 scale=scale[index_no_nan])
-    cdf[cdf > 1 - eps] = 1 - eps
-    cdf_corr = cdf_corr_from_cdf(cdf)
+    pval = np.zeros(n_features) + 0.5
+    one_minus_pval = np.zeros(n_features) + 0.5
 
-    return cdf, cdf_corr
+    if distrib == 'norm':
+
+        pval[index_no_nan] = \
+            norm.sf(beta[index_no_nan], scale=scale[index_no_nan])
+        one_minus_pval[index_no_nan] = \
+            norm.cdf(beta[index_no_nan], scale=scale[index_no_nan])
+
+    pval[pval > 1 - eps] = 1 - eps
+    pval_corr = pval_corr_from_pval(pval)
+
+    one_minus_pval[one_minus_pval > 1 - eps] = 1 - eps
+    one_minus_pval_corr = pval_corr_from_pval(one_minus_pval)
+
+    return pval, pval_corr, one_minus_pval, one_minus_pval_corr
 
 
-def sf_from_cb(cb_min, cb_max, confidence=0.95, distrib='norm', eps=1e-14):
-    """Survival function values from confidence intervals.
+def zscore_from_cb(cb_min, cb_max, confidence=0.95, distrib='norm'):
+    """Computing z-scores from confidence intervals.
 
     Parameters
     ----------
     cb_min : ndarray, shape (n_features,)
-        Value of the inferior confidence bound
+        Value of the inferior confidence bound.
+
     cb_max : ndarray, shape (n_features,)
-        Value of the superior confidence bound
+        Value of the superior confidence bound.
+
     confidence : float, optional (default=0.95)
         Confidence level used to compute the confidence intervals.
         Each value should be in the range [0, 1].
+
     distrib : str, opitonal (default='norm')
         Type of distribution assumed for the underlying estimator.
         'norm' means normal and is the only value accepted at the moment.
-    eps : float, optional
-        The machine-precision regularization in the computation of the
-        survival function value
 
     Returns
     -------
-    sf : ndarray, shape (n_features,)
-        Survival function values
-    sf_corr : ndarray, shape (n_features,)
-        Corrected survival function values
+    zscore : ndarray, shape (n_features,)
+        z-scores.
     """
 
     if distrib == 'norm':
@@ -178,139 +145,144 @@ def sf_from_cb(cb_min, cb_max, confidence=0.95, distrib='norm', eps=1e-14):
 
     zscore = beta_hat / (cb_max - cb_min) * 2 * quantile
 
-    if distrib == 'norm':
-        sf = norm.sf(zscore)
-
-    sf[sf > 1 - eps] = 1 - eps
-    sf_corr = sf_corr_from_sf(sf)
-
-    return sf, sf_corr
+    return zscore
 
 
-def cdf_from_cb(cb_min, cb_max, confidence=0.95, distrib='norm', eps=1e-14):
-    """Cumulative function values from confidence intervals.
+def pval_from_cb(cb_min, cb_max, confidence=0.95, distrib='norm', eps=1e-14):
+    """Computing one-sided p-values from confidence intervals.
 
     Parameters
     ----------
     cb_min : ndarray, shape (n_features,)
-        Value of the inferior confidence bound
+        Value of the inferior confidence bound.
+
     cb_max : ndarray, shape (n_features,)
-        Value of the superior confidence bound
+        Value of the superior confidence bound.
+
     confidence : float, optional (default=0.95)
         Confidence level used to compute the confidence intervals.
         Each value should be in the range [0, 1].
+
     distrib : str, opitonal (default='norm')
         Type of distribution assumed for the underlying estimator.
         'norm' means normal and is the only value accepted at the moment.
+
     eps : float, optional
-        The machine-precision regularization in the computation of the
-        cumulative distribution function value
-
-    Returns
-    -------
-    cdf : ndarray, shape (n_features,)
-        Cumulative distribution function values
-    cdf_corr : ndarray, shape (n_features,)
-        Corrected cumulative distribution function values
-    """
-
-    if distrib == 'norm':
-        quantile = norm.ppf(1 - (1 - confidence) / 2)
-
-    beta_hat = (cb_min + cb_max) / 2
-
-    zscore = beta_hat / (cb_max - cb_min) * 2 * quantile
-
-    if distrib == 'norm':
-        cdf = norm.cdf(zscore)
-
-    cdf[cdf > 1 - eps] = 1 - eps
-    cdf_corr = cdf_corr_from_cdf(cdf)
-
-    return cdf, cdf_corr
-
-
-def pval_from_cb(cb_min, cb_max, confidence=0.95, distrib='norm'):
-    """p-values from confidence intervals.
-
-    Parameters
-    ----------
-    cb_min : ndarray, shape (n_features,)
-        Value of the inferior confidence bound
-    cb_max : ndarray, shape (n_features,)
-        Value of the superior confidence bound
-    confidence : float, optional (default=0.95)
-        Confidence level used to compute the confidence intervals.
-        Each value should be in the range [0, 1].
-    distrib : str, opitonal (default='norm')
-        Type of distribution assumed for the underlying estimator.
-        'norm' means normal and is the only value accepted at the moment.
+        Machine-precision regularization in the computation of the p-values.
 
     Returns
     -------
     pval : ndarray, shape (n_features,)
-        Estimated (two-sided) p-values of the parameters
+        p-value, with numerically accurate values for
+        positive effects (ie., for p-value close to zero).
+
     pval_corr : ndarray, shape (n_features,)
-        Estimated (two-sided) p-values of the parameters corrected for
-        multiple testing
+        p-value corrected for multiple testing.
+
+    one_minus_pval : ndarray, shape (n_features,)
+        One minus the p-value, with numerically accurate values
+        for negative effects (ie., for p-value close to one).
+
+    one_minus_pval_corr : ndarray, shape (n_features,)
+        One minus the p-value corrected for multiple testing.
     """
 
-    n_features = cb_min.size
+    zscore = \
+        zscore_from_cb(cb_min, cb_max, confidence=confidence, distrib=distrib)
 
     if distrib == 'norm':
-        quantile = norm.ppf(1 - (1 - confidence) / 2)
 
-    beta_hat = (cb_min + cb_max) / 2
+        pval = norm.sf(zscore)
+        one_minus_pval = norm.cdf(zscore)
 
-    zscore = np.abs(beta_hat) / (cb_max - cb_min) * 2 * quantile
+    pval[pval > 1 - eps] = 1 - eps
+    pval_corr = pval_corr_from_pval(pval)
+
+    one_minus_pval[one_minus_pval > 1 - eps] = 1 - eps
+    one_minus_pval_corr = pval_corr_from_pval(one_minus_pval)
+
+    return pval, pval_corr, one_minus_pval, one_minus_pval_corr
+
+
+def two_sided_pval_from_zscore(zscore, distrib='norm'):
+    """Computing two-sided p-values from z-scores.
+
+    Parameters
+    ----------
+    zscore : ndarray, shape (n_features,)
+        z-scores.
+
+    distrib : str, opitonal (default='norm')
+        Type of distribution assumed for the underlying estimator.
+        'norm' means normal and is the only value accepted at the moment.
+
+    Returns
+    -------
+    two_sided_pval : ndarray, shape (n_features,)
+        Two-sided p-values (testing the null).
+
+    two_sided_pval_corr : ndarray, shape (n_features,)
+        Two-sided p-values corrected for multiple testing.
+    """
+    n_features = zscore.size
 
     if distrib == 'norm':
-        pval = 2 * norm.sf(zscore)  # pval = 2 * (1 - norm.cdf(zscore))
+        two_sided_pval = 2 * norm.sf(np.abs(zscore))
 
-    pval_corr = np.minimum(1, pval * n_features)
+    two_sided_pval_corr = np.minimum(1, two_sided_pval * n_features)
 
-    return pval, pval_corr
+    return two_sided_pval, two_sided_pval_corr
 
 
-def zscore_from_cb(cb_min, cb_max, confidence=0.95, distrib='norm'):
-    """z-scores from confidence intervals.
+def two_sided_pval_from_cb(cb_min, cb_max, confidence=0.95, distrib='norm'):
+    """Computing two-sided p-values from confidence intervals.
 
     Parameters
     ----------
     cb_min : ndarray, shape (n_features,)
-        Value of the inferior confidence bound
+        Value of the inferior confidence bound.
+
     cb_max : ndarray, shape (n_features,)
-        Value of the superior confidence bound
+        Value of the superior confidence bound.
+
     confidence : float, optional (default=0.95)
         Confidence level used to compute the confidence intervals.
         Each value should be in the range [0, 1].
+
     distrib : str, opitonal (default='norm')
         Type of distribution assumed for the underlying estimator.
         'norm' means normal and is the only value accepted at the moment.
 
     Returns
     -------
-    zscore : ndarray, shape (n_features,)
-        z-score values
+    two_sided_pval : ndarray, shape (n_features,)
+        Two-sided p-values (testing the null).
+
+    two_sided_pval_corr : ndarray, shape (n_features,)
+        Two-sided p-values corrected for multiple testing.
     """
+    zscore = \
+        zscore_from_cb(cb_min, cb_max, confidence=confidence, distrib=distrib)
 
-    if distrib == 'norm':
-        quantile = norm.ppf(1 - (1 - confidence) / 2)
+    two_sided_pval, two_sided_pval_corr = \
+        two_sided_pval_from_zscore(zscore, distrib=distrib)
 
-    beta_hat = (cb_min + cb_max) / 2
-
-    zscore = beta_hat / (cb_max - cb_min) * 2 * quantile
-
-    return zscore
+    return two_sided_pval, two_sided_pval_corr
 
 
-def zscore_from_sf(sf, distrib='norm'):
-    """z-scores from survival function values.
+def zscore_from_pval(pval, one_minus_pval=None, distrib='norm'):
+    """Computing z-scores from one-sided p-values.
 
     Parameters
     -----------
-    sf : ndarray, shape (n_features,)
-        Survival function values
+    pval : ndarray, shape (n_features,)
+        p-value, with numerically accurate values for
+        positive effects (ie., for p-value close to zero).
+
+    one_minus_pval : ndarray, shape (n_features,), optional (default=None)
+        One minus the p-value, with numerically accurate values
+        for negative effects (ie., for p-value close to one).
+
     distrib : str, opitonal (default='norm')
         Type of distribution assumed for the underlying estimator.
         'norm' means normal and is the only value accepted at the moment.
@@ -318,262 +290,106 @@ def zscore_from_sf(sf, distrib='norm'):
     Returns
     -------
     zscore : ndarray, shape (n_features,)
-        z-score values
+        z-scores.
     """
+
     if distrib == 'norm':
-        zscore = norm.isf(sf)
 
-    return zscore
+        zscore = norm.isf(pval)
 
+        if one_minus_pval is not None:
 
-def zscore_from_cdf(cdf, distrib='norm'):
-    """z-scores from cumulative distribution function values.
-
-    Parameters
-    -----------
-    cdf : ndarray, shape (n_features,)
-        Cumulative distribution function values
-    distrib : str, opitonal (default='norm')
-        Type of distribution assumed for the underlying estimator.
-        'norm' means normal and is the only value accepted at the moment.
-
-    Returns
-    -------
-    zscore : ndarray, shape (n_features,)
-        z-score values
-    """
-    if distrib == 'norm':
-        zscore = norm.ppf(cdf)
-
-    return zscore
-
-
-def zscore_from_sf_and_cdf(sf, cdf, distrib='norm'):
-    """z-scores from survival function and cumulative distribution function
-    values.
-
-    Parameters
-    -----------
-    sf : ndarray, shape (n_features,)
-        Survival function values
-    cdf : ndarray, shape (n_features,)
-        Cumulative distribution function values
-    distrib : str, opitonal (default='norm')
-        Type of distribution assumed for the underlying estimator.
-        'norm' means normal and is the only value accepted at the moment.
-
-    Returns
-    -------
-    zscore : ndarray, shape (n_features,)
-        z-score values
-    """
-    if distrib == 'norm':
-        zscore_sf = zscore_from_sf(sf)
-        zscore_cdf = zscore_from_cdf(cdf)
-
-    zscore = np.zeros(sf.size)
-    zscore[sf < 0.5] = zscore_sf[sf < 0.5]
-    zscore[sf > 0.5] = zscore_cdf[sf > 0.5]
+            ind = (pval > 0.5)
+            zscore[ind] = norm.ppf(one_minus_pval[ind])
 
     zscore = _replace_infinity(zscore, replace_val=40, method='plus-one')
 
     return zscore
 
 
-def sf_from_pval_and_sign(pval, sign, eps=1e-14):
-    """Survival function values from p-value and parameter sign.
+def pval_from_two_sided_pval_and_sign(two_sided_pval, parameter_sign,
+                                      eps=1e-14):
+    """Computing one-sided p-values from two-sided p-value and parameter sign.
 
     Parameters
     ----------
-    pval : ndarray, shape (n_features,)
-        Estimated (two-sided) p-values of the parameters
-    sign : ndarray, shape (n_features,)
-        Estimated signs for the parameters
+    two_sided_pval : ndarray, shape (n_features,)
+        Two-sided p-values (testing the null).
+
+    parameter_sign : ndarray, shape (n_features,)
+        Estimated signs for the parameters.
+
     eps : float, optional
-        The machine-precision regularization in the computation of the
-        survival function value
+        Machine-precision regularization in the computation of the p-values.
 
     Returns
     -------
-    sf : ndarray, shape (n_features,)
-        Survival function values
-    """
-
-    n_features = pval.size
-    sf = 0.5 * np.ones(n_features)
-
-    sf[sign > 0] = pval[sign > 0] / 2
-    sf[sign < 0] = 1 - pval[sign < 0] / 2
-    sf[sf > 1 - eps] = 1 - eps
-
-    return sf
-
-
-def cdf_from_pval_and_sign(pval, sign, eps=1e-14):
-    """Cumulative distribution function values from p-value and parameter sign.
-
-    Parameters
-    ----------
     pval : ndarray, shape (n_features,)
-        Estimated (two-sided) p-values of the parameters
-    sign : ndarray, shape (n_features,)
-        Estimated signs for the parameters
-    eps : float, optional
-        The machine-precision regularization in the computation of the
-        cumulative distribution function value
+        p-value, with numerically accurate values for
+        positive effects (ie., for p-value close to zero).
 
-    Returns
-    -------
-    cdf : ndarray, shape (n_features,)
-        Cumulative distribution function values
+    pval_corr : ndarray, shape (n_features,)
+        p-value corrected for multiple testing.
+
+    one_minus_pval : ndarray, shape (n_features,)
+        One minus the p-value, with numerically accurate values
+        for negative effects (ie., for p-value close to one).
+
+    one_minus_pval_corr : ndarray, shape (n_features,)
+        One minus the p-value corrected for multiple testing.
     """
 
-    n_features = pval.size
-    cdf = 0.5 * np.ones(n_features)
+    n_features = two_sided_pval.size
 
-    cdf[sign > 0] = 1 - pval[sign > 0] / 2
-    cdf[sign < 0] = pval[sign < 0] / 2
-    cdf[cdf > 1 - eps] = 1 - eps
+    pval = 0.5 * np.ones(n_features)
+    one_minus_pval = 0.5 * np.ones(n_features)
 
-    return cdf
+    pval[parameter_sign > 0] = two_sided_pval[parameter_sign > 0] / 2
+    pval[parameter_sign < 0] = 1 - two_sided_pval[parameter_sign < 0] / 2
+
+    one_minus_pval[parameter_sign > 0] = \
+        1 - two_sided_pval[parameter_sign > 0] / 2
+    one_minus_pval[parameter_sign < 0] = \
+        two_sided_pval[parameter_sign < 0] / 2
+
+    pval[pval > 1 - eps] = 1 - eps
+    pval_corr = pval_corr_from_pval(pval)
+
+    one_minus_pval[one_minus_pval > 1 - eps] = 1 - eps
+    one_minus_pval_corr = pval_corr_from_pval(one_minus_pval)
+
+    return pval, pval_corr, one_minus_pval, one_minus_pval_corr
 
 
-def sf_and_cdf_from_pval_and_sign(pval, sign, eps=1e-14):
-    """Survival and cumulative distribution function values
-    from p-value and parameter sign.
+def two_sided_pval_from_pval(pval, one_minus_pval=None, distrib='norm'):
+    """Computing two-sided p-value from one-sided p-values.
 
     Parameters
-    ----------
+    -----------
     pval : ndarray, shape (n_features,)
-        Estimated (two-sided) p-values of the parameters
-    sign : ndarray, shape (n_features,)
-        Estimated signs for the parameters
-    eps : float, optional
-        The machine-precision regularization in the computation of the
-        survival or cumulative distribution function value
+        p-value, with numerically accurate values for
+        positive effects (ie., for p-value close to zero).
 
-    Returns
-    -------
-    sf : ndarray, shape (n_features,)
-        Survival function values
-    sf_corr : ndarray, shape (n_features,)
-        Corrected survival function values
-    cdf : ndarray, shape (n_features,)
-        Cumulative distribution function values
-    cdf_corr : ndarray, shape (n_features,)
-        Corrected cumulative distribution function values
-    """
+    one_minus_pval : ndarray, shape (n_features,), optional (default=None)
+        One minus the p-value, with numerically accurate values
+        for negative effects (ie., for p-value close to one).
 
-    sf = sf_from_pval_and_sign(pval, sign, eps=eps)
-    cdf = cdf_from_pval_and_sign(pval, sign, eps=eps)
-    sf_corr = sf_corr_from_sf(sf)
-    cdf_corr = cdf_corr_from_cdf(cdf)
-
-    return sf, sf_corr, cdf, cdf_corr
-
-
-def pval_from_zscore(zscore, distrib='norm'):
-    """p-values from z-scores.
-
-    Parameters
-    ----------
-    zscore : ndarray, shape (n_features,)
-        z-score values
     distrib : str, opitonal (default='norm')
         Type of distribution assumed for the underlying estimator.
         'norm' means normal and is the only value accepted at the moment.
 
     Returns
     -------
-    pval : ndarray, shape (n_features,)
-        Estimated (two-sided) p-values of the parameters
-    pval_corr : ndarray, shape (n_features,)
-        Estimated (two-sided) p-values of the parameters corrected for
-        multiple testing
+    two_sided_pval : ndarray, shape (n_features,)
+        Two-sided p-values (testing the null).
+
+    two_sided_pval_corr : ndarray, shape (n_features,)
+        Two-sided p-values corrected for multiple testing.
     """
-    n_features = zscore.size
 
-    if distrib == 'norm':
-        pval = 2 * norm.sf(np.abs(zscore))
+    zscore = zscore_from_pval(pval, one_minus_pval, distrib=distrib)
 
-    pval_corr = np.minimum(1, pval * n_features)
+    two_sided_pval, two_sided_pval_corr = \
+        two_sided_pval_from_zscore(zscore, distrib=distrib)
 
-    return pval, pval_corr
-
-
-def pval_from_sf(sf, distrib='norm'):
-    """z-scores from survival function values
-
-    Parameters
-    ----------
-    sf : ndarray, shape (n_features,)
-        Survival function values
-    distrib : str, opitonal (default='norm')
-        Type of distribution assumed for the underlying estimator.
-        'norm' means normal and is the only value accepted at the moment.
-
-    Returns
-    -------
-    pval : ndarray, shape (n_features,)
-        Estimated (two-sided) p-values of the parameters
-    pval_corr : ndarray, shape (n_features,)
-        Estimated (two-sided) p-values of the parameters corrected for
-        multiple testing
-    """
-    pval, pval_corr = pval_from_zscore(zscore_from_sf(sf, distrib=distrib),
-                                       distrib=distrib)
-
-    return pval, pval_corr
-
-
-def pval_from_cdf(cdf, distrib='norm'):
-    """z-scores from survival function values
-
-    Parameters
-    ----------
-    cdf : ndarray, shape (n_features,)
-        Cumulative distribution function values
-    distrib : str, opitonal (default='norm')
-        Type of distribution assumed for the underlying estimator.
-        'norm' means normal and is the only value accepted at the moment.
-
-    Returns
-    -------
-    pval : ndarray, shape (n_features,)
-        Estimated (two-sided) p-values of the parameters
-    pval_corr : ndarray, shape (n_features,)
-        Estimated (two-sided) p-values of the parameters corrected for
-        multiple testing
-    """
-    pval, pval_corr = pval_from_zscore(zscore_from_cdf(cdf, distrib=distrib),
-                                       distrib=distrib)
-
-    return pval, pval_corr
-
-
-def pval_from_sf_and_cdf(sf, cdf, distrib='norm'):
-    """z-scores from survival function values
-
-    Parameters
-    ----------
-    sf : ndarray, shape (n_features,)
-        Survival function values
-    cdf : ndarray, shape (n_features,)
-        Cumulative distribution function values
-    distrib : str, opitonal (default='norm')
-        Type of distribution assumed for the underlying estimator.
-        'norm' means normal and is the only value accepted at the moment.
-
-    Returns
-    -------
-    pval : ndarray, shape (n_features,)
-        Estimated (two-sided) p-values of the parameters
-    pval_corr : ndarray, shape (n_features,)
-        Estimated (two-sided) p-values of the parameters corrected for
-        multiple testing
-    """
-    pval, pval_corr = \
-        pval_from_zscore(zscore_from_sf_and_cdf(sf, cdf, distrib=distrib),
-                         distrib=distrib)
-
-    return pval, pval_corr
+    return two_sided_pval, two_sided_pval_corr

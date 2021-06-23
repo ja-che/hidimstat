@@ -12,9 +12,14 @@ from hidimstat.ensemble_clustered_inference import ensemble_clustered_inference
 
 
 def test_ensemble_clustered_inference():
+    '''Testing the procedure on a simulation with a 1D data structure
+    and with n << p. The support is connected and of size 10, it must be
+    recovered with a small spatial tolerance parametrized by `margin_size`.
+    Computing one-sided p-values, we want low p-values for the features
+    of the support and p-values close to 0.5 for the others.'''
 
     n_samples, n_features = 100, 2000
-    support_size = 15
+    support_size = 10
     sigma = 5.0
     rho = 0.95
 
@@ -35,15 +40,15 @@ def test_ensemble_clustered_inference():
                                 connectivity=connectivity,
                                 linkage='ward')
 
-    beta_hat, sf, sf_corr, cdf, cdf_corr = \
+    beta_hat, pval, pval_corr, one_minus_pval, one_minus_pval_corr = \
         ensemble_clustered_inference(X_init, y, ward, n_clusters,
                                      n_bootstraps=n_bootstraps)
 
     expected = 0.5 * np.ones(n_features)
     expected[:support_size] = 0.0
 
-    assert_almost_equal(sf_corr[:support_size-margin_size],
+    assert_almost_equal(pval_corr[:support_size-margin_size],
                         expected[:support_size-margin_size])
-    assert_almost_equal(sf_corr[support_size+margin_size:200],
-                        expected[support_size+margin_size:200],
+    assert_almost_equal(pval_corr[support_size+margin_size:],
+                        expected[support_size+margin_size:],
                         decimal=1)

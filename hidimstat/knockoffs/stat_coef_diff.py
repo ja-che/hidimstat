@@ -3,13 +3,15 @@
 
 import numpy as np
 from sklearn.linear_model import (LassoCV, LogisticRegressionCV)
+from sklearn.model_selection import KFold
 # from sklearn.linear_model._coordinate_descent import _alpha_grid
 # from sklearn.model_selection import GridSearchCV
 
 
-def stat_coef_diff(X, X_tilde, y, method='lasso_cv', cv=5, n_jobs=1,
+def stat_coef_diff(X, X_tilde, y, method='lasso_cv', n_splits=5, n_jobs=1,
                    n_lambdas=10, n_iter=1000, group_reg=1e-3, l1_reg=1e-3,
-                   joblib_verbose=0, return_coef=False, solver='liblinear'):
+                   joblib_verbose=0, return_coef=False, solver='liblinear',
+                   seed=0):
     """Calculate test statistic by doing estimation with Cross-validation on
     concatenated design matrix [X X_tilde] to find coefficients [beta
     beta_tilda]. The test statistic is then:
@@ -34,7 +36,7 @@ def stat_coef_diff(X, X_tilde, y, method='lasso_cv', cv=5, n_jobs=1,
         'least_square', otherwise
         if the response vector is binary, it should be 'logistic'
 
-    cv : int, optional
+    n_splits : int, optional
         number of cross-validation folds
 
     solver : str, optional
@@ -60,6 +62,8 @@ def stat_coef_diff(X, X_tilde, y, method='lasso_cv', cv=5, n_jobs=1,
     lambda_max = np.max(np.dot(X_ko.T, y)) / (2 * n_features)
     lambdas = np.linspace(
         lambda_max*np.exp(-n_lambdas), lambda_max, n_lambdas)
+
+    cv = KFold(n_splits=5, shuffle=True, random_state=seed)
 
     estimator = {
         'lasso_cv': LassoCV(alphas=lambdas, n_jobs=n_jobs,

@@ -12,13 +12,16 @@ from hidimstat.noise_std import reid, group_reid, empirical_snr
 
 
 def test_reid():
+    '''Estimating noise standard deviation in two scenarios.
+    First scenario: no structure and a support of size 2.
+    Second scenario: no structure and an empty support.'''
 
     n_samples, n_features = 50, 30
     sigma = 2.0
 
     # First expe
     # ##########
-    support_size = 10
+    support_size = 2
 
     X, y, beta, noise = \
         multivariate_1D_simulation(n_samples=n_samples, n_features=n_features,
@@ -47,6 +50,9 @@ def test_reid():
 
 
 def test_group_reid():
+    '''Estimating (temporal) noise covariance matrix in two scenarios.
+    First scenario: no data structure and a support of size 2.
+    Second scenario: no data structure and an empty support.'''
 
     n_samples = 30
     n_features = 50
@@ -114,6 +120,9 @@ def test_group_reid():
 
 
 def test_empirical_snr():
+    '''Computing empirical signal to noise ratio from the target `y`,
+    the data `X` and the true parameter vector `beta` in a simple
+    scenario with a 1D data structure.'''
 
     n_samples, n_features = 30, 30
     support_size = 10
@@ -127,4 +136,4 @@ def test_empirical_snr():
     snr = empirical_snr(X, y, beta)
     expected = 2.0
 
-    assert_almost_equal(snr / expected, 1.0, decimal=0)
+    assert_almost_equal(snr, expected, decimal=0)

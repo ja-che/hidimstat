@@ -16,30 +16,39 @@ def multivariate_1D_simulation(n_samples=100, n_features=500,
     Parameters
     -----------
     n_samples : int
-        Number of samples
+        Number of samples.
+
     n_features : int
-        Number of features
+        Number of features.
+
     support_size : int
-        Size of the support
+        Size of the support.
+
     sigma : float
-        Standard deviation of the additive White Gaussian noise
+        Standard deviation of the additive White Gaussian noise.
+
     rho: float
-        Level of correlation between neighboring features (if not `shuffle`)
+        Level of correlation between neighboring features (if not `shuffle`).
+
     shuffle : bool
-        Shuffle the features (changing data structure) if True.
+        Shuffle the features (breaking 1D data structure) if True.
+
     seed : int
-        Seed used for generating design matrix and noise
+        Seed used for generating design matrix and noise.
 
     Returns
     -------
     X : ndarray, shape (n_samples, n_features)
-        Design matrix
+        Design matrix.
+
     y : ndarray, shape (n_samples,)
-        Target
+        Target.
+
     beta : ndarray, shape (n_features,)
-        Parameter vector
+        Parameter vector.
+
     noise : ndarray, shape (n_samples,)
-        Additive white Gaussian noise
+        Additive white Gaussian noise.
     """
 
     rng = np.random.default_rng(seed)
@@ -69,14 +78,15 @@ def generate_2D_weight(shape, roi_size):
     Parameters
     -----------
     shape : tuple (n_x, n_z)
-        Shape of the data in the simulation
+        Shape of the data in the simulation.
+
     roi_size : int
-        Size of the edge of the ROIs
+        Size of the edge of the ROIs.
 
     Returns
     -------
     w : ndarray, shape (n_x, n_z)
-        2D weight map
+        2D weight map.
     """
 
     w = np.zeros(shape + (5,))
@@ -94,14 +104,15 @@ def generate_3D_weight(shape, roi_size):
     Parameters
     -----------
     shape : tuple (n_x, n_y, n_z)
-        Shape of the data in the simulation
+        Shape of the data in the simulation.
+
     roi_size : int
-        Size of the edge of the ROIs
+        Size of the edge of the ROIs.
 
     Returns
     -------
     w : ndarray, shape (n_x, n_y, n_z)
-        3D weight map
+        3D weight map.
     """
 
     w = np.zeros(shape + (5,))
@@ -127,34 +138,44 @@ def multivariate_simulation(n_samples=100,
     Parameters
     -----------
     n_samples : int
-        Number of samples
+        Number of samples.
+
     shape : tuple (n_x, n_y) or (n_x, n_y, n_z)
-        Shape of the data in the simulation
+        Shape of the data in the simulation.
+
     roi_size : int
-        Size of the edge of the ROIs
+        Size of the edge of the ROIs.
+
     sigma : float
-        Standard deviation of the additive white Gaussian noise
+        Standard deviation of the additive white Gaussian noise.
+
     smooth_X : float
-        Level of smoothing using a Gaussian filter
+        Level of (data) smoothing using a Gaussian filter.
+
     return_shaped_data : bool
-        If true, the function returns shaped data and weight map
+        If true, the function returns shaped data and weight map.
+
     seed : int
-        Seed used for generating design matrix and noise
+        Seed used for generating design matrix and noise.
 
     Returns
     -------
     X : ndarray, shape (n_samples, n_features)
-        Design matrix
+        Design matrix.
+
     y : ndarray, shape (n_samples,)
-        Target
+        Target.
     beta: ndarray, shape (n_features,)
-        Parameter vector (flattened weight map)
+        Parameter vector (flattened weight map).
+
     noise: ndarray, shape (n_samples,)
-        Additive white Gaussian noise
+        Additive white Gaussian noise.
+
     X_: ndarray, shape (n_samples, n_x, n_y) or (n_samples, n_x, n_y, n_z)
-        Reshaped design matrix
+        Reshaped design matrix.
+
     w : ndarray, shape (n_x, n_y) or (n_x, n_y, n_z)
-        2D or 3D weight map
+        2D or 3D weight map.
     """
 
     rng = np.random.default_rng(seed)
@@ -192,34 +213,45 @@ def multivariate_temporal_simulation(n_samples=100, n_features=500, n_times=30,
     Parameters
     -----------
     n_samples : int
-        Number of samples
+        Number of samples.
+
     n_features : int
-        Number of features
+        Number of features.
+
     n_times : int
-        Number of time points
+        Number of time points.
+
     support_size: int
-        Size of the row support
+        Size of the row support.
+
     sigma : float
-        Standard deviation of the noise at each time point
+        Standard deviation of the noise at each time point.
+
     rho_noise : float
-        Level of autocorrelation in the noise
+        Level of autocorrelation in the noise.
+
     rho_data: float
-        Level of correlation between neighboring features (if not `shuffle`)
+        Level of correlation between neighboring features (if not `shuffle`).
+
     shuffle : bool
-        Shuffle the features (changing data structure) if True.
+        Shuffle the features (breaking 1D data structure) if True.
+
     seed : int
-        Seed used for generating design matrix and noise
+        Seed used for generating design matrix and noise.
 
     Returns
     -------
     X: ndarray, shape (n_samples, n_features)
-        Design matrix
+        Design matrix.
+
     Y : ndarray, shape (n_samples, n_times)
-        Target
+        Target.
+
     beta : ndarray, shape (n_features, n_times)
-        Parameter matrix
+        Parameter matrix.
+
     noise : ndarray, shape (n_samples, n_times)
-        Noise matrix
+        Noise matrix.
     """
 
     rng = np.random.default_rng(seed)

@@ -17,6 +17,11 @@ SHAPE_3D = (12, 12, 12)
 
 
 def test_multivariate_1D_simulation():
+    '''Test if the data has expected shape, if the input parameters
+    are close to their empirical estimators, if the support size is
+    correct and if the noise model is the generative model. The
+    first test concerns a simulation with a 1D spatial structure,
+    the second test concerns a simulation with a random structure'''
 
     n_samples = 100
     n_features = 500
@@ -24,6 +29,7 @@ def test_multivariate_1D_simulation():
     rho = 0.7
     sigma = 1.0
 
+    # Test 1
     X, y, beta, noise = \
         multivariate_1D_simulation(n_samples=n_samples, n_features=n_features,
                                    support_size=support_size, sigma=sigma,
@@ -38,6 +44,7 @@ def test_multivariate_1D_simulation():
     assert_equal(np.count_nonzero(beta), support_size)
     assert_equal(y, np.dot(X, beta) + noise)
 
+    # Test 2
     X, y, beta, noise = \
         multivariate_1D_simulation()
     rho_hat = np.corrcoef(X[:, 19], X[:, 20])[0, 1]
@@ -45,7 +52,13 @@ def test_multivariate_1D_simulation():
 
 
 def test_multivariate_simulation():
+    '''Test if the data has expected shape, if the input parameters
+    are close to their empirical estimators, if the support has the
+    expected size (from simple geometry) and if the noise model is
+    the generative model. First test concerns a simulation with a 2D
+    structure, second test concerns a simulation with a 3D structure.'''
 
+    # Test 1
     n_samples = 100
     shape = SHAPE_2D
     roi_size = ROI_SIZE_2D
@@ -71,6 +84,7 @@ def test_multivariate_simulation():
     assert_equal(np.count_nonzero(beta), 4 * (roi_size ** 2))
     assert_equal(y, np.dot(X, beta) + noise)
 
+    # Test 2
     shape = SHAPE_3D
     roi_size = ROI_SIZE_3D
     return_shaped_data = False
@@ -86,6 +100,12 @@ def test_multivariate_simulation():
 
 
 def test_multivariate_temporal_simulation():
+    '''Test if the data has expected shape, if the input parameters
+    are close to their empirical estimators, if the support size is
+    correct and if the noise model is the generative model. The
+    first test concerns a simulation with a 1D spatial structure
+    and a temporal structure, the second test concerns a simulation
+    with a random spatial structure and a temporal structure.'''
 
     n_samples = 30
     n_features = 50
@@ -95,6 +115,7 @@ def test_multivariate_temporal_simulation():
     rho_noise = 0.9
     rho_data = 0.95
 
+    # Test 1
     X, Y, beta, noise = \
         multivariate_temporal_simulation(n_samples=n_samples,
                                          n_features=n_features,
@@ -114,6 +135,7 @@ def test_multivariate_temporal_simulation():
     assert_equal(np.count_nonzero(beta), support_size * n_times)
     assert_equal(Y, np.dot(X, beta) + noise)
 
+    # Test 2
     X, Y, beta, noise = \
         multivariate_temporal_simulation(n_samples=n_samples,
                                          n_features=n_features,
