@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>hidimstat.multivariate_1D_simulation &#8212; hidimstat 0.0.5 documentation</title>
+    <title>hidimstat.hd_inference &#8212; hidimstat 0.0.5 documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/style.css" />
@@ -18,8 +18,8 @@
     <script src="../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="hidimstat.permutation_test_cv" href="hidimstat.permutation_test_cv.html" />
-    <link rel="prev" title="hidimstat.hd_inference" href="hidimstat.hd_inference.html" />
+    <link rel="next" title="hidimstat.multivariate_1D_simulation" href="hidimstat.multivariate_1D_simulation.html" />
+    <link rel="prev" title="hidimstat.group_reid" href="hidimstat.group_reid.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -92,40 +92,50 @@
   <div class="row">
     <div class="body col-md-12 content" role="main">
       
-  <div class="section" id="hidimstat-multivariate-1d-simulation">
-<h1>hidimstat.multivariate_1D_simulation<a class="headerlink" href="#hidimstat-multivariate-1d-simulation" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="hidimstat-hd-inference">
+<h1>hidimstat.hd_inference<a class="headerlink" href="#hidimstat-hd-inference" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
-<dt id="hidimstat.multivariate_1D_simulation">
-<code class="sig-prename descclassname">hidimstat.</code><code class="sig-name descname">multivariate_1D_simulation</code><span class="sig-paren">(</span><em class="sig-param">n_samples=100</em>, <em class="sig-param">n_features=500</em>, <em class="sig-param">support_size=10</em>, <em class="sig-param">sigma=1.0</em>, <em class="sig-param">rho=0.0</em>, <em class="sig-param">shuffle=True</em>, <em class="sig-param">seed=0</em><span class="sig-paren">)</span><a class="headerlink" href="#hidimstat.multivariate_1D_simulation" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generate 1D data with Toeplitz design matrix</p>
+<dt id="hidimstat.hd_inference">
+<code class="sig-prename descclassname">hidimstat.</code><code class="sig-name descname">hd_inference</code><span class="sig-paren">(</span><em class="sig-param">X</em>, <em class="sig-param">y</em>, <em class="sig-param">method</em>, <em class="sig-param">n_jobs=1</em>, <em class="sig-param">memory=None</em>, <em class="sig-param">verbose=0</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#hidimstat.hd_inference" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wrap-up high-dimensional inference procedures</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>n_samples</strong><span class="classifier">int</span></dt><dd><p>Number of samples.</p>
+<dt><strong>X</strong><span class="classifier">ndarray, shape (n_samples, n_features)</span></dt><dd><p>Data.</p>
 </dd>
-<dt><strong>n_features</strong><span class="classifier">int</span></dt><dd><p>Number of features.</p>
+<dt><strong>y</strong><span class="classifier">ndarray, shape (n_samples,) or (n_samples, n_times)</span></dt><dd><p>Target.</p>
 </dd>
-<dt><strong>support_size</strong><span class="classifier">int</span></dt><dd><p>Size of the support.</p>
+<dt><strong>method</strong><span class="classifier">str, optional (default=’desparsified-lasso’)</span></dt><dd><p>Method used for making the inference.
+Currently the two methods available are ‘desparsified-lasso’
+and ‘group-desparsified-lasso’. Use ‘desparsified-lasso’ for
+non-temporal data and ‘group-desparsified-lasso’ for temporal data.</p>
 </dd>
-<dt><strong>sigma</strong><span class="classifier">float</span></dt><dd><p>Standard deviation of the additive White Gaussian noise.</p>
+<dt><strong>n_jobs</strong><span class="classifier">int or None, optional (default=1)</span></dt><dd><p>Number of CPUs to use during parallel steps such as inference.</p>
 </dd>
-<dt><strong>rho: float</strong></dt><dd><p>Level of correlation between neighboring features (if not <cite>shuffle</cite>).</p>
+<dt><strong>memory</strong><span class="classifier">str or joblib.Memory object, optional (default=None)</span></dt><dd><p>Used to cache the output of the computation of the clustering
+and the inference. By default, no caching is done. If a string is
+given, it is the path to the caching directory.</p>
 </dd>
-<dt><strong>shuffle</strong><span class="classifier">bool</span></dt><dd><p>Shuffle the features (breaking 1D data structure) if True.</p>
+<dt><strong>verbose: int, optional (default=1)</strong></dt><dd><p>The verbosity level. If <cite>verbose &gt; 0</cite>, we print a message before
+runing the clustered inference.</p>
 </dd>
-<dt><strong>seed</strong><span class="classifier">int</span></dt><dd><p>Seed used for generating design matrix and noise.</p>
+<dt><strong>**kwargs:</strong></dt><dd><p>Arguments passed to the statistical inference function.</p>
 </dd>
 </dl>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><dl class="simple">
-<dt><strong>X</strong><span class="classifier">ndarray, shape (n_samples, n_features)</span></dt><dd><p>Design matrix.</p>
+<dt><strong>beta_hat</strong><span class="classifier">ndarray, shape (n_features,) or (n_features, n_times)</span></dt><dd><p>Estimated parameter vector or matrix.</p>
 </dd>
-<dt><strong>y</strong><span class="classifier">ndarray, shape (n_samples,)</span></dt><dd><p>Target.</p>
+<dt><strong>pval</strong><span class="classifier">ndarray, shape (n_features,)</span></dt><dd><p>p-value, with numerically accurate values for
+positive effects (ie., for p-value close to zero).</p>
 </dd>
-<dt><strong>beta</strong><span class="classifier">ndarray, shape (n_features,)</span></dt><dd><p>Parameter vector.</p>
+<dt><strong>pval_corr</strong><span class="classifier">ndarray, shape (n_features,)</span></dt><dd><p>p-value corrected for multiple testing.</p>
 </dd>
-<dt><strong>noise</strong><span class="classifier">ndarray, shape (n_samples,)</span></dt><dd><p>Additive white Gaussian noise.</p>
+<dt><strong>one_minus_pval</strong><span class="classifier">ndarray, shape (n_features,)</span></dt><dd><p>One minus the p-value, with numerically accurate values
+for negative effects (ie., for p-value close to one).</p>
+</dd>
+<dt><strong>one_minus_pval_corr</strong><span class="classifier">ndarray, shape (n_features,)</span></dt><dd><p>One minus the p-value corrected for multiple testing.</p>
 </dd>
 </dl>
 </dd>
