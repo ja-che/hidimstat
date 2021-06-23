@@ -362,8 +362,7 @@ def pval_from_two_sided_pval_and_sign(two_sided_pval, parameter_sign,
 
 
 def two_sided_pval_from_pval(pval, one_minus_pval=None, distrib='norm'):
-    """Computing two-sided p-value from one-sided p-values testing
-    for negativity or positivity.
+    """Computing two-sided p-value from one-sided p-values.
 
     Parameters
     -----------

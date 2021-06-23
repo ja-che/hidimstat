@@ -17,8 +17,8 @@ def test_clustered_inference():
     with n << p: the first test has no temporal dimension, the second has a
     temporal dimension. The support is connected and of size 10, it must be
     recovered with a small spatial tolerance parametrized by `margin_size`.
-    Computing p-values that test negativity, we want low p-values for the
-    features of the support and p-values close to 0.5 for the others.'''
+    Computing one sided p-values, we want low p-values for the features of
+    the support and p-values close to 0.5 for the others.'''
 
     # Scenario 1: data with no temporal dimension
     # ###########################################

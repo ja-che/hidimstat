@@ -15,8 +15,8 @@ def test_ensemble_clustered_inference():
     '''Testing the procedure on a simulation with a 1D data structure
     and with n << p. The support is connected and of size 10, it must be
     recovered with a small spatial tolerance parametrized by `margin_size`.
-    Computing p-values that test negativity, we want low p-values for the
-    features of the support and p-values close to 0.5 for the others.'''
+    Computing one-sided p-values, we want low p-values for the features
+    of the support and p-values close to 0.5 for the others.'''
 
     n_samples, n_features = 100, 2000
     support_size = 10

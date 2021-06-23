@@ -43,8 +43,8 @@ def test_desparsified_lasso():
 
 def test_desparsified_group_lasso():
     '''Testing the procedure on a simulation with no structure and
-    a support of size 2. Computing p-values that test negativity,
-    we want low p-values for the features of the support and p-values
+    a support of size 2. Computing one-sided p-values, we want
+    low p-values for the features of the support and p-values
     close to 0.5 for the others.'''
 
     n_samples = 50

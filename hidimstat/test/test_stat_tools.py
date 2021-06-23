@@ -123,11 +123,11 @@ def test_two_sided_pval_from_cb():
 
 def test_zscore_from_pval():
 
-    pval = np.asarray([1.0, 0.025, 0.5])
+    pval = np.asarray([1.0, 0.025, 0.5, 0.975])
 
-    # Computing z-scores from p-value testing negativity
+    # Computing z-scores from p-value
     zscore = zscore_from_pval(pval)
-    expected = _replace_infinity(np.asarray([-np.inf, 1.96, 0]),
+    expected = _replace_infinity(np.asarray([-np.inf, 1.96, 0, -1.96]),
                                  replace_val=40, method='plus-one')
 
     assert_almost_equal(zscore, expected, decimal=2)
@@ -135,6 +135,7 @@ def test_zscore_from_pval():
     pval = np.asarray([1.0, 0.025, 0.5, 0.975])
     one_minus_pval = np.asarray([0.0, 0.975, 0.5, 0.025])
 
+    # Computing z-scores from p-value and one minus the p-value
     zscore = zscore_from_pval(pval, one_minus_pval)
     expected = _replace_infinity(np.asarray([-np.inf, 1.96, 0, -1.96]),
                                  replace_val=40, method='plus-one')
