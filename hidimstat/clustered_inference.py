@@ -146,7 +146,7 @@ def _degrouping(ward, beta_hat, pval, pval_corr,
             one_minus_pval_degrouped, one_minus_pval_corr_degrouped)
 
 
-def clustered_inference(X_init, y, ward, n_clusters, train_size=0.3,
+def clustered_inference(X_init, y, ward, n_clusters, train_size=1.0,
                         groups=None, method='desparsified-lasso', seed=0,
                         n_jobs=1, memory=None, verbose=1, **kwargs):
     """Clustered inference algorithm
@@ -165,7 +165,7 @@ def clustered_inference(X_init, y, ward, n_clusters, train_size=0.3,
     n_clusters : int
         Number of clusters used for the compression.
 
-    train_size : float, optional (default=0.3)
+    train_size : float, optional (default=1.0)
         Fraction of samples used to compute the clustering.
         If `train_size = 1`, clustering is not random since all the samples
         are used to compute the clustering.

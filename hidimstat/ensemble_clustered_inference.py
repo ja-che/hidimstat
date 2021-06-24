@@ -8,7 +8,13 @@ from .clustered_inference import clustered_inference
 def _ensembling(list_beta_hat, list_pval, list_pval_corr, list_one_minus_pval,
                 list_one_minus_pval_corr, method='quantiles', gamma_min=0.2):
 
-    beta_hat = np.mean(np.asarray(list_beta_hat), axis=0)
+    beta_hat = np.asarray(list_beta_hat)
+    list_pval = np.asarray(list_pval)
+    list_pval_corr = np.asarray(list_pval_corr)
+    list_one_minus_pval = np.asarray(list_one_minus_pval)
+    list_one_minus_pval_corr = np.asarray(list_one_minus_pval_corr)
+
+    beta_hat = np.mean(list_beta_hat, axis=0)
 
     if method == 'quantiles':
 
@@ -142,12 +148,17 @@ def ensemble_clustered_inference(X_init, y, ward, n_clusters,
         for i in np.arange(seed, seed + n_bootstraps))
 
     # Collecting results
-    results = np.asarray(results)
-    list_beta_hat = results[:, 0, :]
-    list_pval = results[:, 1, :]
-    list_pval_corr = results[:, 2, :]
-    list_one_minus_pval = results[:, 3, :]
-    list_one_minus_pval_corr = results[:, 4, :]
+    list_beta_hat = []
+    list_pval, list_pval_corr = [], []
+    list_one_minus_pval, list_one_minus_pval_corr = [], []
+
+    for i in range(n_bootstraps):
+
+        list_beta_hat.append(results[i][0])
+        list_pval.append(results[i][1])
+        list_pval_corr.append(results[i][2])
+        list_one_minus_pval.append(results[i][3])
+        list_one_minus_pval_corr.append(results[i][4])
 
     # Ensembling
     beta_hat, pval, pval_corr, one_minus_pval, one_minus_pval_corr = \
