@@ -156,15 +156,24 @@ zscore_active_set = zscore[active_set]
 # Building mne.SourceEstimate object
 stc = _compute_stc(zscore_active_set, active_set, evoked, forward)
 
+# Plotting
+max_stc = np.max(np.abs(stc._data))
+clim = dict(pos_lims=(3, zscore_target, max_stc), kind='value')
+brain = stc.plot(subject=subject, hemi='lh', clim=clim,
+                 subjects_dir=subjects_dir)
+brain.show_view('lat')
+brain.add_text(0.05, 0.9, 'audio - cd-MTLasso (AR1)', 'title', font_size=30)
+brain.save_image('figures/meg_audio_cd-MTLasso.png')
+
+interactive_plot = False
+if interactive_plot:
+    brain = stc.plot(subject=subject, hemi='both',
+                     subjects_dir=subjects_dir, clim=clim)
+
 # Runing the ensmeble clustered inference algorithm on temporal data
 # might take several minutes on standard device with `n_jobs=1` (around 10 mn)
 run_ensemble_clustered_inference = False
 if run_ensemble_clustered_inference:
-    # Plotting
-    max_stc = np.max(np.abs(stc._data))
-    clim = dict(pos_lims=(3, zscore_target, max_stc), kind='value')
-    brain = stc.plot(subject=subject, hemi='both', subjects_dir=subjects_dir,
-                     clim=clim)
 
     # Making the inference with the ensembled clustered inference algorithm
     beta_hat, pval, pval_corr, one_minus_pval, one_minus_pval_corr = \
@@ -187,5 +196,13 @@ if run_ensemble_clustered_inference:
     # Plotting
     max_stc = np.max(np.abs(stc._data))
     clim = dict(pos_lims=(3, zscore_target, max_stc), kind='value')
-    brain = stc.plot(subject=subject, hemi='both', subjects_dir=subjects_dir,
-                     clim=clim)
+    brain = stc.plot(subject=subject, hemi='lh', clim=clim,
+                     subjects_dir=subjects_dir)
+    brain.show_view('lat')
+    brain.add_text(0.05, 0.9, 'audio - ecd-MTLasso (AR1)',
+                   'title', font_size=30)
+
+    interactive_plot = False
+    if interactive_plot:
+        brain = stc.plot(subject=subject, hemi='both',
+                         subjects_dir=subjects_dir, clim=clim)
