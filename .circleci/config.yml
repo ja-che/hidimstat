@@ -52,8 +52,8 @@ jobs:
                LIBGL_DEBUG=verbose python -c "import pyvistaqt; pyvistaqt.BackgroundPlotter(show=True)"
         - run:
             name: make html
-            command: |
             no_output_timeout: 30m
+            command: |
               cd doc;
               git status
               git tag
