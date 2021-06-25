@@ -19,6 +19,7 @@ jobs:
           pre-build-command: |
             apt-get update
             apt-get install -y git libopenmpi-dev openmpi-bin
+            apt-get install -y libgl1-mesa-glx
             apt-get install -yqq libxkbcommon-x11-0 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-randr0 libxcb-render-util0 libxcb-xinerama0 libxcb-xfixes0 libopengl0
             pip install -r doc/doc-requirements.txt
             pip install .
