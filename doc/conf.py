@@ -241,7 +241,6 @@ sphinx_gallery_conf = {
     'min_reported_time': 1.,
     'backreferences_dir': os.path.join('generated'),
     'abort_on_example_error': False,
-    'reset_modules': ('matplotlib'),  # called w/each script
     'image_scrapers': scrapers,
     'show_memory': True,
     # 'reference_url': {
