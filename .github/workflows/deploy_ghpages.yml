@@ -28,7 +28,7 @@ jobs:
           pip install .
           echo "localhost slots=50">hostfile
         name: 'Install dependencies'
-      - run: sphinx-build doc doc/_build
+      - run: sphinx-build -b html doc doc/_build/html
         name: 'Generate HTML docs'
       - name:  Upload generated HTML as artifact
         uses: actions/upload-artifact@v2
