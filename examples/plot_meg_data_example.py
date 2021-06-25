@@ -1,3 +1,9 @@
+"""
+Support recovery on MEG data (2D)
+========================================
+
+"""
+
 import numpy as np
 import mne
 from mne.datasets import sample
@@ -157,6 +163,7 @@ zscore_active_set = zscore[active_set]
 stc = _compute_stc(zscore_active_set, active_set, evoked, forward)
 
 # Plotting
+mne.viz.set_3d_backend("pyvista")
 max_stc = np.max(np.abs(stc._data))
 clim = dict(pos_lims=(3, zscore_target, max_stc), kind='value')
 brain = stc.plot(subject=subject, hemi='lh', clim=clim,
@@ -194,6 +201,7 @@ if run_ensemble_clustered_inference:
     stc = _compute_stc(zscore_active_set, active_set, evoked, forward)
 
     # Plotting
+    mne.viz.set_3d_backend("pyvista")
     max_stc = np.max(np.abs(stc._data))
     clim = dict(pos_lims=(3, zscore_target, max_stc), kind='value')
     brain = stc.plot(subject=subject, hemi='lh', clim=clim,
