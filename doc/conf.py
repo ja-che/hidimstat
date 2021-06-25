@@ -250,4 +250,4 @@ sphinx_gallery_conf = {
 
 
 def setup(app):
-    app.add_stylesheet('style.css')
+    app.add_css_style('style.css')
