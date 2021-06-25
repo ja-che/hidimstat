@@ -52,7 +52,11 @@ jobs:
         - run:
             name: make html
             command: |
-              sphinx-build -b html doc doc/_build/html
+              cd doc;
+              git status
+              git tag
+              git branch
+              make html;
         - store_artifacts:
             path: doc/_build/html/
             destination: dev
