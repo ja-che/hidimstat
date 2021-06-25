@@ -9,5 +9,4 @@ scipy
 sphinx-bootstrap-theme
 sphinx-gallery
 mne
-mayavi
 pyvista

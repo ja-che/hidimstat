@@ -205,7 +205,6 @@ intersphinx_mapping = {
     'joblib': ('https://joblib.readthedocs.io/en/latest', None),
     'pandas': ('https://pandas.pydata.org/pandas-docs/stable', None),
     'seaborn': ('https://seaborn.pydata.org/', None),
-    'mayavi': ('http://docs.enthought.com/mayavi/mayavi', None),
     'pyvista': ('https://docs.pyvista.org', None),
 }
 
@@ -215,18 +214,6 @@ import mne
 
 scrapers = ('matplotlib',)
 try:
-    mlab = mne.utils._import_mlab()
-    # Do not pop up any mayavi windows while running the
-    # examples. These are very annoying since they steal the focus.
-    mlab.options.offscreen = True
-    # hack to initialize the Mayavi Engine
-    mlab.test_plot3d()
-    mlab.close()
-except Exception:
-    pass
-else:
-    scrapers += ('mayavi',)
-try:
     with warnings.catch_warnings():
         warnings.filterwarnings("ignore", category=DeprecationWarning)
         import pyvista
@@ -235,7 +222,7 @@ except Exception:
     pass
 else:
     scrapers += ('pyvista',)
-if any(x in scrapers for x in ('pyvista', 'mayavi')):
+if any(x in scrapers for x in ('pyvista')):
     from traits.api import push_exception_handler
     push_exception_handler(reraise_exceptions=True)
     report_scraper = mne.report._ReportScraper()
