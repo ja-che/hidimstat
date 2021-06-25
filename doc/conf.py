@@ -13,12 +13,15 @@
 # serve to show the default.
 
 import os
-import sys
+import time
 import warnings
 import sphinx_gallery
 import sphinx_bootstrap_theme
 from distutils.version import LooseVersion
 import matplotlib
+
+import mne
+from mne.utils import sizeof_fmt
 
 # Disable agg warnings in doc
 warnings.filterwarnings("ignore", category=UserWarning,
@@ -210,7 +213,31 @@ intersphinx_mapping = {
 
 examples_dirs = ['../examples']
 gallery_dirs = ['auto_examples']
-import mne
+
+
+class Resetter(object):
+    """Simple class to make the str(obj) static for Sphinx build env hash."""
+
+    def __init__(self):
+        self.t0 = time.time()
+
+    def __repr__(self):
+        return f'<{self.__class__.__name__}>'
+
+    def __call__(self, gallery_conf, fname):
+        import matplotlib.pyplot as plt
+        # in case users have interactive mode turned on in matplotlibrc,
+        # turn it off here (otherwise the build can be very slow)
+        plt.ioff()
+        plt.rcParams['animation.embed_limit'] = 30.
+        # This will overwrite some Sphinx printing but it's useful
+        # for memory timestamps
+        if os.getenv('SG_STAMP_STARTS', '').lower() == 'true':
+            import psutil
+            process = psutil.Process(os.getpid())
+            mem = sizeof_fmt(process.memory_info().rss)
+            print(f'{time.time() - self.t0:6.1f} s : {mem}'.ljust(22))
+
 
 scrapers = ('matplotlib',)
 try:
@@ -241,6 +268,7 @@ sphinx_gallery_conf = {
     'min_reported_time': 1.,
     'backreferences_dir': os.path.join('generated'),
     'abort_on_example_error': False,
+    'reset_modules': ('matplotlib', Resetter()),  # called w/each script
     'image_scrapers': scrapers,
     'show_memory': True,
     # 'reference_url': {
