@@ -28,6 +28,15 @@ jobs:
           pip install .
           echo "localhost slots=50">hostfile
         name: 'Install dependencies'
+      - run: |
+          LD_DEBUG=libs python -c "from PyQt5.QtWidgets import QApplication, QWidget; app = QApplication([])"
+        name: 'Check PyQt5'
+      - run: |
+          which python
+          QT_DEBUG_PLUGINS=1 mne sys_info
+          python -c "import numpy; numpy.show_config()"
+          LIBGL_DEBUG=verbose python -c "import pyvistaqt; pyvistaqt.BackgroundPlotter(show=True)"
+        name: 'Check installation'
       - run: sphinx-build -b html doc doc/_build/html
         name: 'Generate HTML docs'
       - name:  Upload generated HTML as artifact
