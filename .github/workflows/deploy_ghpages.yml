@@ -24,6 +24,7 @@ jobs:
       - run: |
           sudo apt-get install -y git libopenmpi-dev openmpi-bin
           pip install -r doc/doc-requirements.txt
+	        pip install --progress-bar off https://github.com/sphinx-gallery/sphinx-gallery/zipball/master
           pip install .
           echo "localhost slots=50">hostfile
         name: 'Install dependencies'
