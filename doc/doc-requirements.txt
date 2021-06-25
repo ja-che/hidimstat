@@ -10,3 +10,5 @@ sphinx-bootstrap-theme
 sphinx-gallery
 mne
 pyvista
+pyvistaqt
+PyQt5
