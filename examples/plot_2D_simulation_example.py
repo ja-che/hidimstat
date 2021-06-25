@@ -84,97 +84,91 @@ def plot(maps, titles, save_fig=False):
     plt.show()
 
 
-def main():
+# simulation parameters
+n_samples = 100
+shape = (40, 40)
+n_features = shape[1] * shape[0]
+roi_size = 4
+sigma = 2.0
+smooth_X = 1.0
 
-    # simulation parameters
-    n_samples = 100
-    shape = (40, 40)
-    n_features = shape[1] * shape[0]
-    roi_size = 4
-    sigma = 2.0
-    smooth_X = 1.0
+# hyper-parameters
+n_clusters = 200
 
-    # hyper-parameters
-    n_clusters = 200
+# inference parameters
+fwer_target = 0.1
+delta = 6
+# delta = 6 is the tolerance parameter corresponding to
+# n_clusters = 200 for this particular scenario.
+# To compute it, one must compute the largest cluster diameter.
 
-    # inference parameters
-    fwer_target = 0.1
-    delta = 6
-    # delta = 6 is the tolerance parameter corresponding to
-    # n_clusters = 200 for this particular scenario.
-    # To compute it, one must compute the largest cluster diameter.
+# computation parameter
+n_jobs = 1
 
-    # computation parameter
-    n_jobs = 1
+# computing the thresholds for feature selection
+correction_no_cluster = 1. / n_features
+correction_cluster = 1. / n_clusters
+thr_c = zscore_from_pval((fwer_target / 2) * correction_cluster)
+thr_nc = zscore_from_pval((fwer_target / 2) * correction_no_cluster)
 
-    # computing the thresholds for feature selection
-    correction_no_cluster = 1. / n_features
-    correction_cluster = 1. / n_clusters
-    thr_c = zscore_from_pval((fwer_target / 2) * correction_cluster)
-    thr_nc = zscore_from_pval((fwer_target / 2) * correction_no_cluster)
+X_init, y, beta, epsilon, _, _ = \
+    multivariate_simulation(n_samples, shape, roi_size, sigma, smooth_X,
+                            seed=1)
 
-    X_init, y, beta, epsilon, _, _ = \
-        multivariate_simulation(n_samples, shape, roi_size, sigma, smooth_X,
-                                seed=1)
+empirical_snr(X_init, y, beta, epsilon)
 
-    empirical_snr(X_init, y, beta, epsilon)
+beta_extended = weight_map_2D_extended(shape, roi_size, delta)
 
-    beta_extended = weight_map_2D_extended(shape, roi_size, delta)
+# desparsified lasso
+beta_hat, cb_min, cb_max = desparsified_lasso(X_init, y, n_jobs=n_jobs)
+pval, pval_corr, one_minus_pval, one_minus_pval_corr = \
+    pval_from_cb(cb_min, cb_max)
+zscore = zscore_from_pval(pval, one_minus_pval)
+selected_dl = zscore > thr_nc
+selected_dl = np.logical_or(pval_corr < fwer_target / 2,
+                            one_minus_pval_corr < fwer_target / 2)
 
-    # desparsified lasso
-    beta_hat, cb_min, cb_max = desparsified_lasso(X_init, y, n_jobs=n_jobs)
-    pval, pval_corr, one_minus_pval, one_minus_pval_corr = \
-        pval_from_cb(cb_min, cb_max)
-    zscore = zscore_from_pval(pval, one_minus_pval)
-    selected_dl = zscore > thr_nc
-    selected_dl = np.logical_or(pval_corr < fwer_target / 2,
-                                one_minus_pval_corr < fwer_target / 2)
+# clustered desparsified lasso (CluDL)
+connectivity = image.grid_to_graph(n_x=shape[0],
+                                   n_y=shape[1])
+ward = FeatureAgglomeration(n_clusters=n_clusters,
+                            connectivity=connectivity,
+                            linkage='ward')
+beta_hat, pval, pval_corr, one_minus_pval, one_minus_pval_corr = \
+    clustered_inference(X_init, y, ward, n_clusters)
+zscore = zscore_from_pval(pval, one_minus_pval)
+selected_cdl = zscore > thr_c
+selected_cdl = np.logical_or(pval_corr < fwer_target / 2,
+                             one_minus_pval_corr < fwer_target / 2)
 
-    # clustered desparsified lasso (CluDL)
-    connectivity = image.grid_to_graph(n_x=shape[0],
-                                       n_y=shape[1])
-    ward = FeatureAgglomeration(n_clusters=n_clusters,
-                                connectivity=connectivity,
-                                linkage='ward')
-    beta_hat, pval, pval_corr, one_minus_pval, one_minus_pval_corr = \
-        clustered_inference(X_init, y, ward, n_clusters)
-    zscore = zscore_from_pval(pval, one_minus_pval)
-    selected_cdl = zscore > thr_c
-    selected_cdl = np.logical_or(pval_corr < fwer_target / 2,
-                                 one_minus_pval_corr < fwer_target / 2)
+# ensemble of clustered desparsified lasso (EnCluDL)
+beta_hat, pval, pval_corr, one_minus_pval, one_minus_pval_corr = \
+    ensemble_clustered_inference(X_init, y, ward,
+                                 n_clusters, train_size=0.3)
+zscore = zscore_from_pval(pval, one_minus_pval)
+selected_ecdl = zscore > thr_c
+selected_ecdl = np.logical_or(pval_corr < fwer_target / 2,
+                              one_minus_pval_corr < fwer_target / 2)
 
-    # ensemble of clustered desparsified lasso (EnCluDL)
-    beta_hat, pval, pval_corr, one_minus_pval, one_minus_pval_corr = \
-        ensemble_clustered_inference(X_init, y, ward,
-                                     n_clusters, train_size=0.3)
-    zscore = zscore_from_pval(pval, one_minus_pval)
-    selected_ecdl = zscore > thr_c
-    selected_ecdl = np.logical_or(pval_corr < fwer_target / 2,
-                                  one_minus_pval_corr < fwer_target / 2)
+maps = []
+titles = []
 
-    maps = []
-    titles = []
+maps.append(np.reshape(beta, shape))
+titles.append('True weights')
 
-    maps.append(np.reshape(beta, shape))
-    titles.append('True weights')
+maps.append(np.reshape(beta_extended, shape))
+titles.append('True weights \nwith tolerance')
 
-    maps.append(np.reshape(beta_extended, shape))
-    titles.append('True weights \nwith tolerance')
+maps.append(np.reshape(selected_dl, shape))
+titles.append('Desparsified Lasso')
 
-    maps.append(np.reshape(selected_dl, shape))
-    titles.append('Desparsified Lasso')
+maps.append(None)
+titles.append(None)
 
-    maps.append(None)
-    titles.append(None)
+maps.append(np.reshape(selected_cdl, shape))
+titles.append('CluDL')
 
-    maps.append(np.reshape(selected_cdl, shape))
-    titles.append('CluDL')
+maps.append(np.reshape(selected_ecdl, shape))
+titles.append('EnCluDL')
 
-    maps.append(np.reshape(selected_ecdl, shape))
-    titles.append('EnCluDL')
-
-    plot(maps, titles)
-
-
-if __name__ == '__main__':
-    main()
+plot(maps, titles)

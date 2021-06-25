@@ -85,30 +85,24 @@ def plot(results, n_simu, fdr):
     print(f'Save figure to {figname}')
 
 
-def main():
-    # Simulation paramaters
-    n, p = 50, 200
-    snr = 3.0
-    rho = 0.5
-    sparsity = 0.06
-    offset = 1
-    fdr = 0.05
-    gamma = 0.3
-    n_bootstraps = 10
-    n_simu = 10
-    offset = 1
+# Simulation paramaters
+n, p = 50, 200
+snr = 3.0
+rho = 0.5
+sparsity = 0.06
+offset = 1
+fdr = 0.05
+gamma = 0.3
+n_bootstraps = 10
+n_simu = 10
+offset = 1
 
-    results = Parallel(n_jobs=1)(
-        delayed(one_inference)(
-            n=n, p=p, snr=snr, rho=rho, sparsity=sparsity,
-            n_jobs=1, n_bootstraps=n_bootstraps, fdr=fdr,
-            offset=offset, gamma=gamma, seed=seed)
-        for seed in range(n_simu))
+results = Parallel(n_jobs=1)(
+    delayed(one_inference)(
+        n=n, p=p, snr=snr, rho=rho, sparsity=sparsity,
+        n_jobs=1, n_bootstraps=n_bootstraps, fdr=fdr,
+        offset=offset, gamma=gamma, seed=seed)
+    for seed in range(n_simu))
 
-    # Plotting
-    plot(results, n_simu, fdr)
-    print('Done!')
-
-
-if __name__ == '__main__':
-    main()
+# Plotting
+plot(results, n_simu, fdr)
