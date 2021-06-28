@@ -187,7 +187,7 @@ n_clusters = 1000
 # Setting theoretical FWER target
 fwer_target = 0.1
 correction_clust_inf = 1. / n_clusters
-zscore_target = zscore_from_pval((fwer_target / 2) * correction_clust_inf)
+zscore_threshold = zscore_from_pval((fwer_target / 2) * correction_clust_inf)
 
 # Preprocessing MEG data
 X, Y, forward = preprocess_meg_eeg_data(evoked, forward, noise_cov, pca=pca)
@@ -229,7 +229,7 @@ elif cond == 'somato':
 # Plotting
 mne.viz.set_3d_backend("pyvista")
 max_stc = np.max(np.abs(stc._data))
-clim = dict(pos_lims=(3, zscore_target, max_stc), kind='value')
+clim = dict(pos_lims=(3, zscore_threshold, max_stc), kind='value')
 brain = stc.plot(subject=subject, hemi=hemi, clim=clim,
                  subjects_dir=subjects_dir)
 brain.show_view(view)
@@ -247,15 +247,15 @@ if interactive_plot:
 #  Compare with sLORETA
 lambda2 = 1. / 9
 inv = make_inverse_operator(evoked.info, forward, noise_cov, loose=0.,
-                            depth=0.0, fixed=True)
+                            depth=0., fixed=True)
 stc_full = apply_inverse(evoked, inv, lambda2=lambda2, method='sLORETA')
 stc_full = stc_full.mean()
 
 # Computing estimated support by sLORETA
 n_features = stc_full.data.size
-correction_inf = 1. / n_features
-zscore_target_no_clust = zscore_from_pval((fwer_target / 2) * correction_inf)
-active_set = np.abs(stc_full.data) > zscore_target_no_clust
+correction = 1. / n_features
+zscore_threshold_no_clust = zscore_from_pval((fwer_target / 2) * correction)
+active_set = np.abs(stc_full.data) > zscore_threshold_no_clust
 active_set = active_set.flatten()
 
 sLORETA_solution = np.atleast_2d(stc_full.data[active_set]).flatten()
@@ -266,7 +266,7 @@ stc = _make_sparse_stc(sLORETA_solution, active_set, forward, stc_full.tmin,
 # Plotting sLORETA solution
 mne.viz.set_3d_backend("pyvista")
 max_stc = np.max(np.abs(stc._data))
-clim = dict(pos_lims=(3, zscore_target_no_clust, max_stc), kind='value')
+clim = dict(pos_lims=(3, zscore_threshold_no_clust, max_stc), kind='value')
 brain = stc.plot(subject=subject, hemi=hemi, clim=clim,
                  subjects_dir=subjects_dir)
 brain.show_view(view)
@@ -298,7 +298,7 @@ if run_ensemble_clustered_inference:
     # Plotting
     mne.viz.set_3d_backend("pyvista")
     max_stc = np.max(np.abs(stc._data))
-    clim = dict(pos_lims=(3, zscore_target, max_stc), kind='value')
+    clim = dict(pos_lims=(3, zscore_threshold, max_stc), kind='value')
     brain = stc.plot(subject=subject, hemi=hemi, clim=clim,
                      subjects_dir=subjects_dir)
     brain.show_view(view)
