@@ -113,7 +113,7 @@ evoked = evoked.pick_types('grad')
 evoked.plot()
 evoked.crop(tmin=0.05, tmax=0.1)
 
-# Handling forward solution
+# Handling forward solution:
 forward = mne.read_forward_solution(fwd_fname)
 # Collecting features' connectivity
 connectivity = mne.source_estimate.spatial_src_adjacency(forward['src'])
