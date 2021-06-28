@@ -173,8 +173,7 @@ def main():
     maps.append(np.reshape(selected_ecdl, shape))
     titles.append('EnCluDL')
 
-    plot(maps, titles)
+    # plot(maps, titles)
 
 
-if __name__ == '__main__':
-    main()
+main()
