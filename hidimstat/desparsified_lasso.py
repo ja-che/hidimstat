@@ -2,10 +2,10 @@ import numpy as np
 from numpy.linalg import multi_dot
 from scipy import stats
 from scipy.linalg import inv
-from joblib import Parallel, delayed
 from sklearn.utils.validation import check_memory
 from sklearn.linear_model import Lasso
 
+from .parallel import parallel_func
 from .noise_std import reid, group_reid
 from .stat_tools import pval_from_two_sided_pval_and_sign
 
@@ -17,17 +17,11 @@ def _compute_all_residuals(X, alphas, gram, max_iter=5000, tol=1e-3,
 
     n_samples, n_features = X.shape
 
-    results = \
-        Parallel(n_jobs=n_jobs, verbose=verbose)(
-            delayed(_compute_residuals)
-                (X=X,
-                 column_index=i,
-                 alpha=alphas[i],
-                 gram=gram,
-                 max_iter=max_iter,
-                 tol=tol,
-                 method=method)
-            for i in range(n_features))
+    parallel, p_fun, _ = parallel_func(_compute_residuals, n_jobs=n_jobs)
+    results = parallel(
+        p_fun(X=X, column_index=i, alpha=alphas[i], gram=gram,
+              max_iter=max_iter, tol=tol, method=method)
+        for i in range(n_features))
 
     results = np.asarray(results)
     Z = np.stack(results[:, 0], axis=1)
