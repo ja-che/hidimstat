@@ -43,6 +43,8 @@ def one_inference(n, p, snr, rho, sparsity, n_bootstraps=25, gamma=0.3,
         ko_fdps.append(ko_fdp)
         ko_powers.append(ko_power)
 
+    return
+
     # Aggregated knockoff
     ako_selected = knockoff_aggregation(X, y, fdr=fdr, offset=offset,
                                         n_jobs=n_jobs, gamma=gamma,
@@ -110,5 +112,4 @@ def main():
     print('Done!')
 
 
-if __name__ == '__main__':
-    main()
+main()
