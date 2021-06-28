@@ -228,7 +228,12 @@ elif cond == 'somato':
 
 # Plotting
 mne.viz.set_3d_backend("pyvista")
-max_stc = np.max(np.abs(stc._data))
+
+if active_set.sum() != 0:
+    max_stc = np.max(np.abs(stc.data))
+else:
+    max_stc = 6
+
 clim = dict(pos_lims=(3, zscore_threshold, max_stc), kind='value')
 brain = stc.plot(subject=subject, hemi=hemi, clim=clim,
                  subjects_dir=subjects_dir)
@@ -265,7 +270,12 @@ stc = _make_sparse_stc(sLORETA_solution, active_set, forward, stc_full.tmin,
 
 # Plotting sLORETA solution
 mne.viz.set_3d_backend("pyvista")
-max_stc = np.max(np.abs(stc._data))
+
+if active_set.sum() != 0:
+    max_stc = np.max(np.abs(stc.data))
+else:
+    max_stc = 6
+
 clim = dict(pos_lims=(3, zscore_threshold_no_clust, max_stc), kind='value')
 brain = stc.plot(subject=subject, hemi=hemi, clim=clim,
                  subjects_dir=subjects_dir)
