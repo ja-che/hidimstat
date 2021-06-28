@@ -39,7 +39,6 @@ def one_inference(n, p, snr, rho, sparsity, n_bootstraps=25, gamma=0.3,
     for i in range(n_bootstraps):
         ko_selected = model_x_knockoff(X, y, fdr=fdr, offset=offset,
                                        n_jobs=n_jobs, seed=n_bootstraps*seed)
-        return
         ko_fdp, ko_power = cal_fdp_power(ko_selected, non_zero_index)
         ko_fdps.append(ko_fdp)
         ko_powers.append(ko_power)
