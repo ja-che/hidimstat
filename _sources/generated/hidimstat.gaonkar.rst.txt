@@ -1,4 +1,4 @@
-hidimstat.gaonkar
+﻿hidimstat.gaonkar
 =================
 
 .. currentmodule:: hidimstat

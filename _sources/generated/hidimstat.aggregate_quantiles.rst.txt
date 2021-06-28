@@ -1,4 +1,4 @@
-hidimstat.aggregate\_quantiles
+﻿hidimstat.aggregate\_quantiles
 ==============================
 
 .. currentmodule:: hidimstat

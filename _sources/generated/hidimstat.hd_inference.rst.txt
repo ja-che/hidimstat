@@ -1,4 +1,4 @@
-hidimstat.hd\_inference
+﻿hidimstat.hd\_inference
 =======================
 
 .. currentmodule:: hidimstat

@@ -1,4 +1,4 @@
-hidimstat.multivariate\_1D\_simulation
+﻿hidimstat.multivariate\_1D\_simulation
 ======================================
 
 .. currentmodule:: hidimstat

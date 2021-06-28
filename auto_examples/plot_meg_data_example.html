@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Support recovery on MEG data (2D) &#8212; hidimstat 0.0.5 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/style.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-rendered-html.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-sphinx.js "></script>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html">
+          hidimstat</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.0.5</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="index.html">Examples</a></li>
+                <li><a href="../api.html">API</a></li>
+                <li><a href="https://github.com/ja-che/hidimstat">GitHub</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API Documentation</a></li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+      
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-auto-examples-plot-meg-data-example-py"><span class="std std-ref">here</span></a>
+to download the full example code</p>
+</div>
+<section class="sphx-glr-example-title" id="support-recovery-on-meg-data-2d">
+<span id="sphx-glr-auto-examples-plot-meg-data-example-py"></span><h1>Support recovery on MEG data (2D)<a class="headerlink" href="#support-recovery-on-meg-data-2d" title="Permalink to this headline">¶</a></h1>
+<img src="../_images/sphx_glr_plot_meg_data_example_001.png" srcset="../_images/sphx_glr_plot_meg_data_example_001.png" alt="Gradiometers (203 channels)" class = "sphx-glr-single-img"/><img src="../_images/sphx_glr_plot_meg_data_example_002.png" srcset="../_images/sphx_glr_plot_meg_data_example_002.png" alt="plot meg data example" class = "sphx-glr-single-img"/><p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Using default location ~/mne_data for sample...
+Creating ~/mne_data
+Downloading archive MNE-sample-data-processed.tar.gz to /home/runner/mne_data
+Downloading https://files.osf.io/v1/resources/rxvq7/providers/osfstorage/59c0e26f9ad5a1025c4ab159?version=5&amp;action=download&amp;direct (1.54 GB)
+
+  0%|          | Downloading : 0.00/1.54G [00:00&lt;?,        ?B/s]
+  0%|          | Downloading : 120k/1.54G [00:00&lt;05:12,    5.28MB/s]
+  0%|          | Downloading : 312k/1.54G [00:00&lt;05:04,    5.44MB/s]
+  0%|          | Downloading : 1.05M/1.54G [00:00&lt;04:50,    5.68MB/s]
+  0%|          | Downloading : 4.55M/1.54G [00:00&lt;04:36,    5.96MB/s]
+  1%|          | Downloading : 10.6M/1.54G [00:00&lt;04:21,    6.27MB/s]
+  1%|          | Downloading : 14.6M/1.54G [00:00&lt;04:09,    6.57MB/s]
+  1%|1         | Downloading : 18.6M/1.54G [00:00&lt;03:56,    6.90MB/s]
+  1%|1         | Downloading : 22.6M/1.54G [00:00&lt;03:45,    7.24MB/s]
+  2%|1         | Downloading : 26.6M/1.54G [00:00&lt;03:33,    7.61MB/s]
+  2%|1         | Downloading : 30.6M/1.54G [00:00&lt;03:22,    7.99MB/s]
+  2%|2         | Downloading : 34.6M/1.54G [00:00&lt;03:13,    8.37MB/s]
+  2%|2         | Downloading : 38.6M/1.54G [00:00&lt;03:03,    8.79MB/s]
+  3%|2         | Downloading : 42.6M/1.54G [00:00&lt;02:54,    9.21MB/s]
+  3%|2         | Downloading : 46.6M/1.54G [00:00&lt;02:46,    9.65MB/s]
+  3%|3         | Downloading : 50.6M/1.54G [00:00&lt;02:38,    10.1MB/s]
+  3%|3         | Downloading : 54.6M/1.54G [00:00&lt;02:30,    10.6MB/s]
+  4%|3         | Downloading : 58.6M/1.54G [00:00&lt;02:23,    11.1MB/s]
+  4%|3         | Downloading : 62.6M/1.54G [00:00&lt;02:16,    11.6MB/s]
+  4%|4         | Downloading : 66.6M/1.54G [00:00&lt;02:09,    12.2MB/s]
+  4%|4         | Downloading : 70.6M/1.54G [00:00&lt;02:03,    12.8MB/s]
+  5%|4         | Downloading : 74.6M/1.54G [00:00&lt;01:57,    13.4MB/s]
+  5%|4         | Downloading : 78.6M/1.54G [00:00&lt;01:51,    14.1MB/s]
+  5%|5         | Downloading : 82.6M/1.54G [00:00&lt;01:46,    14.8MB/s]
+  5%|5         | Downloading : 86.6M/1.54G [00:00&lt;01:40,    15.5MB/s]
+  6%|5         | Downloading : 90.6M/1.54G [00:00&lt;01:35,    16.2MB/s]
+  6%|5         | Downloading : 94.6M/1.54G [00:00&lt;01:31,    17.0MB/s]
+  6%|6         | Downloading : 98.6M/1.54G [00:00&lt;01:27,    17.8MB/s]
+  7%|6         | Downloading : 103M/1.54G [00:00&lt;01:22,    18.6MB/s]
+  7%|6         | Downloading : 107M/1.54G [00:00&lt;01:18,    19.5MB/s]
+  7%|7         | Downloading : 111M/1.54G [00:00&lt;01:15,    20.4MB/s]
+  7%|7         | Downloading : 115M/1.54G [00:00&lt;01:11,    21.3MB/s]
+  8%|7         | Downloading : 119M/1.54G [00:00&lt;01:08,    22.2MB/s]
+  8%|7         | Downloading : 123M/1.54G [00:00&lt;01:05,    23.2MB/s]
+  8%|8         | Downloading : 127M/1.54G [00:00&lt;01:02,    24.2MB/s]
+  8%|8         | Downloading : 131M/1.54G [00:01&lt;00:59,    25.3MB/s]
+  9%|8         | Downloading : 135M/1.54G [00:01&lt;00:57,    26.4MB/s]
+  9%|8         | Downloading : 139M/1.54G [00:01&lt;00:54,    27.6MB/s]
+  9%|9         | Downloading : 143M/1.54G [00:01&lt;00:52,    28.9MB/s]
+  9%|9         | Downloading : 147M/1.54G [00:01&lt;00:49,    30.2MB/s]
+ 10%|9         | Downloading : 151M/1.54G [00:01&lt;00:47,    31.5MB/s]
+ 10%|9         | Downloading : 155M/1.54G [00:01&lt;00:45,    32.9MB/s]
+ 10%|#         | Downloading : 159M/1.54G [00:01&lt;00:43,    34.2MB/s]
+ 10%|#         | Downloading : 163M/1.54G [00:01&lt;00:41,    35.5MB/s]
+ 11%|#         | Downloading : 167M/1.54G [00:01&lt;00:40,    36.8MB/s]
+ 11%|#         | Downloading : 171M/1.54G [00:01&lt;00:38,    38.3MB/s]
+ 11%|#1        | Downloading : 175M/1.54G [00:01&lt;00:36,    39.9MB/s]
+ 11%|#1        | Downloading : 179M/1.54G [00:01&lt;00:35,    41.6MB/s]
+ 12%|#1        | Downloading : 183M/1.54G [00:01&lt;00:33,    43.3MB/s]
+ 12%|#1        | Downloading : 187M/1.54G [00:01&lt;00:32,    45.1MB/s]
+ 12%|#2        | Downloading : 191M/1.54G [00:01&lt;00:31,    46.9MB/s]
+ 12%|#2        | Downloading : 195M/1.54G [00:01&lt;00:29,    48.7MB/s]
+ 13%|#2        | Downloading : 199M/1.54G [00:01&lt;00:28,    50.6MB/s]
+ 13%|#2        | Downloading : 203M/1.54G [00:01&lt;00:27,    52.4MB/s]
+ 13%|#3        | Downloading : 207M/1.54G [00:01&lt;00:26,    54.4MB/s]
+ 13%|#3        | Downloading : 211M/1.54G [00:01&lt;00:25,    56.4MB/s]
+ 14%|#3        | Downloading : 215M/1.54G [00:01&lt;00:24,    58.3MB/s]
+ 14%|#3        | Downloading : 219M/1.54G [00:01&lt;00:23,    60.0MB/s]
+ 14%|#4        | Downloading : 223M/1.54G [00:01&lt;00:22,    61.8MB/s]
+ 14%|#4        | Downloading : 227M/1.54G [00:01&lt;00:22,    64.0MB/s]
+ 15%|#4        | Downloading : 231M/1.54G [00:01&lt;00:21,    65.5MB/s]
+ 15%|#4        | Downloading : 235M/1.54G [00:01&lt;00:21,    66.8MB/s]
+ 15%|#5        | Downloading : 239M/1.54G [00:01&lt;00:20,    68.6MB/s]
+ 15%|#5        | Downloading : 243M/1.54G [00:01&lt;00:19,    70.9MB/s]
+ 16%|#5        | Downloading : 247M/1.54G [00:01&lt;00:19,    73.1MB/s]
+ 16%|#5        | Downloading : 251M/1.54G [00:01&lt;00:18,    75.1MB/s]
+ 16%|#6        | Downloading : 255M/1.54G [00:01&lt;00:18,    75.7MB/s]
+ 16%|#6        | Downloading : 259M/1.54G [00:01&lt;00:17,    77.6MB/s]
+ 17%|#6        | Downloading : 263M/1.54G [00:01&lt;00:17,    79.4MB/s]
+ 17%|#6        | Downloading : 267M/1.54G [00:01&lt;00:16,    81.0MB/s]
+ 17%|#7        | Downloading : 271M/1.54G [00:01&lt;00:16,    83.5MB/s]
+ 17%|#7        | Downloading : 275M/1.54G [00:01&lt;00:15,    85.5MB/s]
+ 18%|#7        | Downloading : 279M/1.54G [00:01&lt;00:15,    86.9MB/s]
+ 18%|#7        | Downloading : 283M/1.54G [00:01&lt;00:15,    89.5MB/s]
+ 18%|#8        | Downloading : 287M/1.54G [00:02&lt;00:14,    91.4MB/s]
+ 18%|#8        | Downloading : 291M/1.54G [00:02&lt;00:14,    93.2MB/s]
+ 19%|#8        | Downloading : 295M/1.54G [00:02&lt;00:14,    95.2MB/s]
+ 19%|#8        | Downloading : 299M/1.54G [00:02&lt;00:13,    96.6MB/s]
+ 19%|#9        | Downloading : 303M/1.54G [00:02&lt;00:13,    98.4MB/s]
+ 19%|#9        | Downloading : 307M/1.54G [00:02&lt;00:14,    91.0MB/s]
+ 20%|#9        | Downloading : 313M/1.54G [00:02&lt;00:14,    93.0MB/s]
+ 20%|##        | Downloading : 317M/1.54G [00:02&lt;00:13,    95.2MB/s]
+ 20%|##        | Downloading : 321M/1.54G [00:02&lt;00:13,    97.3MB/s]
+ 21%|##        | Downloading : 325M/1.54G [00:02&lt;00:13,    99.3MB/s]
+ 21%|##        | Downloading : 329M/1.54G [00:02&lt;00:12,     101MB/s]
+ 21%|##1       | Downloading : 333M/1.54G [00:02&lt;00:12,     103MB/s]
+ 21%|##1       | Downloading : 337M/1.54G [00:02&lt;00:12,     104MB/s]
+ 22%|##1       | Downloading : 341M/1.54G [00:02&lt;00:12,     105MB/s]
+ 22%|##1       | Downloading : 345M/1.54G [00:02&lt;00:12,     107MB/s]
+ 22%|##2       | Downloading : 349M/1.54G [00:02&lt;00:11,     108MB/s]
+ 22%|##2       | Downloading : 353M/1.54G [00:02&lt;00:11,     110MB/s]
+ 23%|##2       | Downloading : 357M/1.54G [00:02&lt;00:11,     111MB/s]
+ 23%|##2       | Downloading : 361M/1.54G [00:02&lt;00:11,     112MB/s]
+ 23%|##3       | Downloading : 365M/1.54G [00:02&lt;00:11,     114MB/s]
+ 23%|##3       | Downloading : 369M/1.54G [00:02&lt;00:11,     114MB/s]
+ 24%|##3       | Downloading : 373M/1.54G [00:02&lt;00:10,     115MB/s]
+ 24%|##3       | Downloading : 377M/1.54G [00:02&lt;00:10,     118MB/s]
+ 24%|##4       | Downloading : 381M/1.54G [00:02&lt;00:10,     120MB/s]
+ 24%|##4       | Downloading : 385M/1.54G [00:02&lt;00:10,     120MB/s]
+ 25%|##4       | Downloading : 389M/1.54G [00:02&lt;00:10,     121MB/s]
+ 25%|##4       | Downloading : 393M/1.54G [00:02&lt;00:10,     121MB/s]
+ 25%|##5       | Downloading : 397M/1.54G [00:02&lt;00:10,     121MB/s]
+ 25%|##5       | Downloading : 401M/1.54G [00:02&lt;00:10,     122MB/s]
+ 26%|##5       | Downloading : 405M/1.54G [00:02&lt;00:09,     123MB/s]
+ 26%|##5       | Downloading : 409M/1.54G [00:02&lt;00:09,     123MB/s]
+ 26%|##6       | Downloading : 413M/1.54G [00:03&lt;00:09,     123MB/s]
+ 26%|##6       | Downloading : 417M/1.54G [00:03&lt;00:10,     120MB/s]
+ 27%|##6       | Downloading : 421M/1.54G [00:03&lt;00:09,     121MB/s]
+ 27%|##6       | Downloading : 425M/1.54G [00:03&lt;00:09,     124MB/s]
+ 27%|##7       | Downloading : 429M/1.54G [00:03&lt;00:09,     125MB/s]
+ 27%|##7       | Downloading : 433M/1.54G [00:03&lt;00:09,     127MB/s]
+ 28%|##7       | Downloading : 437M/1.54G [00:03&lt;00:09,     126MB/s]
+ 28%|##7       | Downloading : 441M/1.54G [00:03&lt;00:09,     127MB/s]
+ 28%|##8       | Downloading : 445M/1.54G [00:03&lt;00:09,     129MB/s]
+ 28%|##8       | Downloading : 449M/1.54G [00:03&lt;00:09,     130MB/s]
+ 29%|##8       | Downloading : 453M/1.54G [00:03&lt;00:09,     131MB/s]
+ 29%|##8       | Downloading : 457M/1.54G [00:03&lt;00:08,     133MB/s]
+ 29%|##9       | Downloading : 461M/1.54G [00:03&lt;00:08,     133MB/s]
+ 29%|##9       | Downloading : 465M/1.54G [00:03&lt;00:08,     133MB/s]
+ 30%|##9       | Downloading : 469M/1.54G [00:03&lt;00:08,     133MB/s]
+ 30%|##9       | Downloading : 473M/1.54G [00:03&lt;00:08,     136MB/s]
+ 30%|###       | Downloading : 477M/1.54G [00:03&lt;00:08,     138MB/s]
+ 30%|###       | Downloading : 481M/1.54G [00:03&lt;00:08,     141MB/s]
+ 31%|###       | Downloading : 485M/1.54G [00:03&lt;00:08,     142MB/s]
+ 31%|###       | Downloading : 489M/1.54G [00:03&lt;00:08,     142MB/s]
+ 31%|###1      | Downloading : 493M/1.54G [00:03&lt;00:07,     144MB/s]
+ 32%|###1      | Downloading : 497M/1.54G [00:03&lt;00:07,     145MB/s]
+ 32%|###1      | Downloading : 501M/1.54G [00:03&lt;00:07,     147MB/s]
+ 32%|###2      | Downloading : 505M/1.54G [00:03&lt;00:07,     147MB/s]
+ 32%|###2      | Downloading : 509M/1.54G [00:03&lt;00:07,     149MB/s]
+ 33%|###2      | Downloading : 513M/1.54G [00:03&lt;00:08,     136MB/s]
+ 33%|###2      | Downloading : 517M/1.54G [00:03&lt;00:08,     137MB/s]
+ 33%|###3      | Downloading : 521M/1.54G [00:03&lt;00:08,     137MB/s]
+ 33%|###3      | Downloading : 525M/1.54G [00:03&lt;00:08,     132MB/s]
+ 34%|###3      | Downloading : 529M/1.54G [00:03&lt;00:08,     130MB/s]
+ 34%|###3      | Downloading : 533M/1.54G [00:03&lt;00:08,     130MB/s]
+ 34%|###4      | Downloading : 537M/1.54G [00:03&lt;00:08,     130MB/s]
+ 34%|###4      | Downloading : 541M/1.54G [00:03&lt;00:08,     129MB/s]
+ 35%|###4      | Downloading : 545M/1.54G [00:04&lt;00:08,     129MB/s]
+ 35%|###4      | Downloading : 549M/1.54G [00:04&lt;00:08,     130MB/s]
+ 35%|###5      | Downloading : 553M/1.54G [00:04&lt;00:08,     130MB/s]
+ 35%|###5      | Downloading : 557M/1.54G [00:04&lt;00:08,     129MB/s]
+ 36%|###5      | Downloading : 561M/1.54G [00:04&lt;00:08,     130MB/s]
+ 36%|###5      | Downloading : 565M/1.54G [00:04&lt;00:08,     131MB/s]
+ 36%|###6      | Downloading : 569M/1.54G [00:04&lt;00:08,     131MB/s]
+ 36%|###6      | Downloading : 573M/1.54G [00:04&lt;00:07,     132MB/s]
+ 37%|###6      | Downloading : 577M/1.54G [00:04&lt;00:07,     133MB/s]
+ 37%|###6      | Downloading : 581M/1.54G [00:04&lt;00:07,     133MB/s]
+ 37%|###7      | Downloading : 585M/1.54G [00:04&lt;00:07,     133MB/s]
+ 37%|###7      | Downloading : 589M/1.54G [00:04&lt;00:07,     135MB/s]
+ 38%|###7      | Downloading : 593M/1.54G [00:04&lt;00:07,     136MB/s]
+ 38%|###7      | Downloading : 597M/1.54G [00:04&lt;00:07,     138MB/s]
+ 38%|###8      | Downloading : 601M/1.54G [00:04&lt;00:07,     131MB/s]
+ 38%|###8      | Downloading : 605M/1.54G [00:04&lt;00:07,     132MB/s]
+ 39%|###8      | Downloading : 609M/1.54G [00:04&lt;00:07,     131MB/s]
+ 39%|###8      | Downloading : 613M/1.54G [00:04&lt;00:07,     132MB/s]
+ 39%|###9      | Downloading : 617M/1.54G [00:04&lt;00:07,     132MB/s]
+ 39%|###9      | Downloading : 621M/1.54G [00:04&lt;00:07,     134MB/s]
+ 40%|###9      | Downloading : 625M/1.54G [00:04&lt;00:07,     134MB/s]
+ 40%|###9      | Downloading : 629M/1.54G [00:04&lt;00:07,     135MB/s]
+ 40%|####      | Downloading : 633M/1.54G [00:04&lt;00:08,     122MB/s]
+ 40%|####      | Downloading : 637M/1.54G [00:04&lt;00:08,     123MB/s]
+ 41%|####      | Downloading : 641M/1.54G [00:04&lt;00:07,     124MB/s]
+ 41%|####      | Downloading : 645M/1.54G [00:04&lt;00:07,     126MB/s]
+ 41%|####1     | Downloading : 649M/1.54G [00:04&lt;00:07,     127MB/s]
+ 41%|####1     | Downloading : 653M/1.54G [00:04&lt;00:07,     127MB/s]
+ 42%|####1     | Downloading : 657M/1.54G [00:04&lt;00:07,     127MB/s]
+ 42%|####1     | Downloading : 661M/1.54G [00:04&lt;00:07,     128MB/s]
+ 42%|####2     | Downloading : 665M/1.54G [00:04&lt;00:07,     127MB/s]
+ 42%|####2     | Downloading : 669M/1.54G [00:05&lt;00:07,     130MB/s]
+ 43%|####2     | Downloading : 673M/1.54G [00:05&lt;00:07,     121MB/s]
+ 43%|####2     | Downloading : 677M/1.54G [00:05&lt;00:07,     120MB/s]
+ 43%|####3     | Downloading : 681M/1.54G [00:05&lt;00:07,     120MB/s]
+ 43%|####3     | Downloading : 685M/1.54G [00:05&lt;00:07,     120MB/s]
+ 44%|####3     | Downloading : 689M/1.54G [00:05&lt;00:07,     122MB/s]
+ 44%|####3     | Downloading : 693M/1.54G [00:05&lt;00:07,     122MB/s]
+ 44%|####4     | Downloading : 697M/1.54G [00:05&lt;00:07,     122MB/s]
+ 44%|####4     | Downloading : 701M/1.54G [00:05&lt;00:07,     122MB/s]
+ 45%|####4     | Downloading : 705M/1.54G [00:05&lt;00:07,     123MB/s]
+ 45%|####4     | Downloading : 709M/1.54G [00:05&lt;00:07,     121MB/s]
+ 45%|####5     | Downloading : 713M/1.54G [00:05&lt;00:07,     120MB/s]
+ 45%|####5     | Downloading : 717M/1.54G [00:05&lt;00:07,     118MB/s]
+ 46%|####5     | Downloading : 721M/1.54G [00:05&lt;00:07,     115MB/s]
+ 46%|####5     | Downloading : 725M/1.54G [00:05&lt;00:07,     114MB/s]
+ 46%|####6     | Downloading : 729M/1.54G [00:05&lt;00:07,     113MB/s]
+ 46%|####6     | Downloading : 733M/1.54G [00:05&lt;00:07,     115MB/s]
+ 47%|####6     | Downloading : 737M/1.54G [00:05&lt;00:07,     117MB/s]
+ 47%|####6     | Downloading : 741M/1.54G [00:05&lt;00:07,     119MB/s]
+ 47%|####7     | Downloading : 745M/1.54G [00:05&lt;00:07,     116MB/s]
+ 47%|####7     | Downloading : 749M/1.54G [00:05&lt;00:07,     113MB/s]
+ 48%|####7     | Downloading : 753M/1.54G [00:05&lt;00:08,     108MB/s]
+ 48%|####7     | Downloading : 757M/1.54G [00:05&lt;00:08,     107MB/s]
+ 48%|####8     | Downloading : 761M/1.54G [00:05&lt;00:08,     106MB/s]
+ 49%|####8     | Downloading : 765M/1.54G [00:06&lt;00:08,     106MB/s]
+ 49%|####8     | Downloading : 769M/1.54G [00:06&lt;00:08,     105MB/s]
+ 49%|####9     | Downloading : 773M/1.54G [00:06&lt;00:07,     107MB/s]
+ 49%|####9     | Downloading : 777M/1.54G [00:06&lt;00:07,     108MB/s]
+ 50%|####9     | Downloading : 781M/1.54G [00:06&lt;00:07,     110MB/s]
+ 50%|####9     | Downloading : 785M/1.54G [00:06&lt;00:07,     111MB/s]
+ 50%|#####     | Downloading : 789M/1.54G [00:06&lt;00:07,     112MB/s]
+ 50%|#####     | Downloading : 793M/1.54G [00:06&lt;00:07,     113MB/s]
+ 51%|#####     | Downloading : 797M/1.54G [00:06&lt;00:07,     115MB/s]
+ 51%|#####     | Downloading : 801M/1.54G [00:06&lt;00:06,     117MB/s]
+ 51%|#####1    | Downloading : 805M/1.54G [00:06&lt;00:06,     118MB/s]
+ 51%|#####1    | Downloading : 809M/1.54G [00:06&lt;00:06,     119MB/s]
+ 52%|#####1    | Downloading : 813M/1.54G [00:06&lt;00:06,     119MB/s]
+ 52%|#####1    | Downloading : 817M/1.54G [00:06&lt;00:06,     119MB/s]
+ 52%|#####2    | Downloading : 821M/1.54G [00:06&lt;00:07,     112MB/s]
+ 52%|#####2    | Downloading : 825M/1.54G [00:06&lt;00:07,     104MB/s]
+ 53%|#####2    | Downloading : 829M/1.54G [00:06&lt;00:07,     106MB/s]
+ 53%|#####2    | Downloading : 833M/1.54G [00:06&lt;00:07,     108MB/s]
+ 53%|#####3    | Downloading : 837M/1.54G [00:06&lt;00:07,     110MB/s]
+ 53%|#####3    | Downloading : 841M/1.54G [00:06&lt;00:06,     112MB/s]
+ 54%|#####3    | Downloading : 845M/1.54G [00:06&lt;00:06,     114MB/s]
+ 54%|#####3    | Downloading : 849M/1.54G [00:06&lt;00:06,     116MB/s]
+ 54%|#####4    | Downloading : 853M/1.54G [00:06&lt;00:06,     118MB/s]
+ 54%|#####4    | Downloading : 857M/1.54G [00:06&lt;00:06,     120MB/s]
+ 55%|#####4    | Downloading : 861M/1.54G [00:06&lt;00:06,     120MB/s]
+ 55%|#####4    | Downloading : 865M/1.54G [00:06&lt;00:06,     122MB/s]
+ 55%|#####5    | Downloading : 869M/1.54G [00:06&lt;00:05,     124MB/s]
+ 55%|#####5    | Downloading : 873M/1.54G [00:06&lt;00:06,     123MB/s]
+ 56%|#####5    | Downloading : 877M/1.54G [00:06&lt;00:05,     125MB/s]
+ 56%|#####5    | Downloading : 881M/1.54G [00:06&lt;00:05,     128MB/s]
+ 56%|#####6    | Downloading : 885M/1.54G [00:06&lt;00:05,     130MB/s]
+ 56%|#####6    | Downloading : 889M/1.54G [00:06&lt;00:05,     132MB/s]
+ 57%|#####6    | Downloading : 893M/1.54G [00:07&lt;00:05,     133MB/s]
+ 57%|#####6    | Downloading : 897M/1.54G [00:07&lt;00:05,     134MB/s]
+ 57%|#####7    | Downloading : 901M/1.54G [00:07&lt;00:05,     135MB/s]
+ 57%|#####7    | Downloading : 905M/1.54G [00:07&lt;00:05,     135MB/s]
+ 58%|#####7    | Downloading : 909M/1.54G [00:07&lt;00:05,     137MB/s]
+ 58%|#####7    | Downloading : 913M/1.54G [00:07&lt;00:05,     126MB/s]
+ 58%|#####8    | Downloading : 917M/1.54G [00:07&lt;00:05,     127MB/s]
+ 58%|#####8    | Downloading : 921M/1.54G [00:07&lt;00:05,     128MB/s]
+ 59%|#####8    | Downloading : 925M/1.54G [00:07&lt;00:05,     130MB/s]
+ 59%|#####8    | Downloading : 929M/1.54G [00:07&lt;00:05,     131MB/s]
+ 59%|#####9    | Downloading : 933M/1.54G [00:07&lt;00:05,     133MB/s]
+ 59%|#####9    | Downloading : 937M/1.54G [00:07&lt;00:05,     134MB/s]
+ 60%|#####9    | Downloading : 941M/1.54G [00:07&lt;00:04,     135MB/s]
+ 60%|#####9    | Downloading : 945M/1.54G [00:07&lt;00:05,     122MB/s]
+ 60%|######    | Downloading : 949M/1.54G [00:07&lt;00:05,     123MB/s]
+ 60%|######    | Downloading : 953M/1.54G [00:07&lt;00:05,     122MB/s]
+ 61%|######    | Downloading : 957M/1.54G [00:07&lt;00:05,     123MB/s]
+ 61%|######    | Downloading : 961M/1.54G [00:07&lt;00:05,     124MB/s]
+ 61%|######1   | Downloading : 965M/1.54G [00:07&lt;00:05,     125MB/s]
+ 61%|######1   | Downloading : 969M/1.54G [00:07&lt;00:05,     127MB/s]
+ 62%|######1   | Downloading : 973M/1.54G [00:07&lt;00:04,     128MB/s]
+ 62%|######1   | Downloading : 977M/1.54G [00:07&lt;00:04,     129MB/s]
+ 62%|######2   | Downloading : 981M/1.54G [00:07&lt;00:04,     131MB/s]
+ 62%|######2   | Downloading : 985M/1.54G [00:07&lt;00:04,     132MB/s]
+ 63%|######2   | Downloading : 989M/1.54G [00:07&lt;00:04,     133MB/s]
+ 63%|######2   | Downloading : 993M/1.54G [00:07&lt;00:04,     133MB/s]
+ 63%|######3   | Downloading : 997M/1.54G [00:07&lt;00:04,     131MB/s]
+ 63%|######3   | Downloading : 0.98G/1.54G [00:07&lt;00:04,     129MB/s]
+ 64%|######3   | Downloading : 0.98G/1.54G [00:07&lt;00:04,     128MB/s]
+ 64%|######3   | Downloading : 0.98G/1.54G [00:07&lt;00:04,     128MB/s]
+ 64%|######4   | Downloading : 0.99G/1.54G [00:08&lt;00:04,     127MB/s]
+ 64%|######4   | Downloading : 0.99G/1.54G [00:08&lt;00:04,     124MB/s]
+ 65%|######4   | Downloading : 1.00G/1.54G [00:08&lt;00:04,     122MB/s]
+ 65%|######5   | Downloading : 1.00G/1.54G [00:08&lt;00:04,     120MB/s]
+ 65%|######5   | Downloading : 1.00G/1.54G [00:08&lt;00:04,     119MB/s]
+ 66%|######5   | Downloading : 1.01G/1.54G [00:08&lt;00:04,     123MB/s]
+ 66%|######6   | Downloading : 1.02G/1.54G [00:08&lt;00:04,     126MB/s]
+ 66%|######6   | Downloading : 1.02G/1.54G [00:08&lt;00:04,     129MB/s]
+ 67%|######6   | Downloading : 1.02G/1.54G [00:08&lt;00:04,     130MB/s]
+ 67%|######6   | Downloading : 1.03G/1.54G [00:08&lt;00:04,     130MB/s]
+ 67%|######7   | Downloading : 1.03G/1.54G [00:08&lt;00:05,    93.6MB/s]
+ 67%|######7   | Downloading : 1.04G/1.54G [00:08&lt;00:05,    95.6MB/s]
+ 68%|######7   | Downloading : 1.04G/1.54G [00:08&lt;00:05,    97.8MB/s]
+ 68%|######7   | Downloading : 1.05G/1.54G [00:08&lt;00:05,    99.4MB/s]
+ 68%|######8   | Downloading : 1.05G/1.54G [00:08&lt;00:05,    99.8MB/s]
+ 68%|######8   | Downloading : 1.05G/1.54G [00:08&lt;00:05,     102MB/s]
+ 69%|######8   | Downloading : 1.06G/1.54G [00:08&lt;00:05,     101MB/s]
+ 69%|######8   | Downloading : 1.06G/1.54G [00:08&lt;00:04,     103MB/s]
+ 69%|######9   | Downloading : 1.06G/1.54G [00:08&lt;00:04,     106MB/s]
+ 69%|######9   | Downloading : 1.07G/1.54G [00:08&lt;00:04,     107MB/s]
+ 70%|######9   | Downloading : 1.07G/1.54G [00:08&lt;00:04,     107MB/s]
+ 70%|######9   | Downloading : 1.08G/1.54G [00:08&lt;00:04,     105MB/s]
+ 70%|#######   | Downloading : 1.08G/1.54G [00:09&lt;00:04,     107MB/s]
+ 70%|#######   | Downloading : 1.08G/1.54G [00:09&lt;00:04,     107MB/s]
+ 71%|#######   | Downloading : 1.09G/1.54G [00:09&lt;00:04,     108MB/s]
+ 71%|#######   | Downloading : 1.09G/1.54G [00:09&lt;00:04,     107MB/s]
+ 71%|#######1  | Downloading : 1.10G/1.54G [00:09&lt;00:04,     108MB/s]
+ 71%|#######1  | Downloading : 1.10G/1.54G [00:09&lt;00:04,     109MB/s]
+ 72%|#######1  | Downloading : 1.10G/1.54G [00:09&lt;00:04,     110MB/s]
+ 72%|#######1  | Downloading : 1.11G/1.54G [00:09&lt;00:04,     110MB/s]
+ 72%|#######2  | Downloading : 1.11G/1.54G [00:09&lt;00:04,     111MB/s]
+ 72%|#######2  | Downloading : 1.12G/1.54G [00:09&lt;00:04,     112MB/s]
+ 73%|#######2  | Downloading : 1.12G/1.54G [00:09&lt;00:03,     113MB/s]
+ 73%|#######2  | Downloading : 1.12G/1.54G [00:09&lt;00:03,     115MB/s]
+ 73%|#######3  | Downloading : 1.13G/1.54G [00:09&lt;00:03,     117MB/s]
+ 74%|#######3  | Downloading : 1.13G/1.54G [00:09&lt;00:03,     118MB/s]
+ 74%|#######3  | Downloading : 1.14G/1.54G [00:09&lt;00:03,     119MB/s]
+ 74%|#######4  | Downloading : 1.14G/1.54G [00:09&lt;00:03,     120MB/s]
+ 74%|#######4  | Downloading : 1.14G/1.54G [00:09&lt;00:03,     121MB/s]
+ 75%|#######4  | Downloading : 1.15G/1.54G [00:09&lt;00:03,     122MB/s]
+ 75%|#######4  | Downloading : 1.15G/1.54G [00:09&lt;00:03,     122MB/s]
+ 75%|#######5  | Downloading : 1.15G/1.54G [00:09&lt;00:03,     122MB/s]
+ 75%|#######5  | Downloading : 1.16G/1.54G [00:09&lt;00:03,     121MB/s]
+ 76%|#######5  | Downloading : 1.16G/1.54G [00:09&lt;00:03,     121MB/s]
+ 76%|#######5  | Downloading : 1.17G/1.54G [00:09&lt;00:03,     122MB/s]
+ 76%|#######6  | Downloading : 1.17G/1.54G [00:09&lt;00:03,     122MB/s]
+ 76%|#######6  | Downloading : 1.17G/1.54G [00:09&lt;00:03,     123MB/s]
+ 77%|#######6  | Downloading : 1.18G/1.54G [00:09&lt;00:03,     120MB/s]
+ 77%|#######6  | Downloading : 1.18G/1.54G [00:09&lt;00:03,     106MB/s]
+ 77%|#######6  | Downloading : 1.18G/1.54G [00:09&lt;00:03,     107MB/s]
+ 77%|#######7  | Downloading : 1.19G/1.54G [00:10&lt;00:03,    99.2MB/s]
+ 77%|#######7  | Downloading : 1.19G/1.54G [00:10&lt;00:03,    99.1MB/s]
+ 77%|#######7  | Downloading : 1.19G/1.54G [00:10&lt;00:03,    96.4MB/s]
+ 77%|#######7  | Downloading : 1.19G/1.54G [00:10&lt;00:03,    96.3MB/s]
+ 78%|#######7  | Downloading : 1.19G/1.54G [00:10&lt;00:03,    97.5MB/s]
+ 78%|#######7  | Downloading : 1.20G/1.54G [00:10&lt;00:03,    98.0MB/s]
+ 78%|#######7  | Downloading : 1.20G/1.54G [00:10&lt;00:03,    92.8MB/s]
+ 78%|#######7  | Downloading : 1.20G/1.54G [00:10&lt;00:03,    93.2MB/s]
+ 78%|#######8  | Downloading : 1.20G/1.54G [00:10&lt;00:03,    93.5MB/s]
+ 78%|#######8  | Downloading : 1.20G/1.54G [00:10&lt;00:03,    94.3MB/s]
+ 78%|#######8  | Downloading : 1.21G/1.54G [00:10&lt;00:03,    94.2MB/s]
+ 79%|#######8  | Downloading : 1.21G/1.54G [00:10&lt;00:03,    95.0MB/s]
+ 79%|#######8  | Downloading : 1.21G/1.54G [00:10&lt;00:03,    95.3MB/s]
+ 79%|#######8  | Downloading : 1.21G/1.54G [00:10&lt;00:03,    95.4MB/s]
+ 79%|#######8  | Downloading : 1.22G/1.54G [00:10&lt;00:03,    95.9MB/s]
+ 79%|#######9  | Downloading : 1.22G/1.54G [00:10&lt;00:03,    96.8MB/s]
+ 79%|#######9  | Downloading : 1.22G/1.54G [00:10&lt;00:03,    97.1MB/s]
+ 79%|#######9  | Downloading : 1.22G/1.54G [00:10&lt;00:03,    96.7MB/s]
+ 79%|#######9  | Downloading : 1.22G/1.54G [00:10&lt;00:03,    95.2MB/s]
+ 80%|#######9  | Downloading : 1.23G/1.54G [00:10&lt;00:03,    94.3MB/s]
+ 80%|#######9  | Downloading : 1.23G/1.54G [00:10&lt;00:03,    94.7MB/s]
+ 80%|#######9  | Downloading : 1.23G/1.54G [00:10&lt;00:03,    94.7MB/s]
+ 80%|#######9  | Downloading : 1.23G/1.54G [00:10&lt;00:03,    94.2MB/s]
+ 80%|########  | Downloading : 1.23G/1.54G [00:10&lt;00:03,    93.7MB/s]
+ 80%|########  | Downloading : 1.24G/1.54G [00:10&lt;00:03,    95.1MB/s]
+ 80%|########  | Downloading : 1.24G/1.54G [00:10&lt;00:03,    95.8MB/s]
+ 81%|########  | Downloading : 1.24G/1.54G [00:10&lt;00:03,    97.7MB/s]
+ 81%|########  | Downloading : 1.25G/1.54G [00:11&lt;00:04,    65.8MB/s]
+ 81%|########1 | Downloading : 1.25G/1.54G [00:11&lt;00:04,    67.7MB/s]
+ 82%|########1 | Downloading : 1.26G/1.54G [00:11&lt;00:04,    68.3MB/s]
+ 82%|########1 | Downloading : 1.26G/1.54G [00:11&lt;00:04,    70.0MB/s]
+ 82%|########2 | Downloading : 1.26G/1.54G [00:11&lt;00:04,    72.1MB/s]
+ 82%|########2 | Downloading : 1.27G/1.54G [00:11&lt;00:03,    74.6MB/s]
+ 83%|########2 | Downloading : 1.27G/1.54G [00:11&lt;00:03,    77.1MB/s]
+ 83%|########3 | Downloading : 1.28G/1.54G [00:11&lt;00:03,    80.0MB/s]
+ 83%|########3 | Downloading : 1.28G/1.54G [00:11&lt;00:03,    82.7MB/s]
+ 84%|########3 | Downloading : 1.29G/1.54G [00:11&lt;00:03,    85.6MB/s]
+ 84%|########4 | Downloading : 1.30G/1.54G [00:11&lt;00:02,    88.6MB/s]
+ 85%|########4 | Downloading : 1.30G/1.54G [00:11&lt;00:02,    91.6MB/s]
+ 85%|########4 | Downloading : 1.31G/1.54G [00:11&lt;00:02,    94.6MB/s]
+ 85%|########5 | Downloading : 1.31G/1.54G [00:11&lt;00:02,    97.7MB/s]
+ 86%|########5 | Downloading : 1.32G/1.54G [00:11&lt;00:02,     101MB/s]
+ 86%|########5 | Downloading : 1.32G/1.54G [00:11&lt;00:02,     104MB/s]
+ 86%|########6 | Downloading : 1.33G/1.54G [00:11&lt;00:02,     107MB/s]
+ 86%|########6 | Downloading : 1.33G/1.54G [00:11&lt;00:02,     110MB/s]
+ 87%|########6 | Downloading : 1.33G/1.54G [00:11&lt;00:01,     113MB/s]
+ 87%|########6 | Downloading : 1.34G/1.54G [00:11&lt;00:01,     113MB/s]
+ 87%|########7 | Downloading : 1.34G/1.54G [00:11&lt;00:02,     103MB/s]
+ 87%|########7 | Downloading : 1.34G/1.54G [00:11&lt;00:02,    93.0MB/s]
+ 88%|########7 | Downloading : 1.35G/1.54G [00:11&lt;00:02,    94.4MB/s]
+ 88%|########7 | Downloading : 1.35G/1.54G [00:11&lt;00:02,    95.5MB/s]
+ 88%|########7 | Downloading : 1.35G/1.54G [00:11&lt;00:02,    96.6MB/s]
+ 88%|########7 | Downloading : 1.35G/1.54G [00:11&lt;00:02,    97.5MB/s]
+ 88%|########8 | Downloading : 1.36G/1.54G [00:11&lt;00:01,    99.8MB/s]
+ 88%|########8 | Downloading : 1.36G/1.54G [00:11&lt;00:01,    96.6MB/s]
+ 89%|########8 | Downloading : 1.37G/1.54G [00:11&lt;00:01,    98.5MB/s]
+ 89%|########8 | Downloading : 1.37G/1.54G [00:12&lt;00:01,    99.9MB/s]
+ 89%|########9 | Downloading : 1.37G/1.54G [00:12&lt;00:01,     101MB/s]
+ 89%|########9 | Downloading : 1.38G/1.54G [00:12&lt;00:01,     102MB/s]
+ 90%|########9 | Downloading : 1.38G/1.54G [00:12&lt;00:01,     102MB/s]
+ 90%|########9 | Downloading : 1.39G/1.54G [00:12&lt;00:01,     103MB/s]
+ 90%|######### | Downloading : 1.39G/1.54G [00:12&lt;00:01,     105MB/s]
+ 91%|######### | Downloading : 1.39G/1.54G [00:12&lt;00:01,     105MB/s]
+ 91%|######### | Downloading : 1.40G/1.54G [00:12&lt;00:01,     100MB/s]
+ 91%|#########1| Downloading : 1.40G/1.54G [00:12&lt;00:01,     102MB/s]
+ 91%|#########1| Downloading : 1.40G/1.54G [00:12&lt;00:01,     101MB/s]
+ 92%|#########1| Downloading : 1.41G/1.54G [00:12&lt;00:01,     101MB/s]
+ 92%|#########1| Downloading : 1.41G/1.54G [00:12&lt;00:01,     100MB/s]
+ 92%|#########2| Downloading : 1.42G/1.54G [00:12&lt;00:01,    99.1MB/s]
+ 92%|#########2| Downloading : 1.42G/1.54G [00:12&lt;00:01,     100MB/s]
+ 93%|#########2| Downloading : 1.42G/1.54G [00:12&lt;00:01,     100MB/s]
+ 93%|#########2| Downloading : 1.43G/1.54G [00:12&lt;00:01,    99.0MB/s]
+ 93%|#########3| Downloading : 1.43G/1.54G [00:12&lt;00:01,    99.4MB/s]
+ 93%|#########3| Downloading : 1.44G/1.54G [00:12&lt;00:01,     101MB/s]
+ 94%|#########3| Downloading : 1.44G/1.54G [00:12&lt;00:01,     103MB/s]
+ 94%|#########3| Downloading : 1.44G/1.54G [00:12&lt;00:00,     106MB/s]
+ 94%|#########4| Downloading : 1.45G/1.54G [00:12&lt;00:00,     109MB/s]
+ 94%|#########4| Downloading : 1.45G/1.54G [00:12&lt;00:00,     112MB/s]
+ 95%|#########4| Downloading : 1.46G/1.54G [00:12&lt;00:00,     111MB/s]
+ 95%|#########4| Downloading : 1.46G/1.54G [00:12&lt;00:00,     111MB/s]
+ 95%|#########5| Downloading : 1.46G/1.54G [00:12&lt;00:00,     113MB/s]
+ 95%|#########5| Downloading : 1.47G/1.54G [00:12&lt;00:00,     114MB/s]
+ 96%|#########5| Downloading : 1.47G/1.54G [00:12&lt;00:00,     115MB/s]
+ 96%|#########5| Downloading : 1.48G/1.54G [00:12&lt;00:00,     118MB/s]
+ 96%|#########6| Downloading : 1.48G/1.54G [00:12&lt;00:00,     119MB/s]
+ 96%|#########6| Downloading : 1.48G/1.54G [00:13&lt;00:00,     120MB/s]
+ 97%|#########6| Downloading : 1.49G/1.54G [00:13&lt;00:00,     119MB/s]
+ 97%|#########6| Downloading : 1.49G/1.54G [00:13&lt;00:00,     120MB/s]
+ 97%|#########7| Downloading : 1.49G/1.54G [00:13&lt;00:00,     120MB/s]
+ 97%|#########7| Downloading : 1.50G/1.54G [00:13&lt;00:00,     120MB/s]
+ 98%|#########7| Downloading : 1.50G/1.54G [00:13&lt;00:00,     122MB/s]
+ 98%|#########7| Downloading : 1.51G/1.54G [00:13&lt;00:00,     123MB/s]
+ 98%|#########8| Downloading : 1.51G/1.54G [00:13&lt;00:00,     120MB/s]
+ 98%|#########8| Downloading : 1.51G/1.54G [00:13&lt;00:00,     120MB/s]
+ 99%|#########8| Downloading : 1.52G/1.54G [00:13&lt;00:00,     121MB/s]
+ 99%|#########8| Downloading : 1.52G/1.54G [00:13&lt;00:00,     122MB/s]
+ 99%|#########9| Downloading : 1.53G/1.54G [00:13&lt;00:00,     123MB/s]
+ 99%|#########9| Downloading : 1.53G/1.54G [00:13&lt;00:00,     125MB/s]
+100%|#########9| Downloading : 1.53G/1.54G [00:13&lt;00:00,     123MB/s]
+100%|#########9| Downloading : 1.54G/1.54G [00:13&lt;00:00,     124MB/s]
+100%|##########| Downloading : 1.54G/1.54G [00:13&lt;00:00,     122MB/s]
+Verifying hash 12b75d1cb7df9dfb4ad73ed82f61094f.
+Decompressing the archive: /home/runner/mne_data/MNE-sample-data-processed.tar.gz
+(please be patient, this can take some time)
+Successfully extracted to: [&#39;/home/runner/mne_data/MNE-sample-data&#39;]
+Attempting to create new mne-python configuration file:
+/home/runner/.mne/mne-python.json
+    365 x 365 full covariance (kind = 1) found.
+    Read a total of 4 projection items:
+        PCA-v1 (1 x 102) active
+        PCA-v2 (1 x 102) active
+        PCA-v3 (1 x 102) active
+        Average EEG reference (1 x 59) active
+Reading /home/runner/mne_data/MNE-sample-data/MEG/sample/sample_audvis-ave.fif ...
+    Read a total of 4 projection items:
+        PCA-v1 (1 x 102) active
+        PCA-v2 (1 x 102) active
+        PCA-v3 (1 x 102) active
+        Average EEG reference (1 x 60) active
+    Found the data of interest:
+        t =    -199.80 ...     499.49 ms (Left Auditory)
+        0 CTF compensation matrices available
+        nave = 55 - aspect type = 100
+Projections have already been applied. Setting proj attribute to True.
+Applying baseline correction (mode: mean)
+Removing projector &lt;Projection | PCA-v1, active : True, n_channels : 102&gt;
+Removing projector &lt;Projection | PCA-v2, active : True, n_channels : 102&gt;
+Removing projector &lt;Projection | PCA-v3, active : True, n_channels : 102&gt;
+Removing projector &lt;Projection | Average EEG reference, active : True, n_channels : 60&gt;
+Reading forward solution from /home/runner/mne_data/MNE-sample-data/MEG/sample/sample_audvis-meg-eeg-oct-6-fwd.fif...
+    Reading a source space...
+    Computing patch statistics...
+    Patch information added...
+    Distance information added...
+    [done]
+    Reading a source space...
+    Computing patch statistics...
+    Patch information added...
+    Distance information added...
+    [done]
+    2 source spaces read
+    Desired named matrix (kind = 3523) not available
+    Read MEG forward solution (7498 sources, 306 channels, free orientations)
+    Desired named matrix (kind = 3523) not available
+    Read EEG forward solution (7498 sources, 60 channels, free orientations)
+    MEG and EEG forward solutions combined
+    Source spaces transformed to the forward solution coordinate frame
+-- number of adjacent vertices : 8196
+/home/runner/work/hidimstat/hidimstat/examples/plot_meg_data_example.py:119: RuntimeWarning: 8.5% of original source space vertices have been omitted, tri-based adjacency will have holes.
+Consider using distance-based adjacency or morphing data to all source space vertices.
+  connectivity = mne.source_estimate.spatial_src_adjacency(forward[&#39;src&#39;])
+/home/runner/work/hidimstat/hidimstat/examples/plot_meg_data_example.py:125: RuntimeWarning: The measurement information indicates a low-pass frequency of 40 Hz. The decim=6 parameter will result in a sampling frequency of 100.102 Hz, which can cause aliasing artifacts.
+  evoked.decimate(step)
+Converting forward solution to fixed orietnation
+    Average patch normals will be employed in the rotation to the local surface coordinates....
+    Converting to surface-based source orientations...
+    [done]
+info[&quot;bads&quot;] and noise_cov[&quot;bads&quot;] do not match, excluding bad channels from both
+Computing inverse operator with 203 channels.
+    203 out of 366 channels remain after picking
+Selected 203 channels
+Whitening the forward solution.
+Computing rank from covariance with rank=None
+    Using tolerance 1.9e-13 (2.2e-16 eps * 203 dim * 4.2  max singular value)
+    Estimated rank (grad): 203
+    GRAD: rank 203 computed from 203 data channels with 0 projectors
+    Setting small GRAD eigenvalues to zero (without PCA)
+Creating the source covariance matrix
+Adjusting source covariance matrix.
+/home/runner/work/hidimstat/hidimstat/examples/plot_meg_data_example.py:144: UserWarning: the number of connected components of the connectivity matrix is 2 &gt; 1. Completing it to avoid stopping the tree early.
+  _fix_connectivity(X.T, connectivity, affinity=&quot;euclidean&quot;)
+Clustered inference: n_clusters = 1000, inference method = desparsified-group-lasso, seed = 0
+/home/runner/.local/lib/python3.8/site-packages/sklearn/cluster/_agglomerative.py:245: UserWarning: the number of connected components of the connectivity matrix is 2 &gt; 1. Completing it to avoid stopping the tree early.
+  connectivity, n_connected_components = _fix_connectivity(
+/home/runner/work/hidimstat/hidimstat/hidimstat/desparsified_lasso.py:32: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify &#39;dtype=object&#39; when creating the ndarray.
+  results = np.asarray(results)
+Group reid: AR1 cov estimation
+Using pyvista 3d backend.
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">mne</span>
+<span class="kn">from</span> <span class="nn">mne.datasets</span> <span class="k">import</span> <span class="n">sample</span>
+<span class="kn">from</span> <span class="nn">mne.inverse_sparse.mxne_inverse</span> <span class="k">import</span> <span class="n">_prepare_gain</span><span class="p">,</span> <span class="n">_make_sparse_stc</span>
+<span class="kn">from</span> <span class="nn">sklearn.cluster</span> <span class="k">import</span> <a href="https://scikit-learn.org/stable/modules/generated/sklearn.cluster.FeatureAgglomeration.html#sklearn.cluster.FeatureAgglomeration" title="sklearn.cluster.FeatureAgglomeration" class="sphx-glr-backref-module-sklearn-cluster sphx-glr-backref-type-py-class"><span class="n">FeatureAgglomeration</span></a>
+<span class="kn">from</span> <span class="nn">sklearn.cluster._agglomerative</span> <span class="k">import</span> <span class="n">_fix_connectivity</span>
+
+<span class="kn">from</span> <span class="nn">hidimstat.clustered_inference</span> <span class="k">import</span> <span class="n">clustered_inference</span>
+<span class="kn">from</span> <span class="nn">hidimstat.ensemble_clustered_inference</span> <span class="k">import</span> \
+    <span class="n">ensemble_clustered_inference</span>
+<span class="kn">from</span> <span class="nn">hidimstat.stat_tools</span> <span class="k">import</span> <span class="n">zscore_from_pval</span>
+
+
+<span class="k">def</span> <span class="nf">preprocess_meg_eeg_data</span><span class="p">(</span><span class="n">evoked</span><span class="p">,</span> <span class="n">forward</span><span class="p">,</span> <span class="n">noise_cov</span><span class="p">,</span> <span class="n">loose</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span>
+                            <span class="n">pca</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">rank</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Preprocess MEG or EEG data to produce the whitened MEG/EEG measurements</span>
+<span class="sd">    (target) and the preprocessed gain matrix (design matrix). This function</span>
+<span class="sd">    is mainly wrapping the `_prepare_gain` MNE function.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    evoked : instance of mne.Evoked</span>
+<span class="sd">        The evoked data.</span>
+
+<span class="sd">    forward : instance of Forward</span>
+<span class="sd">        The forward solution.</span>
+
+<span class="sd">    noise_cov : instance of Covariance</span>
+<span class="sd">        The noise covariance.</span>
+
+<span class="sd">    loose : float in [0, 1] or &#39;auto&#39;</span>
+<span class="sd">        Value that weights the source variances of the dipole components</span>
+<span class="sd">        that are parallel (tangential) to the cortical surface. If loose</span>
+<span class="sd">        is 0 then the solution is computed with fixed orientation.</span>
+<span class="sd">        If loose is 1, it corresponds to free orientations.</span>
+<span class="sd">        The default value (&#39;auto&#39;) is set to 0.2 for surface-oriented source</span>
+<span class="sd">        space and set to 1.0 for volumic or discrete source space.</span>
+
+<span class="sd">    depth : None or float in [0, 1]</span>
+<span class="sd">        Depth weighting coefficients. If None, no depth weighting is performed.</span>
+
+<span class="sd">    pca : bool, optional (default=False)</span>
+<span class="sd">        If True, Whitener is reduced.</span>
+<span class="sd">        If False, Whitener is not reduced.</span>
+
+<span class="sd">    rank : None or int</span>
+<span class="sd">        Rank reduction of the whitener. If None rank is estimated from data.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    G : array, shape (n_channels, n_dipoles)</span>
+<span class="sd">        The preprocessed gain matrix.</span>
+
+<span class="sd">    M : array, shape (n_channels, n_times)</span>
+<span class="sd">        The whitened MEG/EEG measurements.</span>
+
+<span class="sd">    forward : instance of Forward</span>
+<span class="sd">        The preprocessed forward solution.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">all_ch_names</span> <span class="o">=</span> <span class="n">evoked</span><span class="o">.</span><span class="n">ch_names</span>
+
+    <span class="c1"># Handle depth weighting and whitening (here is no weights)</span>
+    <span class="n">forward</span><span class="p">,</span> <span class="n">G</span><span class="p">,</span> <span class="n">gain_info</span><span class="p">,</span> <span class="n">whitener</span><span class="p">,</span> <span class="n">source_weighting</span><span class="p">,</span> <span class="n">mask</span> <span class="o">=</span> \
+        <span class="n">_prepare_gain</span><span class="p">(</span><span class="n">forward</span><span class="p">,</span> <span class="n">evoked</span><span class="o">.</span><span class="n">info</span><span class="p">,</span> <span class="n">noise_cov</span><span class="p">,</span> <span class="n">pca</span><span class="o">=</span><span class="n">pca</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="n">depth</span><span class="p">,</span>
+                      <span class="n">loose</span><span class="o">=</span><span class="n">loose</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">weights_min</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">rank</span><span class="o">=</span><span class="n">rank</span><span class="p">)</span>
+
+    <span class="c1"># Select channels of interest</span>
+    <span class="n">sel</span> <span class="o">=</span> <span class="p">[</span><span class="n">all_ch_names</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">gain_info</span><span class="p">[</span><span class="s1">&#39;ch_names&#39;</span><span class="p">]]</span>
+
+    <span class="n">M</span> <span class="o">=</span> <span class="n">evoked</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">sel</span><span class="p">]</span>
+    <span class="n">M</span> <span class="o">=</span> <a href="https://numpy.org/devdocs/reference/generated/numpy.dot.html#numpy.dot" title="numpy.dot" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">dot</span></a><span class="p">(</span><span class="n">whitener</span><span class="p">,</span> <span class="n">M</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">G</span><span class="p">,</span> <span class="n">M</span><span class="p">,</span> <span class="n">forward</span>
+
+
+<span class="k">def</span> <span class="nf">_compute_stc</span><span class="p">(</span><a href="https://numpy.org/devdocs/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">zscore_active_set</span></a><span class="p">,</span> <a href="https://numpy.org/devdocs/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">active_set</span></a><span class="p">,</span> <span class="n">evoked</span><span class="p">,</span> <span class="n">forward</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Wrapper of `_make_sparse_stc`&quot;&quot;&quot;</span>
+
+    <a href="https://numpy.org/devdocs/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X</span></a> <span class="o">=</span> <a href="https://numpy.org/devdocs/reference/generated/numpy.atleast_2d.html#numpy.atleast_2d" title="numpy.atleast_2d" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">atleast_2d</span></a><span class="p">(</span><a href="https://numpy.org/devdocs/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">zscore_active_set</span></a><span class="p">)</span>
+
+    <span class="k">if</span> <a href="https://docs.python.org/3/library/stdtypes.html#tuple" title="builtins.tuple" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X</span><span class="o">.</span><span class="n">shape</span></a><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <a href="https://docs.python.org/3/library/stdtypes.html#tuple" title="builtins.tuple" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X</span><span class="o">.</span><span class="n">shape</span></a><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <a href="https://numpy.org/devdocs/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X</span></a> <span class="o">=</span> <a href="https://numpy.org/devdocs/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X</span><span class="o">.</span><span class="n">T</span></a>
+
+    <span class="n">stc</span> <span class="o">=</span> <span class="n">_make_sparse_stc</span><span class="p">(</span><a href="https://numpy.org/devdocs/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X</span></a><span class="p">,</span> <a href="https://numpy.org/devdocs/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">active_set</span></a><span class="p">,</span> <span class="n">forward</span><span class="p">,</span> <span class="n">tmin</span><span class="o">=</span><a href="https://numpy.org/devdocs/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">evoked</span><span class="o">.</span><span class="n">times</span></a><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                           <span class="n">tstep</span><span class="o">=</span><span class="mf">1.</span> <span class="o">/</span> <span class="n">evoked</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;sfreq&#39;</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">stc</span>
+
+
+<span class="c1"># Downloading data</span>
+<a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">subject</span></a> <span class="o">=</span> <span class="s1">&#39;sample&#39;</span>
+<a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data_path</span></a> <span class="o">=</span> <span class="n">sample</span><span class="o">.</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data_path</span></a><span class="p">()</span>
+<a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">fwd_fname</span></a> <span class="o">=</span> <a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data_path</span></a> <span class="o">+</span> <span class="s1">&#39;/MEG/sample/sample_audvis-meg-eeg-oct-6-fwd.fif&#39;</span>
+<a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ave_fname</span></a> <span class="o">=</span> <a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data_path</span></a> <span class="o">+</span> <span class="s1">&#39;/MEG/sample/sample_audvis-ave.fif&#39;</span>
+<a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">raw_fname</span></a> <span class="o">=</span> <a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data_path</span></a> <span class="o">+</span> <span class="s1">&#39;/MEG/sample/sample_audvis_raw.fif&#39;</span>
+<a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">cov_fname</span></a> <span class="o">=</span> <a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data_path</span></a> <span class="o">+</span> <span class="s1">&#39;/MEG/sample/sample_audvis-shrunk-cov.fif&#39;</span>
+<a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">subjects_dir</span></a> <span class="o">=</span> <a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data_path</span></a> <span class="o">+</span> <span class="s1">&#39;/subjects&#39;</span>
+<a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">condition</span></a> <span class="o">=</span> <span class="s1">&#39;Left Auditory&#39;</span>
+
+<span class="c1"># Read noise covariance matrix</span>
+<span class="n">noise_cov</span> <span class="o">=</span> <span class="n">mne</span><span class="o">.</span><span class="n">read_cov</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">cov_fname</span></a><span class="p">)</span>
+
+<span class="c1"># Handling average file</span>
+<span class="n">evoked</span> <span class="o">=</span> <span class="n">mne</span><span class="o">.</span><span class="n">read_evokeds</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ave_fname</span></a><span class="p">,</span> <a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">condition</span></a><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">condition</span></a><span class="p">,</span> <span class="n">baseline</span><span class="o">=</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+<span class="n">evoked</span> <span class="o">=</span> <span class="n">evoked</span><span class="o">.</span><span class="n">pick_types</span><span class="p">(</span><span class="s1">&#39;grad&#39;</span><span class="p">)</span>
+<span class="c1"># Selecting relevant time window</span>
+<span class="n">evoked</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+<span class="n">evoked</span><span class="o">.</span><span class="n">crop</span><span class="p">(</span><span class="n">tmin</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">tmax</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+
+<span class="c1"># Handling forward solution:</span>
+<span class="n">forward</span> <span class="o">=</span> <span class="n">mne</span><span class="o">.</span><span class="n">read_forward_solution</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">fwd_fname</span></a><span class="p">)</span>
+<span class="c1"># Collecting features&#39; connectivity</span>
+<a href="https://scipy.github.io/devdocs/reference/generated/scipy.sparse.coo_matrix.html#scipy.sparse.coo_matrix" title="scipy.sparse.coo_matrix" class="sphx-glr-backref-module-scipy-sparse sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">connectivity</span></a> <span class="o">=</span> <span class="n">mne</span><span class="o">.</span><span class="n">source_estimate</span><span class="o">.</span><span class="n">spatial_src_adjacency</span><span class="p">(</span><span class="n">forward</span><span class="p">[</span><span class="s1">&#39;src&#39;</span><span class="p">])</span>
+
+<span class="c1"># Choosing frequency and number of clusters used for compression.</span>
+<span class="c1"># Reducing the frequency to 100Hz to make inference faster</span>
+<a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">t_step</span></a> <span class="o">=</span> <span class="mf">0.01</span>
+<a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">step</span></a> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">t_step</span></a> <span class="o">*</span> <span class="n">evoked</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;sfreq&#39;</span><span class="p">])</span>
+<span class="n">evoked</span><span class="o">.</span><span class="n">decimate</span><span class="p">(</span><a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">step</span></a><span class="p">)</span>
+<a href="https://numpy.org/devdocs/reference/arrays.scalars.html#numpy.float64" title="numpy.float64" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-attribute"><span class="n">t_min</span></a> <span class="o">=</span> <a href="https://numpy.org/devdocs/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">evoked</span><span class="o">.</span><span class="n">times</span></a><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">t_step</span></a> <span class="o">=</span> <span class="mf">1.</span> <span class="o">/</span> <span class="n">evoked</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;sfreq&#39;</span><span class="p">]</span>
+<span class="c1"># Taking n_clusters &gt; 2000 might lead to an unpowerfull inference.</span>
+<span class="c1"># Taking n_clusters &lt; 500 might compress too much the data leading</span>
+<span class="c1"># to a compress problem not close enough to the original problem.</span>
+<span class="c1"># For MEG data n_clusters = 1000 is generally a good default choice.</span>
+<a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">n_clusters</span></a> <span class="o">=</span> <span class="mi">1000</span>
+<span class="c1"># Setting theoretical FWER target</span>
+<a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">fwer_target</span></a> <span class="o">=</span> <span class="mf">0.1</span>
+<a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">correction_clust_inf</span></a> <span class="o">=</span> <span class="mf">1.</span> <span class="o">/</span> <a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">n_clusters</span></a>
+<a href="https://numpy.org/devdocs/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">zscore_target</span></a> <span class="o">=</span> <span class="n">zscore_from_pval</span><span class="p">((</span><a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">fwer_target</span></a> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">correction_clust_inf</span></a><span class="p">)</span>
+
+
+<span class="c1"># Preprocessing MEG data</span>
+<a href="https://numpy.org/devdocs/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X</span></a><span class="p">,</span> <a href="https://numpy.org/devdocs/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">Y</span></a><span class="p">,</span> <span class="n">forward</span> <span class="o">=</span> <span class="n">preprocess_meg_eeg_data</span><span class="p">(</span><span class="n">evoked</span><span class="p">,</span> <span class="n">forward</span><span class="p">,</span> <span class="n">noise_cov</span><span class="p">)</span>
+
+<span class="c1"># Initializing FeatureAgglomeration object used for the clustering step</span>
+<a href="https://scipy.github.io/devdocs/reference/generated/scipy.sparse.lil_matrix.html#scipy.sparse.lil_matrix" title="scipy.sparse.lil_matrix" class="sphx-glr-backref-module-scipy-sparse sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">connectivity_fixed</span></a><span class="p">,</span> <a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">_</span></a> <span class="o">=</span> \
+    <span class="n">_fix_connectivity</span><span class="p">(</span><a href="https://numpy.org/devdocs/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X</span><span class="o">.</span><span class="n">T</span></a><span class="p">,</span> <a href="https://scipy.github.io/devdocs/reference/generated/scipy.sparse.coo_matrix.html#scipy.sparse.coo_matrix" title="scipy.sparse.coo_matrix" class="sphx-glr-backref-module-scipy-sparse sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">connectivity</span></a><span class="p">,</span> <span class="n">affinity</span><span class="o">=</span><span class="s2">&quot;euclidean&quot;</span><span class="p">)</span>
+<a href="https://scikit-learn.org/stable/modules/generated/sklearn.cluster.FeatureAgglomeration.html#sklearn.cluster.FeatureAgglomeration" title="sklearn.cluster.FeatureAgglomeration" class="sphx-glr-backref-module-sklearn-cluster sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ward</span></a> <span class="o">=</span> <a href="https://scikit-learn.org/stable/modules/generated/sklearn.cluster.FeatureAgglomeration.html#sklearn.cluster.FeatureAgglomeration" title="sklearn.cluster.FeatureAgglomeration" class="sphx-glr-backref-module-sklearn-cluster sphx-glr-backref-type-py-class"><span class="n">FeatureAgglomeration</span></a><span class="p">(</span><a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">n_clusters</span></a><span class="o">=</span><a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">n_clusters</span></a><span class="p">,</span> <a href="https://scipy.github.io/devdocs/reference/generated/scipy.sparse.coo_matrix.html#scipy.sparse.coo_matrix" title="scipy.sparse.coo_matrix" class="sphx-glr-backref-module-scipy-sparse sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">connectivity</span></a><span class="o">=</span><a href="https://scipy.github.io/devdocs/reference/generated/scipy.sparse.coo_matrix.html#scipy.sparse.coo_matrix" title="scipy.sparse.coo_matrix" class="sphx-glr-backref-module-scipy-sparse sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">connectivity</span></a><span class="p">)</span>
+
+<span class="c1"># Making the inference with the clustered inference algorithm</span>
+<a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">inference_method</span></a> <span class="o">=</span> <span class="s1">&#39;desparsified-group-lasso&#39;</span>
+<a href="https://numpy.org/devdocs/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">beta_hat</span></a><span class="p">,</span> <a href="https://numpy.org/devdocs/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">pval</span></a><span class="p">,</span> <a href="https://numpy.org/devdocs/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">pval_corr</span></a><span class="p">,</span> <a href="https://numpy.org/devdocs/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">one_minus_pval</span></a><span class="p">,</span> <a href="https://numpy.org/devdocs/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">one_minus_pval_corr</span></a> <span class="o">=</span> \
+    <span class="n">clustered_inference</span><span class="p">(</span><a href="https://numpy.org/devdocs/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X</span></a><span class="p">,</span> <a href="https://numpy.org/devdocs/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">Y</span></a><span class="p">,</span> <a href="https://scikit-learn.org/stable/modules/generated/sklearn.cluster.FeatureAgglomeration.html#sklearn.cluster.FeatureAgglomeration" title="sklearn.cluster.FeatureAgglomeration" class="sphx-glr-backref-module-sklearn-cluster sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ward</span></a><span class="p">,</span> <a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">n_clusters</span></a><span class="p">,</span> <span class="n">method</span><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">inference_method</span></a><span class="p">)</span>
+
+<span class="c1"># Extracting active set (support)</span>
+<a href="https://numpy.org/devdocs/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">active_set</span></a> <span class="o">=</span> <a href="https://numpy.org/devdocs/reference/generated/numpy.ufunc.html#numpy.ufunc" title="numpy.ufunc" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">np</span><span class="o">.</span><span class="n">logical_or</span></a><span class="p">(</span><a href="https://numpy.org/devdocs/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">pval_corr</span></a> <span class="o">&lt;</span> <a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">fwer_target</span></a> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
+                           <a href="https://numpy.org/devdocs/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">one_minus_pval_corr</span></a> <span class="o">&lt;</span> <a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">fwer_target</span></a> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+<a href="https://numpy.org/devdocs/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">active_set_full</span></a> <span class="o">=</span> <a href="https://numpy.org/devdocs/reference/generated/numpy.copy.html#numpy.copy" title="numpy.copy" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">copy</span></a><span class="p">(</span><a href="https://numpy.org/devdocs/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">active_set</span></a><span class="p">)</span>
+<a href="https://numpy.org/devdocs/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">active_set_full</span></a><span class="p">[:]</span> <span class="o">=</span> <span class="kc">True</span>
+
+<span class="c1"># Computing z-scores</span>
+<a href="https://numpy.org/devdocs/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">zscore</span></a> <span class="o">=</span> <span class="n">zscore_from_pval</span><span class="p">(</span><a href="https://numpy.org/devdocs/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">pval</span></a><span class="p">,</span> <a href="https://numpy.org/devdocs/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">one_minus_pval</span></a><span class="p">)</span>
+<a href="https://numpy.org/devdocs/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">zscore_active_set</span></a> <span class="o">=</span> <a href="https://numpy.org/devdocs/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">zscore</span></a><span class="p">[</span><a href="https://numpy.org/devdocs/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">active_set</span></a><span class="p">]</span>
+
+<span class="c1"># Building mne.SourceEstimate object</span>
+<span class="n">stc</span> <span class="o">=</span> <span class="n">_compute_stc</span><span class="p">(</span><a href="https://numpy.org/devdocs/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">zscore_active_set</span></a><span class="p">,</span> <a href="https://numpy.org/devdocs/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">active_set</span></a><span class="p">,</span> <span class="n">evoked</span><span class="p">,</span> <span class="n">forward</span><span class="p">)</span>
+
+<span class="c1"># Plotting</span>
+<span class="n">mne</span><span class="o">.</span><span class="n">viz</span><span class="o">.</span><span class="n">set_3d_backend</span><span class="p">(</span><span class="s2">&quot;pyvista&quot;</span><span class="p">)</span>
+<a href="https://numpy.org/devdocs/reference/arrays.scalars.html#numpy.float64" title="numpy.float64" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-attribute"><span class="n">max_stc</span></a> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><a href="https://numpy.org/devdocs/reference/generated/numpy.ufunc.html#numpy.ufunc" title="numpy.ufunc" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">np</span><span class="o">.</span><span class="n">abs</span></a><span class="p">(</span><a href="https://numpy.org/devdocs/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">stc</span><span class="o">.</span><span class="n">_data</span></a><span class="p">))</span>
+<a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">clim</span></a> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">pos_lims</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <a href="https://numpy.org/devdocs/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">zscore_target</span></a><span class="p">,</span> <a href="https://numpy.org/devdocs/reference/arrays.scalars.html#numpy.float64" title="numpy.float64" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-attribute"><span class="n">max_stc</span></a><span class="p">),</span> <span class="n">kind</span><span class="o">=</span><span class="s1">&#39;value&#39;</span><span class="p">)</span>
+<span class="n">brain</span> <span class="o">=</span> <span class="n">stc</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">subject</span></a><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">subject</span></a><span class="p">,</span> <span class="n">hemi</span><span class="o">=</span><span class="s1">&#39;lh&#39;</span><span class="p">,</span> <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">clim</span></a><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">clim</span></a><span class="p">,</span>
+                 <a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">subjects_dir</span></a><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">subjects_dir</span></a><span class="p">)</span>
+<span class="n">brain</span><span class="o">.</span><span class="n">show_view</span><span class="p">(</span><span class="s1">&#39;lat&#39;</span><span class="p">)</span>
+<span class="n">brain</span><span class="o">.</span><span class="n">add_text</span><span class="p">(</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">,</span> <span class="s1">&#39;audio - cd-MTLasso (AR1)&#39;</span><span class="p">,</span> <span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="n">font_size</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+<span class="n">brain</span><span class="o">.</span><span class="n">save_image</span><span class="p">(</span><span class="s1">&#39;figures/meg_audio_cd-MTLasso.png&#39;</span><span class="p">)</span>
+
+<a href="https://docs.python.org/3/library/functions.html#bool" title="builtins.bool" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">interactive_plot</span></a> <span class="o">=</span> <span class="kc">False</span>
+<span class="k">if</span> <a href="https://docs.python.org/3/library/functions.html#bool" title="builtins.bool" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">interactive_plot</span></a><span class="p">:</span>
+    <span class="n">brain</span> <span class="o">=</span> <span class="n">stc</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">subject</span></a><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">subject</span></a><span class="p">,</span> <span class="n">hemi</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">,</span>
+                     <a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">subjects_dir</span></a><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">subjects_dir</span></a><span class="p">,</span> <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">clim</span></a><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">clim</span></a><span class="p">)</span>
+
+<span class="c1"># Runing the ensmeble clustered inference algorithm on temporal data</span>
+<span class="c1"># might take several minutes on standard device with `n_jobs=1` (around 10 mn)</span>
+<a href="https://docs.python.org/3/library/functions.html#bool" title="builtins.bool" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">run_ensemble_clustered_inference</span></a> <span class="o">=</span> <span class="kc">False</span>
+<span class="k">if</span> <a href="https://docs.python.org/3/library/functions.html#bool" title="builtins.bool" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">run_ensemble_clustered_inference</span></a><span class="p">:</span>
+
+    <span class="c1"># Making the inference with the ensembled clustered inference algorithm</span>
+    <a href="https://numpy.org/devdocs/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">beta_hat</span></a><span class="p">,</span> <a href="https://numpy.org/devdocs/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">pval</span></a><span class="p">,</span> <a href="https://numpy.org/devdocs/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">pval_corr</span></a><span class="p">,</span> <a href="https://numpy.org/devdocs/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">one_minus_pval</span></a><span class="p">,</span> <a href="https://numpy.org/devdocs/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">one_minus_pval_corr</span></a> <span class="o">=</span> \
+        <span class="n">ensemble_clustered_inference</span><span class="p">(</span><a href="https://numpy.org/devdocs/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X</span></a><span class="p">,</span> <a href="https://numpy.org/devdocs/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">Y</span></a><span class="p">,</span> <a href="https://scikit-learn.org/stable/modules/generated/sklearn.cluster.FeatureAgglomeration.html#sklearn.cluster.FeatureAgglomeration" title="sklearn.cluster.FeatureAgglomeration" class="sphx-glr-backref-module-sklearn-cluster sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ward</span></a><span class="p">,</span> <a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">n_clusters</span></a><span class="p">,</span>
+                                     <a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">inference_method</span></a><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">inference_method</span></a><span class="p">)</span>
+
+    <span class="c1"># Extracting active set (support)</span>
+    <a href="https://numpy.org/devdocs/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">active_set</span></a> <span class="o">=</span> <a href="https://numpy.org/devdocs/reference/generated/numpy.ufunc.html#numpy.ufunc" title="numpy.ufunc" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">np</span><span class="o">.</span><span class="n">logical_or</span></a><span class="p">(</span><a href="https://numpy.org/devdocs/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">pval_corr</span></a> <span class="o">&lt;</span> <a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">fwer_target</span></a> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
+                               <a href="https://numpy.org/devdocs/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">one_minus_pval_corr</span></a> <span class="o">&lt;</span> <a href="https://docs.python.org/3/library/functions.html#float" title="builtins.float" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">fwer_target</span></a> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+    <a href="https://numpy.org/devdocs/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">active_set_full</span></a> <span class="o">=</span> <a href="https://numpy.org/devdocs/reference/generated/numpy.copy.html#numpy.copy" title="numpy.copy" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">copy</span></a><span class="p">(</span><a href="https://numpy.org/devdocs/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">active_set</span></a><span class="p">)</span>
+    <a href="https://numpy.org/devdocs/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">active_set_full</span></a><span class="p">[:]</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="c1"># Computing z-scores</span>
+    <a href="https://numpy.org/devdocs/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">zscore</span></a> <span class="o">=</span> <span class="n">zscore_from_pval</span><span class="p">(</span><a href="https://numpy.org/devdocs/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">pval</span></a><span class="p">,</span> <a href="https://numpy.org/devdocs/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">one_minus_pval</span></a><span class="p">)</span>
+    <a href="https://numpy.org/devdocs/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">zscore_active_set</span></a> <span class="o">=</span> <a href="https://numpy.org/devdocs/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">zscore</span></a><span class="p">[</span><a href="https://numpy.org/devdocs/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">active_set</span></a><span class="p">]</span>
+
+    <span class="c1"># Building mne.SourceEstimate object</span>
+    <span class="n">stc</span> <span class="o">=</span> <span class="n">_compute_stc</span><span class="p">(</span><a href="https://numpy.org/devdocs/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">zscore_active_set</span></a><span class="p">,</span> <a href="https://numpy.org/devdocs/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">active_set</span></a><span class="p">,</span> <span class="n">evoked</span><span class="p">,</span> <span class="n">forward</span><span class="p">)</span>
+
+    <span class="c1"># Plotting</span>
+    <span class="n">mne</span><span class="o">.</span><span class="n">viz</span><span class="o">.</span><span class="n">set_3d_backend</span><span class="p">(</span><span class="s2">&quot;pyvista&quot;</span><span class="p">)</span>
+    <a href="https://numpy.org/devdocs/reference/arrays.scalars.html#numpy.float64" title="numpy.float64" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-attribute"><span class="n">max_stc</span></a> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><a href="https://numpy.org/devdocs/reference/generated/numpy.ufunc.html#numpy.ufunc" title="numpy.ufunc" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">np</span><span class="o">.</span><span class="n">abs</span></a><span class="p">(</span><a href="https://numpy.org/devdocs/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">stc</span><span class="o">.</span><span class="n">_data</span></a><span class="p">))</span>
+    <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">clim</span></a> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">pos_lims</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <a href="https://numpy.org/devdocs/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">zscore_target</span></a><span class="p">,</span> <a href="https://numpy.org/devdocs/reference/arrays.scalars.html#numpy.float64" title="numpy.float64" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-attribute"><span class="n">max_stc</span></a><span class="p">),</span> <span class="n">kind</span><span class="o">=</span><span class="s1">&#39;value&#39;</span><span class="p">)</span>
+    <span class="n">brain</span> <span class="o">=</span> <span class="n">stc</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">subject</span></a><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">subject</span></a><span class="p">,</span> <span class="n">hemi</span><span class="o">=</span><span class="s1">&#39;lh&#39;</span><span class="p">,</span> <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">clim</span></a><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">clim</span></a><span class="p">,</span>
+                     <a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">subjects_dir</span></a><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">subjects_dir</span></a><span class="p">)</span>
+    <span class="n">brain</span><span class="o">.</span><span class="n">show_view</span><span class="p">(</span><span class="s1">&#39;lat&#39;</span><span class="p">)</span>
+    <span class="n">brain</span><span class="o">.</span><span class="n">add_text</span><span class="p">(</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">,</span> <span class="s1">&#39;audio - ecd-MTLasso (AR1)&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="n">font_size</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+
+    <a href="https://docs.python.org/3/library/functions.html#bool" title="builtins.bool" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">interactive_plot</span></a> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">if</span> <a href="https://docs.python.org/3/library/functions.html#bool" title="builtins.bool" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">interactive_plot</span></a><span class="p">:</span>
+        <span class="n">brain</span> <span class="o">=</span> <span class="n">stc</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">subject</span></a><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">subject</span></a><span class="p">,</span> <span class="n">hemi</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">,</span>
+                         <a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">subjects_dir</span></a><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">subjects_dir</span></a><span class="p">,</span> <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">clim</span></a><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">clim</span></a><span class="p">)</span>
+</pre></div>
+</div>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 1 minutes  16.616 seconds)</p>
+<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-plot-meg-data-example-py">
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/40ce49ab7b480411ab9e56d71bcdd62a/plot_meg_data_example.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_meg_data_example.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/7cbfcab774b8bf1a8e00abab1ae4da8d/plot_meg_data_example.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_meg_data_example.ipynb</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</section>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2020, Jerome-Alexis Chevalier &amp; Binh Nguyen.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.0.2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

@@ -1,4 +1,4 @@
-hidimstat.permutation\_test\_cv
+﻿hidimstat.permutation\_test\_cv
 ===============================
 
 .. currentmodule:: hidimstat

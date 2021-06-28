@@ -1,21 +1,22 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>HiDimStat: High-dimensional statistical inference tool for Python &#8212; hidimstat 0.0.5 documentation</title>
-    <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/bootstrap-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="_static/style.css" />
     <link rel="stylesheet" type="text/css" href="_static/gallery.css" />
     <link rel="stylesheet" type="text/css" href="_static/gallery-binder.css" />
     <link rel="stylesheet" type="text/css" href="_static/gallery-dataframe.css" />
     <link rel="stylesheet" type="text/css" href="_static/gallery-rendered-html.css" />
-    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
-    <script src="_static/language_data.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="API Documentation" href="api.html" />
@@ -91,10 +92,10 @@
   <div class="row">
     <div class="body col-md-12 content" role="main">
       
-  <div class="section" id="hidimstat-high-dimensional-statistical-inference-tool-for-python">
+  <section id="hidimstat-high-dimensional-statistical-inference-tool-for-python">
 <h1>HiDimStat: High-dimensional statistical inference tool for Python<a class="headerlink" href="#hidimstat-high-dimensional-statistical-inference-tool-for-python" title="Permalink to this headline">¶</a></h1>
 <p><a class="reference external" href="https://codecov.io/gh/ja-che/hidimstat"><img alt="Build Status" src="https://travis-ci.com/ja-che/hidimstat.svg?branch=main" /></a> <a class="reference external" href="https://codecov.io/gh/ja-che/hidimstat"><img alt="codecov" src="https://codecov.io/gh/ja-che/hidimstat/branch/main/graph/badge.svg" /></a></p>
-<div class="section" id="installation">
+<section id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
 <p>HiDimStat working only with Python 3, ideally Python 3.6+. For installation,
 run the following from terminal:</p>
@@ -104,8 +105,8 @@ run the following from terminal:</p>
 <span class="c1"># or python setup.py install</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="dependencies">
+</section>
+<section id="dependencies">
 <h2>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this headline">¶</a></h2>
 <p>hidimstat depends on the following packages:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">joblib</span>
@@ -116,8 +117,8 @@ run the following from terminal:</p>
 </div>
 <p>To run examples it is neccessary to install <code class="docutils literal notranslate"><span class="pre">`matplotlib</span></code>, and to run tests it
 is also needed to install <code class="docutils literal notranslate"><span class="pre">pytest</span></code>.</p>
-</div>
-<div class="section" id="documentation-examples">
+</section>
+<section id="documentation-examples">
 <h2>Documentation &amp; Examples<a class="headerlink" href="#documentation-examples" title="Permalink to this headline">¶</a></h2>
 <p>As of now in the <cite>examples</cite> folder there is a Python script to reproduce Figure
 1 in Nguyen et al. 2020 (see References below).</p>
@@ -129,10 +130,10 @@ is also needed to install <code class="docutils literal notranslate"><span class
 <span class="n">python</span> <span class="n">plot_fig_1_nguyen_et_al</span><span class="o">.</span><span class="n">py</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="references">
+</section>
+<section id="references">
 <h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="main-references">
+<section id="main-references">
 <h3>Main references<a class="headerlink" href="#main-references" title="Permalink to this headline">¶</a></h3>
 <p>Ensemble of Clustered desparsified Lasso (ECDL):</p>
 <ul class="simple">
@@ -148,8 +149,8 @@ of Multiple Knockoffs. In Proceedings of the 37th International Conference on
 Machine Learning, Vienna, Austria, PMLR 119.</p></li>
 </ul>
 <p>If you use our packages, we would appreciate citations to the aforementioned papers.</p>
-</div>
-<div class="section" id="other-useful-references">
+</section>
+<section id="other-useful-references">
 <h3>Other useful references<a class="headerlink" href="#other-useful-references" title="Permalink to this headline">¶</a></h3>
 <p>For de-sparsified(or de-biased) Lasso:</p>
 <ul class="simple">
@@ -169,9 +170,9 @@ via knockoffs. Annals of Statistics. 43 , no. 5,
 knockoffs for high dimensional controlled variable selection. Journal of the
 Royal Statistical Society Series B, 80(3), 551-577.</p></li>
 </ul>
-</div>
-</div>
-<div class="section" id="build-the-documentation">
+</section>
+</section>
+<section id="build-the-documentation">
 <h2>Build the documentation<a class="headerlink" href="#build-the-documentation" title="Permalink to this headline">¶</a></h2>
 <p>To build the documentation you will need to run:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">U</span> <span class="n">sphinx_gallery</span> <span class="n">sphinx_bootstrap_theme</span>
@@ -179,16 +180,16 @@ Royal Statistical Society Series B, 80(3), 551-577.</p></li>
 <span class="n">make</span> <span class="n">html</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="api">
+</section>
+<section id="api">
 <h2>API<a class="headerlink" href="#api" title="Permalink to this headline">¶</a></h2>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="api.html">API Documentation</a></li>
 </ul>
 </div>
-</div>
-</div>
+</section>
+</section>
 
 
     </div>
@@ -203,7 +204,7 @@ Royal Statistical Society Series B, 80(3), 551-577.</p></li>
     </p>
     <p>
         &copy; Copyright 2020, Jerome-Alexis Chevalier &amp; Binh Nguyen.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.0.2.<br/>
     </p>
   </div>
 </footer>

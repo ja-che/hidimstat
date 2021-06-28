@@ -1,21 +1,22 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>Histogram of KO vs AKO performance &#8212; hidimstat 0.0.5 documentation</title>
-    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="../_static/style.css" />
     <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
     <link rel="stylesheet" type="text/css" href="../_static/gallery-binder.css" />
     <link rel="stylesheet" type="text/css" href="../_static/gallery-dataframe.css" />
     <link rel="stylesheet" type="text/css" href="../_static/gallery-rendered-html.css" />
-    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
     <script src="../_static/doctools.js"></script>
-    <script src="../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
 <meta charset='utf-8'>
@@ -95,7 +96,7 @@
 <p>Click <a class="reference internal" href="#sphx-glr-download-auto-examples-plot-fig-1-nguyen-et-al-py"><span class="std std-ref">here</span></a>
 to download the full example code</p>
 </div>
-<div class="sphx-glr-example-title section" id="histogram-of-ko-vs-ako-performance">
+<section class="sphx-glr-example-title" id="histogram-of-ko-vs-ako-performance">
 <span id="sphx-glr-auto-examples-plot-fig-1-nguyen-et-al-py"></span><h1>Histogram of KO vs AKO performance<a class="headerlink" href="#histogram-of-ko-vs-ako-performance" title="Permalink to this headline">¶</a></h1>
 <p>Example: reproducing Figure 1 in:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Nguyen</span> <span class="n">et</span> <span class="n">al</span><span class="o">.</span> <span class="p">(</span><span class="mi">2020</span><span class="p">)</span> <span class="n">Aggregation</span> <span class="n">of</span> <span class="n">Multiple</span> <span class="n">Knockoffs</span>
@@ -103,8 +104,7 @@ to download the full example code</p>
 </pre></div>
 </div>
 <p>To reduce the script runtime it is desirable to increase n_jobs parameter.</p>
-<img alt="plot fig 1 nguyen et al" class="sphx-glr-single-img" src="../_images/sphx_glr_plot_fig_1_nguyen_et_al_001.png" />
-<p class="sphx-glr-script-out">Out:</p>
+<img src="../_images/sphx_glr_plot_fig_1_nguyen_et_al_001.png" srcset="../_images/sphx_glr_plot_fig_1_nguyen_et_al_001.png" alt="plot fig 1 nguyen et al" class = "sphx-glr-single-img"/><p class="sphx-glr-script-out">Out:</p>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Save figure to figures/histogram_ko_vs_ako.png
 Done!
 </pre></div>
@@ -114,11 +114,11 @@ Done!
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">hidimstat.knockoffs</span> <span class="kn">import</span> <span class="n">knockoff_aggregation</span><span class="p">,</span> <span class="n">model_x_knockoff</span>
-<span class="kn">from</span> <span class="nn">hidimstat.knockoffs.data_simulation</span> <span class="kn">import</span> <span class="n">simu_data</span>
-<span class="kn">from</span> <span class="nn">hidimstat.knockoffs.utils</span> <span class="kn">import</span> <span class="n">cal_fdp_power</span>
-<span class="kn">from</span> <span class="nn">joblib</span> <span class="kn">import</span> <a href="https://joblib.readthedocs.io/en/latest/generated/joblib.Parallel.html#joblib.Parallel" title="joblib.Parallel" class="sphx-glr-backref-module-joblib sphx-glr-backref-type-py-class"><span class="n">Parallel</span></a><span class="p">,</span> <a href="https://joblib.readthedocs.io/en/latest/parallel.html#joblib.delayed" title="joblib.delayed" class="sphx-glr-backref-module-joblib sphx-glr-backref-type-py-function"><span class="n">delayed</span></a>
-<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <a href="https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.StandardScaler.html#sklearn.preprocessing.StandardScaler" title="sklearn.preprocessing.StandardScaler" class="sphx-glr-backref-module-sklearn-preprocessing sphx-glr-backref-type-py-class"><span class="n">StandardScaler</span></a>
+<span class="kn">from</span> <span class="nn">hidimstat.knockoffs</span> <span class="k">import</span> <span class="n">knockoff_aggregation</span><span class="p">,</span> <span class="n">model_x_knockoff</span>
+<span class="kn">from</span> <span class="nn">hidimstat.knockoffs.data_simulation</span> <span class="k">import</span> <span class="n">simu_data</span>
+<span class="kn">from</span> <span class="nn">hidimstat.knockoffs.utils</span> <span class="k">import</span> <span class="n">cal_fdp_power</span>
+<span class="kn">from</span> <span class="nn">joblib</span> <span class="k">import</span> <a href="https://joblib.readthedocs.io/en/latest/generated/joblib.Parallel.html#joblib.Parallel" title="joblib.Parallel" class="sphx-glr-backref-module-joblib sphx-glr-backref-type-py-class"><span class="n">Parallel</span></a><span class="p">,</span> <a href="https://joblib.readthedocs.io/en/latest/parallel.html#joblib.delayed" title="joblib.delayed" class="sphx-glr-backref-module-joblib sphx-glr-backref-type-py-function"><span class="n">delayed</span></a>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="k">import</span> <a href="https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.StandardScaler.html#sklearn.preprocessing.StandardScaler" title="sklearn.preprocessing.StandardScaler" class="sphx-glr-backref-module-sklearn-preprocessing sphx-glr-backref-type-py-class"><span class="n">StandardScaler</span></a>
 
 <a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">color_blue</span></a> <span class="o">=</span> <span class="s1">&#39;#1f77b4&#39;</span>
 <a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">color_teal</span></a> <span class="o">=</span> <span class="s1">&#39;#1fbecf&#39;</span>
@@ -184,7 +184,7 @@ Done!
 
     <span class="n">figname</span> <span class="o">=</span> <span class="s1">&#39;figures/histogram_ko_vs_ako.png&#39;</span>
     <a href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.savefig.html#matplotlib.pyplot.savefig" title="matplotlib.pyplot.savefig" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">savefig</span></a><span class="p">(</span><span class="n">figname</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Save figure to </span><span class="si">{figname}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Save figure to </span><span class="si">{figname}</span><span class="s1">&#39;</span><span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
@@ -216,7 +216,7 @@ Done!
     <span class="n">main</span><span class="p">()</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  32.388 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  32.913 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-plot-fig-1-nguyen-et-al-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../_downloads/2fef3f4806e2d1828eb9cc8eb5b420d6/plot_fig_1_nguyen_et_al.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_fig_1_nguyen_et_al.py</span></code></a></p>
@@ -226,7 +226,7 @@ Done!
 </div>
 </div>
 <p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
-</div>
+</section>
 
 
     </div>
@@ -241,7 +241,7 @@ Done!
     </p>
     <p>
         &copy; Copyright 2020, Jerome-Alexis Chevalier &amp; Binh Nguyen.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.0.2.<br/>
     </p>
   </div>
 </footer>

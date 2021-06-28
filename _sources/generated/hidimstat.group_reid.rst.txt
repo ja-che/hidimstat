@@ -1,4 +1,4 @@
-hidimstat.group\_reid
+﻿hidimstat.group\_reid
 =====================
 
 .. currentmodule:: hidimstat

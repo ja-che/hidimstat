@@ -1,4 +1,4 @@
-hidimstat.clustered\_inference
+﻿hidimstat.clustered\_inference
 ==============================
 
 .. currentmodule:: hidimstat

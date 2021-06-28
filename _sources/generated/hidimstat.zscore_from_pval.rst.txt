@@ -1,4 +1,4 @@
-hidimstat.zscore\_from\_pval
+﻿hidimstat.zscore\_from\_pval
 ============================
 
 .. currentmodule:: hidimstat

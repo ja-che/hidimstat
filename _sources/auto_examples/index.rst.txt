@@ -42,10 +42,10 @@ Examples Gallery
 
 .. only:: html
 
- .. figure:: /auto_examples/images/thumb/sphx_glr_plot_2D_example_thumb.png
+ .. figure:: /auto_examples/images/thumb/sphx_glr_plot_2D_simulation_example_thumb.png
      :alt: Support recovery on structured data (2D)
 
-     :ref:`sphx_glr_auto_examples_plot_2D_example.py`
+     :ref:`sphx_glr_auto_examples_plot_2D_simulation_example.py`
 
 .. raw:: html
 
@@ -55,7 +55,28 @@ Examples Gallery
 .. toctree::
    :hidden:
 
-   /auto_examples/plot_2D_example
+   /auto_examples/plot_2D_simulation_example
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Support recovery on MEG data (2D)">
+
+.. only:: html
+
+ .. figure:: /auto_examples/images/thumb/sphx_glr_plot_meg_data_example_thumb.png
+     :alt: Support recovery on MEG data (2D)
+
+     :ref:`sphx_glr_auto_examples_plot_meg_data_example.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/plot_meg_data_example
 .. raw:: html
 
     <div class="sphx-glr-clear"></div>

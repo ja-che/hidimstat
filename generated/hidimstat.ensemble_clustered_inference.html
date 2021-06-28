@@ -1,21 +1,22 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>hidimstat.ensemble_clustered_inference &#8212; hidimstat 0.0.5 documentation</title>
-    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/bootstrap-sphinx.css" />
     <link rel="stylesheet" type="text/css" href="../_static/style.css" />
     <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
     <link rel="stylesheet" type="text/css" href="../_static/gallery-binder.css" />
     <link rel="stylesheet" type="text/css" href="../_static/gallery-dataframe.css" />
     <link rel="stylesheet" type="text/css" href="../_static/gallery-rendered-html.css" />
-    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
     <script src="../_static/doctools.js"></script>
-    <script src="../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="hidimstat.gaonkar" href="hidimstat.gaonkar.html" />
@@ -92,11 +93,11 @@
   <div class="row">
     <div class="body col-md-12 content" role="main">
       
-  <div class="section" id="hidimstat-ensemble-clustered-inference">
+  <section id="hidimstat-ensemble-clustered-inference">
 <h1>hidimstat.ensemble_clustered_inference<a class="headerlink" href="#hidimstat-ensemble-clustered-inference" title="Permalink to this headline">¶</a></h1>
-<dl class="function">
-<dt id="hidimstat.ensemble_clustered_inference">
-<code class="sig-prename descclassname">hidimstat.</code><code class="sig-name descname">ensemble_clustered_inference</code><span class="sig-paren">(</span><em class="sig-param">X_init</em>, <em class="sig-param">y</em>, <em class="sig-param">ward</em>, <em class="sig-param">n_clusters</em>, <em class="sig-param">train_size=0.3</em>, <em class="sig-param">groups=None</em>, <em class="sig-param">inference_method='desparsified-lasso'</em>, <em class="sig-param">seed=0</em>, <em class="sig-param">ensembling_method='quantiles'</em>, <em class="sig-param">gamma_min=0.2</em>, <em class="sig-param">n_bootstraps=25</em>, <em class="sig-param">n_jobs=1</em>, <em class="sig-param">memory=None</em>, <em class="sig-param">verbose=1</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#hidimstat.ensemble_clustered_inference" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="hidimstat.ensemble_clustered_inference">
+<span class="sig-prename descclassname"><span class="pre">hidimstat.</span></span><span class="sig-name descname"><span class="pre">ensemble_clustered_inference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X_init</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ward</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_clusters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">groups</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inference_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'desparsified-lasso'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ensembling_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'quantiles'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gamma_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_bootstraps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">25</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">memory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#hidimstat.ensemble_clustered_inference" title="Permalink to this definition">¶</a></dt>
 <dd><p>Ensemble clustered inference algorithm</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -175,7 +176,7 @@ arXiv preprint arXiv:2106.02590.</p>
 </dl>
 </dd></dl>
 
-</div>
+</section>
 
 
     </div>
@@ -190,7 +191,7 @@ arXiv preprint arXiv:2106.02590.</p>
     </p>
     <p>
         &copy; Copyright 2020, Jerome-Alexis Chevalier &amp; Binh Nguyen.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 4.0.2.<br/>
     </p>
   </div>
 </footer>

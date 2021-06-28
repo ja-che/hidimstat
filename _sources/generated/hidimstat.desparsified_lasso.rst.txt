@@ -1,4 +1,4 @@
-hidimstat.desparsified\_lasso
+﻿hidimstat.desparsified\_lasso
 =============================
 
 .. currentmodule:: hidimstat

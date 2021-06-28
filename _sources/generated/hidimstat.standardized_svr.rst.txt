@@ -1,4 +1,4 @@
-hidimstat.standardized\_svr
+﻿hidimstat.standardized\_svr
 ===========================
 
 .. currentmodule:: hidimstat
