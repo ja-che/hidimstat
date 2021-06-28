@@ -12,6 +12,7 @@
 # All configuration values have a default; values that are commented out
 # serve to show the default.
 
+import os
 import sys
 import warnings
 import sphinx_gallery
@@ -204,13 +205,44 @@ intersphinx_mapping = {
     'joblib': ('https://joblib.readthedocs.io/en/latest', None),
     'pandas': ('https://pandas.pydata.org/pandas-docs/stable', None),
     'seaborn': ('https://seaborn.pydata.org/', None),
+    'pyvista': ('https://docs.pyvista.org', None),
 }
 
+examples_dirs = ['../examples']
+gallery_dirs = ['auto_examples']
+import mne
+
+scrapers = ('matplotlib',)
+try:
+    with warnings.catch_warnings():
+        warnings.filterwarnings("ignore", category=DeprecationWarning)
+        import pyvista
+    pyvista.OFF_SCREEN = False
+except Exception:
+    pass
+else:
+    brain_scraper = mne.viz._brain._BrainScraper()
+    scrapers += (brain_scraper, 'pyvista')
+if any(x in scrapers for x in ('pyvista')):
+    from traits.api import push_exception_handler
+    push_exception_handler(reraise_exceptions=True)
+    report_scraper = mne.report._ReportScraper()
+    scrapers += (report_scraper,)
+else:
+    report_scraper = None
+
 sphinx_gallery_conf = {
-    'doc_module': ('hidimstat',),
-    'reference_url': dict(hidimstat=None),
-    'examples_dirs': '../examples',
-    'gallery_dirs': 'auto_examples',
+    'doc_module': 'groupmne',
+    'reference_url': dict(groupmne=None),
+    'examples_dirs': examples_dirs,
+    'gallery_dirs': gallery_dirs,
+    'plot_gallery': 'True',
+    'thumbnail_size': (160, 112),
+    'min_reported_time': 1.,
+    'backreferences_dir': os.path.join('generated'),
+    'abort_on_example_error': False,
+    'image_scrapers': scrapers,
+    'show_memory': True,
     # 'reference_url': {
     #     'numpy': 'http://docs.scipy.org/doc/numpy-1.9.1',
     #     'scipy': 'http://docs.scipy.org/doc/scipy-0.17.0/reference',
@@ -219,4 +251,4 @@ sphinx_gallery_conf = {
 
 
 def setup(app):
-    app.add_stylesheet('style.css')
+    app.add_css_file('style.css')
