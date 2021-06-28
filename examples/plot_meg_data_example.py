@@ -4,9 +4,10 @@ Support recovery on MEG data (2D)
 
 """
 
+import os
 import numpy as np
 import mne
-from mne.datasets import sample
+from mne.datasets import sample, somato
 from mne.inverse_sparse.mxne_inverse import _prepare_gain, _make_sparse_stc
 from sklearn.cluster import FeatureAgglomeration
 from sklearn.cluster._agglomerative import _fix_connectivity
@@ -18,7 +19,7 @@ from hidimstat.stat_tools import zscore_from_pval
 
 
 def preprocess_meg_eeg_data(evoked, forward, noise_cov, loose=0., depth=0.,
-                            pca=False, rank=None):
+                            pca=False):
     """Preprocess MEG or EEG data to produce the whitened MEG/EEG measurements
     (target) and the preprocessed gain matrix (design matrix). This function
     is mainly wrapping the `_prepare_gain` MNE function.
@@ -49,9 +50,6 @@ def preprocess_meg_eeg_data(evoked, forward, noise_cov, loose=0., depth=0.,
         If True, Whitener is reduced.
         If False, Whitener is not reduced.
 
-    rank : None or int
-        Rank reduction of the whitener. If None rank is estimated from data.
-
     Returns
     -------
     G : array, shape (n_channels, n_dipoles)
@@ -69,7 +67,7 @@ def preprocess_meg_eeg_data(evoked, forward, noise_cov, loose=0., depth=0.,
     # Handle depth weighting and whitening (here is no weights)
     forward, G, gain_info, whitener, source_weighting, mask = \
         _prepare_gain(forward, evoked.info, noise_cov, pca=pca, depth=depth,
-                      loose=loose, weights=None, weights_min=None, rank=rank)
+                      loose=loose, weights=None, weights_min=None, rank=None)
 
     # Select channels of interest
     sel = [all_ch_names.index(name) for name in gain_info['ch_names']]
@@ -93,34 +91,89 @@ def _compute_stc(zscore_active_set, active_set, evoked, forward):
     return stc
 
 
+# Choose the experiment (task)
+list_cond = ['audio', 'visual', 'somato']
+cond = list_cond[0]
+
 # Downloading data
-subject = 'sample'
-data_path = sample.data_path()
-fwd_fname = data_path + '/MEG/sample/sample_audvis-meg-eeg-oct-6-fwd.fif'
-ave_fname = data_path + '/MEG/sample/sample_audvis-ave.fif'
-raw_fname = data_path + '/MEG/sample/sample_audvis_raw.fif'
-cov_fname = data_path + '/MEG/sample/sample_audvis-shrunk-cov.fif'
-subjects_dir = data_path + '/subjects'
-condition = 'Left Auditory'
+if cond in ['audio', 'visual']:
 
-# Read noise covariance matrix
-noise_cov = mne.read_cov(cov_fname)
+    subject = 'sample'
+    data_path = sample.data_path()
+    fwd_fname_suffix = 'MEG/sample/sample_audvis-meg-eeg-oct-6-fwd.fif'
+    fwd_fname = os.path.join(data_path, fwd_fname_suffix)
+    ave_fname = os.path.join(data_path, 'MEG/sample/sample_audvis-ave.fif')
+    raw_fname = os.path.join(data_path, 'MEG/sample/sample_audvis_raw.fif')
+    cov_fname_suffix = 'MEG/sample/sample_audvis-shrunk-cov.fif'
+    cov_fname = os.path.join(data_path, cov_fname_suffix)
+    cov_fname = data_path + '/' + cov_fname_suffix
+    subjects_dir = os.path.join(data_path, 'subjects')
 
-# Handling average file
-evoked = mne.read_evokeds(ave_fname, condition=condition, baseline=(None, 0))
-evoked = evoked.pick_types('grad')
-# Selecting relevant time window
-evoked.plot()
-evoked.crop(tmin=0.05, tmax=0.1)
+    if cond == 'audio':
+        condition = 'Left Auditory'
+    elif cond == 'visual':
+        condition = 'Left visual'
 
-# Handling forward solution:
+    # Read noise covariance matrix
+    noise_cov = mne.read_cov(cov_fname)
+
+    # Handling average file
+    evoked = mne.read_evokeds(ave_fname, condition=condition,
+                              baseline=(None, 0))
+    evoked = evoked.pick_types('grad')
+
+    # Selecting relevant time window
+    evoked.plot()
+    t_min, t_max = 0.05, 0.1
+    t_step = 0.01
+
+    pca = False
+
+elif cond == 'somato':
+
+    data_path = somato.data_path()
+    subject = '01'
+    subjects_dir = data_path + '/derivatives/freesurfer/subjects'
+    task = 'somato'
+    raw_fname = os.path.join(data_path, f'sub-{subject}', 'meg',
+                             f'sub-{subject}_task-{task}_meg.fif')
+    fwd_fname = os.path.join(data_path, 'derivatives', f'sub-{subject}',
+                             f'sub-{subject}_task-{task}-fwd.fif')
+    condition = 'Unknown'
+
+    # Read evoked
+    raw = mne.io.read_raw_fif(raw_fname)
+    events = mne.find_events(raw, stim_channel='STI 014')
+    reject = dict(grad=4000e-13, eog=350e-6)
+    picks = mne.pick_types(raw.info, meg=True, eeg=True, eog=True)
+
+    event_id, tmin, tmax = 1, -.2, .25
+    epochs = mne.Epochs(raw, events, event_id, tmin, tmax, picks=picks,
+                        reject=reject, preload=True)
+    evoked = epochs.average()
+    evoked = evoked.pick_types('grad')
+
+    # Compute noise covariance matrix
+    noise_cov = mne.compute_covariance(epochs, rank='info', tmax=0.)
+
+    # Selecting relevant time window: focusing on early signal
+    evoked.plot()
+    t_min, t_max = 0.03, 0.05
+    t_step = 1.0 / 300
+
+    # We must reduce the whitener since data were preprocessed for removal
+    # of environmental noise leading to an effective number of 64 samples.
+    pca = True
+
+# Handling forward solution
 forward = mne.read_forward_solution(fwd_fname)
 # Collecting features' connectivity
 connectivity = mne.source_estimate.spatial_src_adjacency(forward['src'])
 
+# Croping evoked according to relevant time window
+evoked.crop(tmin=t_min, tmax=t_max)
 # Choosing frequency and number of clusters used for compression.
 # Reducing the frequency to 100Hz to make inference faster
-t_step = 0.01
 step = int(t_step * evoked.info['sfreq'])
 evoked.decimate(step)
 t_min = evoked.times[0]
@@ -135,9 +188,8 @@ fwer_target = 0.1
 correction_clust_inf = 1. / n_clusters
 zscore_target = zscore_from_pval((fwer_target / 2) * correction_clust_inf)
 
-
 # Preprocessing MEG data
-X, Y, forward = preprocess_meg_eeg_data(evoked, forward, noise_cov)
+X, Y, forward = preprocess_meg_eeg_data(evoked, forward, noise_cov, pca=pca)
 
 # Initializing FeatureAgglomeration object used for the clustering step
 connectivity_fixed, _ = \
@@ -162,15 +214,29 @@ zscore_active_set = zscore[active_set]
 # Building mne.SourceEstimate object
 stc = _compute_stc(zscore_active_set, active_set, evoked, forward)
 
+# Plotting parameters
+if cond == 'audio':
+    hemi = 'lh'
+    view = 'lateral'
+elif cond == 'visual':
+    hemi = 'rh'
+    view = 'medial'
+elif cond == 'somato':
+    hemi = 'rh'
+    view = 'lateral'
+
 # Plotting
 mne.viz.set_3d_backend("pyvista")
 max_stc = np.max(np.abs(stc._data))
 clim = dict(pos_lims=(3, zscore_target, max_stc), kind='value')
-brain = stc.plot(subject=subject, hemi='lh', clim=clim,
+brain = stc.plot(subject=subject, hemi=hemi, clim=clim,
                  subjects_dir=subjects_dir)
-brain.show_view('lat')
-brain.add_text(0.05, 0.9, 'audio - cd-MTLasso (AR1)', 'title', font_size=30)
-brain.save_image('figures/meg_audio_cd-MTLasso.png')
+brain.show_view(view)
+brain.add_text(0.05, 0.9, f'{cond} - cd-MTLasso (AR1)', 'title', font_size=30)
+
+save_fig = False
+if save_fig:
+    brain.save_image('figures/meg_audio_cd-MTLasso.png')
 
 interactive_plot = False
 if interactive_plot:
@@ -204,10 +270,10 @@ if run_ensemble_clustered_inference:
     mne.viz.set_3d_backend("pyvista")
     max_stc = np.max(np.abs(stc._data))
     clim = dict(pos_lims=(3, zscore_target, max_stc), kind='value')
-    brain = stc.plot(subject=subject, hemi='lh', clim=clim,
+    brain = stc.plot(subject=subject, hemi=hemi, clim=clim,
                      subjects_dir=subjects_dir)
-    brain.show_view('lat')
-    brain.add_text(0.05, 0.9, 'audio - ecd-MTLasso (AR1)',
+    brain.show_view(view)
+    brain.add_text(0.05, 0.9, f'{cond} - ecd-MTLasso (AR1)',
                    'title', font_size=30)
 
     interactive_plot = False
