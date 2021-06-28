@@ -9,6 +9,7 @@ import numpy as np
 import mne
 from mne.datasets import sample, somato
 from mne.inverse_sparse.mxne_inverse import _prepare_gain, _make_sparse_stc
+from mne.minimum_norm import make_inverse_operator, apply_inverse
 from sklearn.cluster import FeatureAgglomeration
 from sklearn.cluster._agglomerative import _fix_connectivity
 
@@ -243,8 +244,36 @@ if interactive_plot:
     brain = stc.plot(subject=subject, hemi='both',
                      subjects_dir=subjects_dir, clim=clim)
 
-# Runing the ensmeble clustered inference algorithm on temporal data
-# might take several minutes on standard device with `n_jobs=1` (around 10 mn)
+#  Compare with sLORETA
+lambda2 = 1. / 9
+inv = make_inverse_operator(evoked.info, forward, noise_cov, loose=0.,
+                            depth=0.0, fixed=True)
+stc_full = apply_inverse(evoked, inv, lambda2=lambda2, method='sLORETA')
+stc_full = stc_full.mean()
+
+# Computing estimated support by sLORETA
+n_features = stc_full.data.size
+correction_inf = 1. / n_features
+zscore_target_no_clust = zscore_from_pval((fwer_target / 2) * correction_inf)
+active_set = np.abs(stc_full.data) > zscore_target_no_clust
+active_set = active_set.flatten()
+
+sLORETA_solution = np.atleast_2d(stc_full.data[active_set]).flatten()
+
+stc = _make_sparse_stc(sLORETA_solution, active_set, forward, stc_full.tmin,
+                       tstep=stc_full.tstep)
+
+# Plotting sLORETA solution
+mne.viz.set_3d_backend("pyvista")
+max_stc = np.max(np.abs(stc._data))
+clim = dict(pos_lims=(3, zscore_target_no_clust, max_stc), kind='value')
+brain = stc.plot(subject=subject, hemi=hemi, clim=clim,
+                 subjects_dir=subjects_dir)
+brain.show_view(view)
+brain.add_text(0.05, 0.9, f'{cond} - sLORETA', 'title', font_size=30)
+
+# Runing the ensemble clustered inference algorithm on temporal data
+# might take several minutes on standard device with `n_jobs=1` (around 10 min)
 run_ensemble_clustered_inference = False
 if run_ensemble_clustered_inference:
 
