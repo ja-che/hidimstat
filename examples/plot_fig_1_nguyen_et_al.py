@@ -15,7 +15,7 @@ import numpy as np
 from hidimstat.knockoffs import knockoff_aggregation, model_x_knockoff
 from hidimstat.knockoffs.data_simulation import simu_data
 from hidimstat.knockoffs.utils import cal_fdp_power
-from joblib import Parallel, delayed
+from hidimstat.parallel import parallel_func
 from sklearn.preprocessing import StandardScaler
 
 color_blue = '#1f77b4'
@@ -98,11 +98,11 @@ def main():
     n_simu = 10
     offset = 1
 
-    results = Parallel(n_jobs=1)(
-        delayed(one_inference)(
-            n=n, p=p, snr=snr, rho=rho, sparsity=sparsity,
-            n_jobs=1, n_bootstraps=n_bootstraps, fdr=fdr,
-            offset=offset, gamma=gamma, seed=seed)
+    parallel, p_fun, _ = parallel_func(one_inference, n_jobs=1)
+    results = parallel(
+        p_fun(n=n, p=p, snr=snr, rho=rho, sparsity=sparsity,
+              n_jobs=1, n_bootstraps=n_bootstraps, fdr=fdr,
+              offset=offset, gamma=gamma, seed=seed)
         for seed in range(n_simu))
 
     # Plotting
