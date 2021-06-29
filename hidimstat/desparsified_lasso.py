@@ -18,7 +18,7 @@ def _compute_all_residuals(X, alphas, gram, max_iter=5000, tol=1e-3,
     n_samples, n_features = X.shape
 
     parallel, p_compute_residuals, _ = \
-        parallel_func(_compute_residuals, n_jobs=n_jobs)
+        parallel_func(_compute_residuals, n_jobs=n_jobs, verbose=verbose)
     results = parallel(
         p_compute_residuals(X=X, column_index=i, alpha=alphas[i], gram=gram,
                             max_iter=max_iter, tol=tol, method=method)

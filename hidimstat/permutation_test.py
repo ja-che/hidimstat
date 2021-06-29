@@ -124,7 +124,7 @@ def permutation_test(X, y, estimator, n_permutations=1000,
     stat = _permutation_test_stat(clone(estimator), X, y)
 
     parallel, p_permutation_test_stat, _ = \
-        parallel_func(_permutation_test_stat, n_jobs=n_jobs)
+        parallel_func(_permutation_test_stat, n_jobs=n_jobs, verbose=verbose)
 
     permutation_stats = parallel(
         _permutation_test_stat(clone(estimator), X, _shuffle(y, rng))
