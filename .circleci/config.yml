@@ -1,41 +1,69 @@
 version: 2.1
 
-orbs:
-  # The python orb contains a set of prepackaged CircleCI configuration you can use repeatedly in your configuration files
-  # Orb commands and jobs help you with common scripting around a language/tool
-  # so you dont have to copy and paste it everywhere.
-  # See the orb documentation here: https://circleci.com/developer/orbs/orb/circleci/python
-  python: circleci/python@1.2
-
-workflows:
-  sample:  # This is the name of the workflow, feel free to change it to better match your workflow.
-    # Inside the workflow, you define the jobs you want to run. 
-    # For more details on extending your workflow, see the configuration docs: https://circleci.com/docs/2.0/configuration-reference/#workflows 
-    jobs:
-      - build-and-test
-
+_xvfb: &xvfb
+  name: Start Xvfb virtual framebuffer
+  command: |
+    echo "export DISPLAY=:99" >> $BASH_ENV
+    /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -screen 0 1280x1024x24 -ac +extension GLX +render -noreset -nolisten tcp -nolisten unix
 
 jobs:
-  build-and-test:  # This is the name of the job, feel free to change it to better match what you're trying to do!
-    # These next lines defines a Docker executors: https://circleci.com/docs/2.0/executor-types/
-    # You can specify an image from Dockerhub or use one of the convenience images from CircleCI's Developer Hub
-    # A list of available CircleCI Docker convenience images are available here: https://circleci.com/developer/images/image/cimg/python
-    # The executor is the environment in which the steps below will be executed - below will use a python 3.9 container
-    # Change the version below to your required version of python
-    docker:
-      - image: cimg/python:3.8
-    # Checkout the code as the first step. This is a dedicated CircleCI step.
-    # The python orb's install-packages step will install the dependencies from a Pipfile via Pipenv by default.
-    # Here we're making sure we use just use the system-wide pip. By default it uses the project root's requirements.txt.
-    # Then run your tests!
-    # CircleCI will report the results back to your VCS provider.
-    steps:
-      - checkout
-      - python/install-packages:
-          pkg-manager: pip
-          # app-dir: ~/project/package-directory/  # If you're requirements.txt isn't in the root directory.
-          # pip-dependency-file: test-requirements.txt  # if you have a different name for your requirements file, maybe one that combines your runtime and test requirements.
-      - run:
-          name: Run tests
-          # This assumes pytest is installed via the install-package step above
-          command: pytest
+    build_docs:
+      docker:
+        - image: circleci/python:3.8.5-buster
+      steps:
+        - checkout
+        - run:
+            name: Set BASH_ENV
+            command: |
+              set -e
+              echo "set -e" >> $BASH_ENV
+              echo "export XDG_RUNTIME_DIR=/tmp/runtime-circleci" >> $BASH_ENV
+              echo "export MNE_3D_BACKEND=pyvista" >> $BASH_ENV
+              echo "export PYTHONUNBUFFERED=1" >> $BASH_ENV
+              echo "BASH_ENV:"
+              cat $BASH_ENV
+        - run:
+            <<: *xvfb
+        - run:
+            name: Install OpenGL
+            command: |
+              sudo apt-get update
+              sudo apt-get install -y git libopenmpi-dev openmpi-bin
+              sudo apt-get install libosmesa6 libglx-mesa0 libopengl0 libglx0 libdbus-1-3 \
+                libxkbcommon-x11-0 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-randr0 \
+                libxcb-render-util0 libxcb-shape0 libxcb-xfixes0 libxcb-xinerama0
+              sudo ln -s /usr/lib/x86_64-linux-gnu/libxcb-util.so.0 /usr/lib/x86_64-linux-gnu/libxcb-util.so.1
+        - run:
+            name: Install dependencies
+            command: |
+              python -m pip install --progress-bar off --upgrade pip setuptools wheel
+              python -m pip install --progress-bar off -r doc/doc-requirements.txt
+              python -m pip install -e .
+              echo "localhost slots=50">hostfile
+        - run:
+            name: Check PyQt5
+            command: LD_DEBUG=libs python -c "from PyQt5.QtWidgets import QApplication, QWidget; app = QApplication([])"
+        - run:
+            name: Check installation
+            command: |
+               which python
+               QT_DEBUG_PLUGINS=1 mne sys_info
+               python -c "import numpy; numpy.show_config()"
+               LIBGL_DEBUG=verbose python -c "import pyvistaqt; pyvistaqt.BackgroundPlotter(show=True)"
+        - run:
+            name: make html
+            no_output_timeout: 30m
+            command: |
+              cd doc;
+              export OMP_NUM_THREADS=1;
+              make html;
+        - store_artifacts:
+            path: doc/_build/html/
+            destination: dev
+
+workflows:
+  version: 2
+
+  default:
+    jobs:
+      - build_docs
