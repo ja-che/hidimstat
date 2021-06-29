@@ -5,12 +5,12 @@
 
 Computation times
 =================
-**03:50.186** total execution time for **auto_examples** files:
+**04:00.123** total execution time for **auto_examples** files:
 
 +-------------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_auto_examples_plot_2D_simulation_example.py` (``plot_2D_simulation_example.py``) | 01:41.016 | 0.0 MB |
+| :ref:`sphx_glr_auto_examples_plot_2D_simulation_example.py` (``plot_2D_simulation_example.py``) | 01:52.509 | 0.0 MB |
 +-------------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_auto_examples_plot_meg_data_example.py` (``plot_meg_data_example.py``)           | 01:33.804 | 0.0 MB |
+| :ref:`sphx_glr_auto_examples_plot_meg_data_example.py` (``plot_meg_data_example.py``)           | 01:30.755 | 0.0 MB |
 +-------------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_auto_examples_plot_fig_1_nguyen_et_al.py` (``plot_fig_1_nguyen_et_al.py``)       | 00:35.366 | 0.0 MB |
+| :ref:`sphx_glr_auto_examples_plot_fig_1_nguyen_et_al.py` (``plot_fig_1_nguyen_et_al.py``)       | 00:36.859 | 0.0 MB |
 +-------------------------------------------------------------------------------------------------+-----------+--------+
