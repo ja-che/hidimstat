@@ -55,6 +55,7 @@ jobs:
             no_output_timeout: 30m
             command: |
               cd doc;
+              export OMP_NUM_THREADS=1;
               export MNE_FORCE_SERIAL=true;
               make html;
         - store_artifacts:
