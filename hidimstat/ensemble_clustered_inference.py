@@ -138,13 +138,15 @@ def ensemble_clustered_inference(X_init, y, ward, n_clusters,
         raise ValueError("'memory' must be None or a string corresponding " +
                          "to the path of the caching directory.")
 
-    parallel, p_fun, _ = parallel_func(clustered_inference, n_jobs=n_jobs)
+    parallel, p_clustered_inference, _ = \
+        parallel_func(clustered_inference, n_jobs=n_jobs)
 
     # Clustered inference algorithms
     results = parallel(
-        p_fun(X_init, y, ward, n_clusters, train_size=train_size,
-              groups=groups, method=inference_method, seed=i, n_jobs=1,
-              memory=memory, verbose=verbose, **kwargs)
+        p_clustered_inference(X_init, y, ward, n_clusters,
+                              train_size=train_size, groups=groups,
+                              method=inference_method, seed=i, n_jobs=1,
+                              memory=memory, verbose=verbose, **kwargs)
         for i in range(seed, seed + n_bootstraps))
 
     # Collecting results

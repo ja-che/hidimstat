@@ -1,5 +1,4 @@
 import numpy as np
-from joblib import Parallel, delayed
 
 from sklearn.base import clone
 from sklearn.utils import _safe_indexing
@@ -7,7 +6,8 @@ from sklearn.svm import LinearSVR
 from sklearn.model_selection import GridSearchCV
 from sklearn.pipeline import Pipeline
 
-from hidimstat.stat_tools import pval_from_two_sided_pval_and_sign
+from .parallel import parallel_func
+from .stat_tools import pval_from_two_sided_pval_and_sign
 
 
 def permutation_test_cv(X, y, n_permutations=1000,
@@ -123,11 +123,12 @@ def permutation_test(X, y, estimator, n_permutations=1000,
 
     stat = _permutation_test_stat(clone(estimator), X, y)
 
-    permutation_stats = \
-        Parallel(n_jobs=n_jobs, verbose=verbose)(
-            delayed(_permutation_test_stat)(clone(estimator), X,
-                                            _shuffle(y, rng))
-            for _ in range(n_permutations))
+    parallel, p_permutation_test_stat, _ = \
+        parallel_func(_permutation_test_stat, n_jobs=n_jobs)
+
+    permutation_stats = parallel(
+        _permutation_test_stat(clone(estimator), X, _shuffle(y, rng))
+        for _ in range(n_permutations))
 
     permutation_stats = np.array(permutation_stats)
     two_sided_pval_corr = step_down_max_T(stat, permutation_stats)
