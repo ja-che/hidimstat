@@ -3,7 +3,8 @@ Support recovery on fMRI data
 =============================
 
 This example show how to recover the support of a decoder map with
-statistical guarantees working with the Haxby dataset.
+statistical guarantees working with the Haxby dataset, focusing on
+'face vs house' contrast.
 
 """
 
@@ -31,8 +32,8 @@ from hidimstat.ensemble_clustered_inference import ensemble_clustered_inference
 #############################################################################
 # Function to fetch and preprocess Haxby dataset
 # ----------------------------------------------
-def preprocess_haxby(subject=2, memory=None, comparison='face-house'):
-    '''Gathering and preprocessing Haxby dataset for a given subject'''
+def preprocess_haxby(subject=2, memory=None):
+    '''Gathering and preprocessing Haxby dataset for a given subject.'''
 
     # Gathering Data
     haxby_dataset = datasets.fetch_haxby(subjects=[subject])
@@ -43,17 +44,7 @@ def preprocess_haxby(subject=2, memory=None, comparison='face-house'):
     conditions = pd.DataFrame.to_numpy(behavioral['labels'])
     session_label = pd.DataFrame.to_numpy(behavioral['chunks'])
 
-    if comparison == 'face-house':
-        condition_mask = np.logical_or(conditions == 'face',
-                                       conditions == 'house')
-        y = np.asarray((conditions[condition_mask] == 'face') * 2 - 1)
-    elif comparison == 'cat-chair':
-        condition_mask = np.logical_or(conditions == 'cat',
-                                       conditions == 'chair')
-        y = np.asarray((conditions[condition_mask] == 'cat') * 2 - 1)
-    else:
-        raise ValueError(f'Not a valid comparison: {comparison}')
-
+    condition_mask = np.logical_or(conditions == 'face', conditions == 'house')
     groups = session_label[condition_mask]
 
     # Loading anatomical image (back-ground image)
@@ -62,6 +53,9 @@ def preprocess_haxby(subject=2, memory=None, comparison='face-house'):
     else:
         bg_img = mean_img(haxby_dataset.anat)
 
+    # Building target where '1' corresponds to 'face' and '-1' to 'house'
+    y = np.asarray((conditions[condition_mask] == 'face') * 2 - 1)
+
     # Loading mask
     mask_img = haxby_dataset.mask
     masker = NiftiMasker(mask_img=mask_img, standardize=True,
@@ -69,7 +63,6 @@ def preprocess_haxby(subject=2, memory=None, comparison='face-house'):
 
     # Computing masked data
     fmri_masked = masker.fit_transform(fmri_filename)
-
     X = np.asarray(fmri_masked)[condition_mask, :]
 
     return Bunch(X=X, y=y, groups=groups, bg_img=bg_img, masker=masker)
@@ -78,10 +71,8 @@ def preprocess_haxby(subject=2, memory=None, comparison='face-house'):
 #############################################################################
 # Gathering and preprocessing Haxby dataset for a given subject
 # -------------------------------------------------------------
-list_subject = [1, 2, 3, 4, 5, 6]
-list_comparison = ['face-house', 'cat-chair']
-# Choose subject and contrast. By default subject=2 and comparison='face-house'
-data = preprocess_haxby(subject=list_subject[1], comparison=list_comparison[0])
+# You may choose a subject in [1, 2, 3, 4, 5, 6]. By default subject=2.
+data = preprocess_haxby(subject=2)
 X, y, groups, masker = data.X, data.y, data.groups, data.masker
 mask = masker.mask_img_.get_fdata().astype(bool)
 
