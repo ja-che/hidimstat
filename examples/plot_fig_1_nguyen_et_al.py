@@ -106,8 +106,8 @@ def main():
               offset=offset, gamma=gamma, seed=seed)
         for seed in range(n_simu))
 
-    # # Plotting
-    # plot(results, n_simu, fdr)
+    # Plotting
+    plot(results, n_simu, fdr)
     print('Done!')
 
 
