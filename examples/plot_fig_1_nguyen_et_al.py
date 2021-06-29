@@ -98,15 +98,15 @@ def main():
     n_simu = 10
     offset = 1
 
-    parallel, p_fun, _ = parallel_func(one_inference, n_jobs=1)
-    results = parallel(
-        p_fun(n=n, p=p, snr=snr, rho=rho, sparsity=sparsity,
-              n_jobs=1, n_bootstraps=n_bootstraps, fdr=fdr,
-              offset=offset, gamma=gamma, seed=seed)
-        for seed in range(n_simu))
+    # parallel, p_fun, _ = parallel_func(one_inference, n_jobs=1)
+    # results = parallel(
+    #     p_fun(n=n, p=p, snr=snr, rho=rho, sparsity=sparsity,
+    #           n_jobs=1, n_bootstraps=n_bootstraps, fdr=fdr,
+    #           offset=offset, gamma=gamma, seed=seed)
+    #     for seed in range(n_simu))
 
-    # Plotting
-    plot(results, n_simu, fdr)
+    # # Plotting
+    # plot(results, n_simu, fdr)
     print('Done!')
 
 
