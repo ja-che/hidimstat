@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Authors: Binh Nguyen <tuan-binh.nguyen@inria.fr>
 import numpy as np
-from joblib import Parallel, delayed
 from sklearn.preprocessing import StandardScaler
 from sklearn.utils import check_random_state
 from sklearn.utils.validation import check_memory
@@ -10,6 +9,7 @@ from .gaussian_knockoff import (_estimate_distribution,
                                 gaussian_knockoff_generation)
 from .stat_coef_diff import stat_coef_diff
 from .utils import fdr_threshold, quantile_aggregation
+from ..parallel import parallel_func
 
 
 def knockoff_aggregation(X, y, centered=True, shrink=False,
@@ -56,12 +56,16 @@ def knockoff_aggregation(X, y, centered=True, shrink=False,
         raise TypeError('Wrong type for random_state')
 
     seed_list = rng.randint(1, np.iinfo(np.int32).max, n_bootstraps)
-    parallel = Parallel(n_jobs, verbose=joblib_verbose)
-    X_tildes = parallel(delayed(gaussian_knockoff_generation)(
+
+    parallel, p_fun, _ = parallel_func(
+        gaussian_knockoff_generation, n_jobs=n_jobs, verbose=joblib_verbose)
+    X_tildes = parallel(p_fun(
         X, mu, Sigma, method=construct_method, memory=memory,
         seed=seed) for seed in seed_list)
 
-    ko_stats = parallel(delayed(stat_coef_diff_cached)(
+    parallel, p_fun, _ = parallel_func(
+        stat_coef_diff_cached, n_jobs=n_jobs, verbose=joblib_verbose)
+    ko_stats = parallel(p_fun(
         X, X_tildes[i], y, method=statistic) for i in range(n_bootstraps))
 
     pvals = np.array([_empirical_pval(ko_stats[i], offset)

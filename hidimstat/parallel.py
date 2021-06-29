@@ -89,8 +89,7 @@ def check_n_jobs(n_jobs):
     """
     if _force_serial:
         n_jobs = 1
-        logger.info('... MNE_FORCE_SERIAL set. Processing in forced '
-                    'serial mode.')
+        print('... MNE_FORCE_SERIAL set. Processing in forced serial mode.')
     elif n_jobs <= 0:
         try:
             import multiprocessing
