@@ -2,8 +2,8 @@
 Support recovery on fMRI data
 =============================
 
-This example show how to recover the support of a decoder map working with
-the Haxby dataset.
+This example show how to recover the support of a decoder map with
+statistical guarantees working with the Haxby dataset.
 
 """
 
@@ -13,7 +13,6 @@ the Haxby dataset.
 import numpy as np
 import pandas as pd
 from sklearn.utils import Bunch
-from sklearn.preprocessing import StandardScaler
 from sklearn.cluster import FeatureAgglomeration
 from sklearn.feature_extraction import image
 from nilearn import datasets
@@ -32,7 +31,7 @@ from hidimstat.ensemble_clustered_inference import ensemble_clustered_inference
 #############################################################################
 # Function to fetch and preprocess Haxby dataset
 # ----------------------------------------------
-def preprocess_haxby(subject=2, memory=None, comparision='face-house'):
+def preprocess_haxby(subject=2, memory=None, comparison='face-house'):
     '''Gathering and preprocessing Haxby dataset for a given subject'''
 
     # Gathering Data
@@ -44,16 +43,16 @@ def preprocess_haxby(subject=2, memory=None, comparision='face-house'):
     conditions = pd.DataFrame.to_numpy(behavioral['labels'])
     session_label = pd.DataFrame.to_numpy(behavioral['chunks'])
 
-    if comparision == 'face-house':
+    if comparison == 'face-house':
         condition_mask = np.logical_or(conditions == 'face',
                                        conditions == 'house')
         y = np.asarray((conditions[condition_mask] == 'face') * 2 - 1)
-    elif comparision == 'cat-chair':
+    elif comparison == 'cat-chair':
         condition_mask = np.logical_or(conditions == 'cat',
                                        conditions == 'chair')
         y = np.asarray((conditions[condition_mask] == 'cat') * 2 - 1)
     else:
-        raise ValueError(f'Not a valid comparision: {comparision}')
+        raise ValueError(f'Not a valid comparison: {comparison}')
 
     groups = session_label[condition_mask]
 
@@ -70,22 +69,21 @@ def preprocess_haxby(subject=2, memory=None, comparision='face-house'):
 
     # Computing masked data
     fmri_masked = masker.fit_transform(fmri_filename)
-    mask = masker.mask_img_.get_fdata().astype(bool)
 
     X = np.asarray(fmri_masked)[condition_mask, :]
-    X = StandardScaler().fit_transform(X)
 
-    return Bunch(X=X, y=y, groups=groups, bg_img=bg_img, mask=mask,
-                 masker=masker)
+    return Bunch(X=X, y=y, groups=groups, bg_img=bg_img, masker=masker)
 
 
 #############################################################################
 # Gathering and preprocessing Haxby dataset for a given subject
 # -------------------------------------------------------------
 list_subject = [1, 2, 3, 4, 5, 6]
-subject = list_subject[1]
-data = preprocess_haxby(subject=subject)
-X, y, groups, mask = data.X, data.y, data.groups, data.mask
+list_comparison = ['face-house', 'cat-chair']
+# Choose subject and contrast. By default subject=2 and comparison='face-house'
+data = preprocess_haxby(subject=list_subject[1], comparison=list_comparison[0])
+X, y, groups, masker = data.X, data.y, data.groups, data.masker
+mask = masker.mask_img_.get_fdata().astype(bool)
 
 #############################################################################
 # Initializing FeatureAgglomeration object needed to perform the clustering
@@ -146,28 +144,29 @@ zscore_ecdl = zscore_from_pval(pval, one_minus_pval)
 #############################################################################
 # Plotting the results
 # --------------------
-bg_img, masker = data.bg_img, data.masker
-cut_coords = [-30, -50, -5]
+bg_img = data.bg_img
+cut_coords = [-25, -40, -5]
+# cut_coords = None
 
 zscore_img = masker.inverse_transform(zscore_std_svr)
 plot_stat_map(zscore_img, threshold=zscore_threshold_no_clust, bg_img=bg_img,
-              cut_coords=cut_coords, title='SVR permutation-test solution')
+              cut_coords=cut_coords, title='SVR parametric threshold')
 
 if permutation_test_inference:
     zscore_img = masker.inverse_transform(zscore_permutation_test)
     plot_stat_map(zscore_img, threshold=zscore_threshold_corr, bg_img=bg_img,
-                  cut_coords=cut_coords, title='SVR permutation-test solution')
+                  cut_coords=cut_coords, title='SVR permutation-test thresh.')
 
 zscore_img = masker.inverse_transform(zscore_gaonkar)
 plot_stat_map(zscore_img, threshold=zscore_threshold_no_clust, bg_img=bg_img,
-              cut_coords=cut_coords, title='Gaonkar algorithm solution')
+              cut_coords=cut_coords, title='Gaonkar algorithm')
 
 zscore_img = masker.inverse_transform(zscore_cdl)
 plot_stat_map(zscore_img, threshold=zscore_threshold_clust, bg_img=bg_img,
-              cut_coords=cut_coords, title='CluDL solution')
+              cut_coords=cut_coords, title='CluDL')
 
 zscore_img = masker.inverse_transform(zscore_ecdl)
 plot_stat_map(zscore_img, threshold=zscore_threshold_clust, bg_img=bg_img,
-              cut_coords=cut_coords, title='EnCluDL solution')
+              cut_coords=cut_coords, title='EnCluDL')
 
 show()
