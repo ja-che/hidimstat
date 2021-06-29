@@ -226,19 +226,17 @@ elif cond == 'somato':
     hemi = 'rh'
     view = 'lateral'
 
-# Plotting
+# Plotting clustered inference solution
 mne.viz.set_3d_backend("pyvista")
 
 if active_set.sum() != 0:
     max_stc = np.max(np.abs(stc.data))
-else:
-    max_stc = 6
-
-clim = dict(pos_lims=(3, zscore_threshold, max_stc), kind='value')
-brain = stc.plot(subject=subject, hemi=hemi, clim=clim,
-                 subjects_dir=subjects_dir)
-brain.show_view(view)
-brain.add_text(0.05, 0.9, f'{cond} - cd-MTLasso (AR1)', 'title', font_size=30)
+    clim = dict(pos_lims=(3, zscore_threshold, max_stc), kind='value')
+    brain = stc.plot(subject=subject, hemi=hemi, clim=clim,
+                     subjects_dir=subjects_dir)
+    brain.show_view(view)
+    brain.add_text(0.05, 0.9, f'{cond} - cd-MTLasso (AR1)', 'title',
+                   font_size=30)
 
 save_fig = False
 if save_fig:
@@ -269,18 +267,13 @@ stc = _make_sparse_stc(sLORETA_solution, active_set, forward, stc_full.tmin,
                        tstep=stc_full.tstep)
 
 # Plotting sLORETA solution
-mne.viz.set_3d_backend("pyvista")
-
 if active_set.sum() != 0:
     max_stc = np.max(np.abs(stc.data))
-else:
-    max_stc = 6
-
-clim = dict(pos_lims=(3, zscore_threshold_no_clust, max_stc), kind='value')
-brain = stc.plot(subject=subject, hemi=hemi, clim=clim,
-                 subjects_dir=subjects_dir)
-brain.show_view(view)
-brain.add_text(0.05, 0.9, f'{cond} - sLORETA', 'title', font_size=30)
+    clim = dict(pos_lims=(3, zscore_threshold_no_clust, max_stc), kind='value')
+    brain = stc.plot(subject=subject, hemi=hemi, clim=clim,
+                     subjects_dir=subjects_dir)
+    brain.show_view(view)
+    brain.add_text(0.05, 0.9, f'{cond} - sLORETA', 'title', font_size=30)
 
 # Runing the ensemble clustered inference algorithm on temporal data
 # might take several minutes on standard device with `n_jobs=1` (around 10 min)
@@ -305,17 +298,17 @@ if run_ensemble_clustered_inference:
     # Building mne.SourceEstimate object
     stc = _compute_stc(zscore_active_set, active_set, evoked, forward)
 
-    # Plotting
-    mne.viz.set_3d_backend("pyvista")
-    max_stc = np.max(np.abs(stc._data))
-    clim = dict(pos_lims=(3, zscore_threshold, max_stc), kind='value')
-    brain = stc.plot(subject=subject, hemi=hemi, clim=clim,
-                     subjects_dir=subjects_dir)
-    brain.show_view(view)
-    brain.add_text(0.05, 0.9, f'{cond} - ecd-MTLasso (AR1)',
-                   'title', font_size=30)
+    # Plotting ensemble clustered inference solution
+    if active_set.sum() != 0:
+        max_stc = np.max(np.abs(stc._data))
+        clim = dict(pos_lims=(3, zscore_threshold, max_stc), kind='value')
+        brain = stc.plot(subject=subject, hemi=hemi, clim=clim,
+                         subjects_dir=subjects_dir)
+        brain.show_view(view)
+        brain.add_text(0.05, 0.9, f'{cond} - ecd-MTLasso (AR1)',
+                       'title', font_size=30)
 
-    interactive_plot = False
-    if interactive_plot:
-        brain = stc.plot(subject=subject, hemi='both',
-                         subjects_dir=subjects_dir, clim=clim)
+        interactive_plot = False
+        if interactive_plot:
+            brain = stc.plot(subject=subject, hemi='both',
+                             subjects_dir=subjects_dir, clim=clim)
