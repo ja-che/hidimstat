@@ -16,6 +16,7 @@ import pandas as pd
 from sklearn.utils import Bunch
 from sklearn.cluster import FeatureAgglomeration
 from sklearn.feature_extraction import image
+from sklearn.linear_model import Ridge
 from nilearn import datasets
 from nilearn.input_data import NiftiMasker
 from nilearn.image import mean_img
@@ -23,7 +24,7 @@ from nilearn.plotting import plot_stat_map, show
 
 from hidimstat.stat_tools import zscore_from_pval, pval_from_scale
 from hidimstat.standardized_svr import standardized_svr
-from hidimstat.permutation_test import permutation_test_cv
+from hidimstat.permutation_test import permutation_test, permutation_test_cv
 from hidimstat.gaonkar import gaonkar
 from hidimstat.clustered_inference import clustered_inference
 from hidimstat.ensemble_clustered_inference import ensemble_clustered_inference
@@ -110,12 +111,19 @@ zscore_std_svr = zscore_from_pval(pval, one_minus_pval)
 
 # Recovering the support with SVR decoder thresholded by permutation test
 # This inference takes around 15 minutes.
-permutation_test_inference = False
-if permutation_test_inference:
+SVR_permutation_test_inference = False
+if SVR_permutation_test_inference:
     # We computed the regularization parameter by CV (C = 0.1)
     pval_corr, one_minus_pval_corr = \
         permutation_test_cv(X, y, n_permutations=50, C=0.1)
-    zscore_permutation_test = zscore_from_pval(pval_corr, one_minus_pval_corr)
+    zscore_svr_permutation_test = \
+        zscore_from_pval(pval_corr, one_minus_pval_corr)
+
+# Thresholding Ridge decoder with permutation test instead
+estimator = Ridge()
+pval_corr, one_minus_pval_corr = permutation_test(X, y, estimator=estimator)
+zscore_ridge_permutation_test = \
+    zscore_from_pval(pval_corr, one_minus_pval_corr)
 
 # Recovering the support with Gaonkar algorithm
 beta_hat, scale = gaonkar(X, y)
@@ -141,23 +149,29 @@ cut_coords = [-25, -40, -5]
 
 zscore_img = masker.inverse_transform(zscore_std_svr)
 plot_stat_map(zscore_img, threshold=zscore_threshold_no_clust, bg_img=bg_img,
-              cut_coords=cut_coords, title='SVR parametric threshold')
+              dim=-1, cut_coords=cut_coords, title='SVR parametric threshold')
 
-if permutation_test_inference:
-    zscore_img = masker.inverse_transform(zscore_permutation_test)
+if SVR_permutation_test_inference:
+    zscore_img = masker.inverse_transform(zscore_svr_permutation_test)
     plot_stat_map(zscore_img, threshold=zscore_threshold_corr, bg_img=bg_img,
-                  cut_coords=cut_coords, title='SVR permutation-test thresh.')
+                  dim=-1, cut_coords=cut_coords,
+                  title='SVR permutation-test thresh.')
+
+zscore_img = masker.inverse_transform(zscore_ridge_permutation_test)
+plot_stat_map(zscore_img, threshold=zscore_threshold_corr, bg_img=bg_img,
+              dim=-1, cut_coords=cut_coords,
+              title='Ridge permutation-test thresh.')
 
 zscore_img = masker.inverse_transform(zscore_gaonkar)
 plot_stat_map(zscore_img, threshold=zscore_threshold_no_clust, bg_img=bg_img,
-              cut_coords=cut_coords, title='Gaonkar algorithm')
+              dim=-1, cut_coords=cut_coords, title='Gaonkar algorithm')
 
 zscore_img = masker.inverse_transform(zscore_cdl)
 plot_stat_map(zscore_img, threshold=zscore_threshold_clust, bg_img=bg_img,
-              cut_coords=cut_coords, title='CluDL')
+              dim=-1, cut_coords=cut_coords, title='CluDL')
 
 zscore_img = masker.inverse_transform(zscore_ecdl)
 plot_stat_map(zscore_img, threshold=zscore_threshold_clust, bg_img=bg_img,
-              cut_coords=cut_coords, title='EnCluDL')
+              dim=-1, cut_coords=cut_coords, title='EnCluDL')
 
 show()
