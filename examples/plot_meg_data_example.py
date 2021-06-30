@@ -1,7 +1,25 @@
 """
-Support recovery on MEG data (2D)
-========================================
+Support recovery on MEG data
+============================
 
+This example shows how to recover the support in the MEG/EEG source
+localization problem with statistical guarantees. Here we work
+with two datasets that study three different tasks (visual, audio, somato).
+
+We reproduce the real data experiment of Chevalier et al. (2020) _[1],
+which shows the benefit of (ensemble) clustered inference such as
+(ensemble) of clustered desparsified Multi-Task Lasso ((e)cd-MTLasso)
+over standard approach such as sLORETA. Specifically, they retrieve
+the support using a natural threshold (not computed a posteriori)
+of the estimated parameter. The estimated support enjoys statistical
+guarantees.
+
+References
+----------
+.. [1] Chevalier, J. A., Gramfort, A., Salmon, J., & Thirion, B. (2020).
+       Statistical control for spatio-temporal MEG/EEG source imaging with
+       desparsified multi-task Lasso. In NeurIPS 2020-34h Conference on
+       Neural Information Processing Systems.
 """
 
 import os
