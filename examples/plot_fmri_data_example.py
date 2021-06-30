@@ -2,7 +2,7 @@
 Support recovery on fMRI data
 =============================
 
-This example show how to recover the support of a decoder map with
+This example shows how to recover the support of a decoder map with
 statistical guarantees working with the Haxby dataset, focusing on
 'face vs house' contrast.
 
@@ -10,7 +10,7 @@ In this example, we show that statistical methods (i.e., methods that
 theoretically offer statistical guarantees on the estimated support) are
 not powerfull when applied on the uncompressed problem (method such as
 thresholding the SVR or Ridge decoder or the algorithm proposed by
-Gaonkar _[1]). This due to the high dimensionality and structure of the
+Gaonkar _[1]). This is due to the high dimensionality and structure of the
 data. We also present two methods that offer statistical guarantees
 but with a (small) spatial tolerance on the shape of the support:
 clustered desparsified lasso (CLuDL) combines clustering and statistical
@@ -18,7 +18,7 @@ inference ; ensemble of clustered desparsified lasso (EnCluDL) adds
 randomization step over the choice of clustering.
 
 EnCluDL is powerfull and does not depend on a unique clustering choice.
-As shown in Chevalier et al. _[2], for several task the estimated
+As shown in Chevalier et al. (2021) _[2], for several task the estimated
 support (predictive regions) look relevant.
 
 References
@@ -146,9 +146,10 @@ if SVR_permutation_test_inference:
         zscore_from_pval(pval_corr, one_minus_pval_corr)
 
 # Thresholding Ridge decoder with permutation test instead
-# Since the computation time is much shorter around 1 minute.
+# Since the computation time is much shorter around 20 seconds.
 estimator = Ridge()
-pval_corr, one_minus_pval_corr = permutation_test(X, y, estimator=estimator)
+pval_corr, one_minus_pval_corr = \
+    permutation_test(X, y, estimator=estimator, n_permutations=200)
 zscore_ridge_permutation_test = \
     zscore_from_pval(pval_corr, one_minus_pval_corr)
 
@@ -163,8 +164,12 @@ beta_hat, pval, pval_corr, one_minus_pval, one_minus_pval_corr = \
 zscore_cdl = zscore_from_pval(pval, one_minus_pval)
 
 # Recovering the support with ensemble clustered inference
+# To make the experiment shorter we take `n_bootstraps=5`
+# However you might benefit from randomization taking
+# `n_bootstraps=25` or `n_bootstraps=100`, also we set `n_jobs=2`
 beta_hat, pval, pval_corr, one_minus_pval, one_minus_pval_corr = \
-    ensemble_clustered_inference(X, y, ward, n_clusters, groups=groups)
+    ensemble_clustered_inference(X, y, ward, n_clusters, groups=groups,
+                                 n_bootstraps=5, n_jobs=2)
 zscore_ecdl = zscore_from_pval(pval, one_minus_pval)
 
 #############################################################################
