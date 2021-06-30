@@ -37,6 +37,10 @@ from hidimstat.ensemble_clustered_inference import \
 from hidimstat.stat_tools import zscore_from_pval
 
 
+##############################################################################
+# MEG Preprocessing functions
+# ---------------------------
+
 def preprocess_meg_eeg_data(evoked, forward, noise_cov, loose=0., depth=0.,
                             pca=False):
     """Preprocess MEG or EEG data to produce the whitened MEG/EEG measurements
@@ -112,7 +116,7 @@ def _compute_stc(zscore_active_set, active_set, evoked, forward):
 
 # Choose the experiment (task)
 list_cond = ['audio', 'visual', 'somato']
-cond = list_cond[0]
+cond = list_cond[2]
 
 # Downloading data
 if cond in ['audio', 'visual']:
@@ -184,7 +188,9 @@ elif cond == 'somato':
     # of environmental noise leading to an effective number of 64 samples.
     pca = True
 
-# Handling forward solution
+##############################################################################
+# Handling forward solution and running clustered inference
+# ---------------------------------------------------------
 forward = mne.read_forward_solution(fwd_fname)
 # Collecting features' connectivity
 connectivity = mne.source_estimate.spatial_src_adjacency(forward['src'])
@@ -265,7 +271,9 @@ if interactive_plot:
     brain = stc.plot(subject=subject, hemi='both',
                      subjects_dir=subjects_dir, clim=clim)
 
-#  Compare with sLORETA
+##############################################################################
+# Compare with sLORETA
+# --------------------
 lambda2 = 1. / 9
 inv = make_inverse_operator(evoked.info, forward, noise_cov, loose=0.,
                             depth=0., fixed=True)
