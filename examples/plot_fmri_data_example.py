@@ -6,6 +6,32 @@ This example show how to recover the support of a decoder map with
 statistical guarantees working with the Haxby dataset, focusing on
 'face vs house' contrast.
 
+In this example, we show that statistical methods (i.e., methods that
+theoretically offer statistical guarantees on the estimated support) are
+not powerfull when applied on the uncompressed problem (method such as
+thresholding the SVR or Ridge decoder or the algorithm proposed by
+Gaonkar _[1]). This due to the high dimensionality and structure of the
+data. We also present two methods that offer statistical guarantees
+but with a (small) spatial tolerance on the shape of the support:
+clustered desparsified lasso (CLuDL) combines clustering and statistical
+inference ; ensemble of clustered desparsified lasso (EnCluDL) adds
+randomization step over the choice of clustering.
+
+EnCluDL is powerfull and does not depend on a unique clustering choice.
+As shown in Chevalier et al. _[2], for several task the estimated
+support (predictive regions) look relevant.
+
+References
+----------
+.. [1] Gaonkar, B., & Davatzikos, C. (2012, October). Deriving statistical
+       significance maps for SVM based image classification and group
+       comparisons. In International Conference on Medical Image Computing
+       and Computer-Assisted Intervention (pp. 723-730). Springer, Berlin,
+       Heidelberg.
+
+.. [2] Chevalier, J. A., Nguyen, T. B., Salmon, J., Varoquaux, G.,
+       & Thirion, B. (2021). Decoding with confidence: Statistical
+       control on decoder maps. NeuroImage, 234, 117921.
 """
 
 #############################################################################
@@ -120,6 +146,7 @@ if SVR_permutation_test_inference:
         zscore_from_pval(pval_corr, one_minus_pval_corr)
 
 # Thresholding Ridge decoder with permutation test instead
+# Since the computation time is much shorter around 1 minute.
 estimator = Ridge()
 pval_corr, one_minus_pval_corr = permutation_test(X, y, estimator=estimator)
 zscore_ridge_permutation_test = \
