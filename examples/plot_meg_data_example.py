@@ -6,7 +6,7 @@ This example shows how to recover the support in the MEG/EEG source
 localization problem with statistical guarantees. Here we work
 with two datasets that study three different tasks (visual, audio, somato).
 
-We reproduce the real data experiment of Chevalier et al. (2020) _[1],
+We reproduce the real data experiment of Chevalier et al. (2020) [1]_,
 which shows the benefit of (ensemble) clustered inference such as
 (ensemble) of clustered desparsified Multi-Task Lasso ((e)cd-MTLasso)
 over standard approach such as sLORETA. Specifically, they retrieve
@@ -101,7 +101,7 @@ def preprocess_meg_eeg_data(evoked, forward, noise_cov, loose=0., depth=0.,
     return G, M, forward
 
 
-def _compute_stc(zscore_active_set, active_set, evoked, forward):
+def compute_stc(zscore_active_set, active_set, evoked, forward):
     """Wrapper of `_make_sparse_stc`"""
 
     X = np.atleast_2d(zscore_active_set)
@@ -117,10 +117,12 @@ def _compute_stc(zscore_active_set, active_set, evoked, forward):
 # Choose the experiment (task)
 list_cond = ['audio', 'visual', 'somato']
 cond = list_cond[2]
+print(f"Let's process the condition: {cond}")
 
+##############################################################################
 # Downloading data
+# ----------------
 if cond in ['audio', 'visual']:
-
     subject = 'sample'
     data_path = sample.data_path()
     fwd_fname_suffix = 'MEG/sample/sample_audvis-meg-eeg-oct-6-fwd.fif'
@@ -162,7 +164,6 @@ elif cond == 'somato':
                              f'sub-{subject}_task-{task}_meg.fif')
     fwd_fname = os.path.join(data_path, 'derivatives', f'sub-{subject}',
                              f'sub-{subject}_task-{task}-fwd.fif')
-    condition = 'Unknown'
 
     # Read evoked
     raw = mne.io.read_raw_fif(raw_fname)
@@ -189,8 +190,12 @@ elif cond == 'somato':
     pca = True
 
 ##############################################################################
-# Handling forward solution and running clustered inference
-# ---------------------------------------------------------
+# Preparing data for clustered inference
+# --------------------------------------
+#
+# For clustered inference we need the targets ``Y``, the design matrix ``X``
+# and the ``connectivity`` matrix, which is a sparse adjacency matrix.
+
 forward = mne.read_forward_solution(fwd_fname)
 # Collecting features' connectivity
 connectivity = mne.source_estimate.spatial_src_adjacency(forward['src'])
@@ -203,18 +208,24 @@ step = int(t_step * evoked.info['sfreq'])
 evoked.decimate(step)
 t_min = evoked.times[0]
 t_step = 1. / evoked.info['sfreq']
+# Preprocessing MEG data
+X, Y, forward = preprocess_meg_eeg_data(evoked, forward, noise_cov, pca=pca)
+
+##############################################################################
+# Running clustered inference
+# ---------------------------
+#
+# For MEG data n_clusters = 1000 is generally a good default choice.
 # Taking n_clusters > 2000 might lead to an unpowerfull inference.
 # Taking n_clusters < 500 might compress too much the data leading
 # to a compress problem not close enough to the original problem.
-# For MEG data n_clusters = 1000 is generally a good default choice.
+
 n_clusters = 1000
+
 # Setting theoretical FWER target
 fwer_target = 0.1
 correction_clust_inf = 1. / n_clusters
 zscore_threshold = zscore_from_pval((fwer_target / 2) * correction_clust_inf)
-
-# Preprocessing MEG data
-X, Y, forward = preprocess_meg_eeg_data(evoked, forward, noise_cov, pca=pca)
 
 # Initializing FeatureAgglomeration object used for the clustering step
 connectivity_fixed, _ = \
@@ -236,8 +247,11 @@ active_set_full[:] = True
 zscore = zscore_from_pval(pval, one_minus_pval)
 zscore_active_set = zscore[active_set]
 
-# Building mne.SourceEstimate object
-stc = _compute_stc(zscore_active_set, active_set, evoked, forward)
+##############################################################################
+# Visualization
+# -------------
+
+stc = compute_stc(zscore_active_set, active_set, evoked, forward)
 
 # Plotting parameters
 if cond == 'audio':
@@ -272,8 +286,9 @@ if interactive_plot:
                      subjects_dir=subjects_dir, clim=clim)
 
 ##############################################################################
-# Compare with sLORETA
-# --------------------
+# Comparision with sLORETA
+# ------------------------
+
 lambda2 = 1. / 9
 inv = make_inverse_operator(evoked.info, forward, noise_cov, loose=0.,
                             depth=0., fixed=True)
@@ -301,11 +316,14 @@ if active_set.sum() != 0:
     brain.show_view(view)
     brain.add_text(0.05, 0.9, f'{cond} - sLORETA', 'title', font_size=30)
 
-# Runing the ensemble clustered inference algorithm on temporal data
-# might take several minutes on standard device with `n_jobs=1` (around 10 min)
+##############################################################################
+# To go further it's possible to run the ensemble clustered inference
+# algorithm. It might take several minutes on standard device with
+# ``n_jobs=1`` (around 10 min). Just set
+# ``run_ensemble_clustered_inference=True`` below.
 run_ensemble_clustered_inference = False
-if run_ensemble_clustered_inference:
 
+if run_ensemble_clustered_inference:
     # Making the inference with the ensembled clustered inference algorithm
     beta_hat, pval, pval_corr, one_minus_pval, one_minus_pval_corr = \
         ensemble_clustered_inference(X, Y, ward, n_clusters,
@@ -322,7 +340,7 @@ if run_ensemble_clustered_inference:
     zscore_active_set = zscore[active_set]
 
     # Building mne.SourceEstimate object
-    stc = _compute_stc(zscore_active_set, active_set, evoked, forward)
+    stc = compute_stc(zscore_active_set, active_set, evoked, forward)
 
     # Plotting ensemble clustered inference solution
     if active_set.sum() != 0:
