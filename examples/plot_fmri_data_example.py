@@ -68,8 +68,9 @@ def preprocess_haxby(subject=2, memory=None):
 
     behavioral = pd.read_csv(haxby_dataset.session_target[0], sep=" ")
 
-    conditions = pd.DataFrame.to_numpy(behavioral['labels'])
-    session_label = pd.DataFrame.to_numpy(behavioral['chunks'])
+    # conditions = pd.DataFrame.to_numpy(behavioral['labels'])
+    conditions = behavioral['labels'].values
+    session_label = behavioral['chunks'].values
 
     condition_mask = np.logical_or(conditions == 'face', conditions == 'house')
     groups = session_label[condition_mask]
