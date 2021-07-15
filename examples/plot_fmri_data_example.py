@@ -10,7 +10,7 @@ In this example, we show that statistical methods (i.e., methods that
 theoretically offer statistical guarantees on the estimated support) are
 not powerfull when applied on the uncompressed problem (method such as
 thresholding the SVR or Ridge decoder or the algorithm proposed by
-Gaonkar _[1]). This is due to the high dimensionality and structure of the
+Gaonkar [1]_). This is due to the high dimensionality and structure of the
 data. We also present two methods that offer statistical guarantees
 but with a (small) spatial tolerance on the shape of the support:
 clustered desparsified lasso (CLuDL) combines clustering and statistical
@@ -18,7 +18,7 @@ inference ; ensemble of clustered desparsified lasso (EnCluDL) adds
 randomization step over the choice of clustering.
 
 EnCluDL is powerfull and does not depend on a unique clustering choice.
-As shown in Chevalier et al. (2021) _[2], for several task the estimated
+As shown in Chevalier et al. (2021) [2]_, for several task the estimated
 support (predictive regions) look relevant.
 
 References
@@ -118,7 +118,9 @@ ward = FeatureAgglomeration(n_clusters=n_clusters, connectivity=connectivity)
 #############################################################################
 # Making the inference with several algorithms
 # --------------------------------------------
-# Setting theoretical FWER target
+#
+# First, we set theoretical FWER target.
+
 n_samples, n_features = X.shape
 fwer_target = 0.1
 # No need of correction for permutation tests
@@ -129,14 +131,19 @@ zscore_threshold_no_clust = zscore_from_pval((fwer_target / 2) * correction)
 correction_clust = 1. / n_clusters
 zscore_threshold_clust = zscore_from_pval((fwer_target / 2) * correction_clust)
 
-# Recovering the support with SVR decoder thresholded parametrically
+#############################################################################
+# Let us recover the support with SVR decoder thresholded parametrically
+
 # We computed the regularization parameter by CV (C = 0.1)
 beta_hat, scale = standardized_svr(X, y, Cs=[0.1])
 pval, _, one_minus_pval, _ = pval_from_scale(beta_hat, scale)
 zscore_std_svr = zscore_from_pval(pval, one_minus_pval)
 
-# Recovering the support with SVR decoder thresholded by permutation test
+#############################################################################
+# To recover the support with SVR decoder thresholded by permutation test
+# use `SVR_permutation_test_inference = True`.
 # This inference takes around 15 minutes.
+
 SVR_permutation_test_inference = False
 if SVR_permutation_test_inference:
     # We computed the regularization parameter by CV (C = 0.1)
@@ -145,28 +152,32 @@ if SVR_permutation_test_inference:
     zscore_svr_permutation_test = \
         zscore_from_pval(pval_corr, one_minus_pval_corr)
 
-# Thresholding Ridge decoder with permutation test instead
-# Since the computation time is much shorter around 20 seconds.
+#############################################################################
+# A faster solution is to threshold the Ridge decoder by permutation test.
+# The computation time is much shorter around 20 seconds.
 estimator = Ridge()
 pval_corr, one_minus_pval_corr = \
     permutation_test(X, y, estimator=estimator, n_permutations=200)
 zscore_ridge_permutation_test = \
     zscore_from_pval(pval_corr, one_minus_pval_corr)
 
-# Recovering the support with Gaonkar algorithm
+#############################################################################
+# Now, let us recover the support with Gaonkar algorithm.
 beta_hat, scale = gaonkar(X, y)
 pval, _, one_minus_pval, _ = pval_from_scale(beta_hat, scale)
 zscore_gaonkar = zscore_from_pval(pval, one_minus_pval)
 
-# Recovering the support with clustered inference
+#############################################################################
+# Now, we use a clustered inference algorithm to recover the support.
 beta_hat, pval, pval_corr, one_minus_pval, one_minus_pval_corr = \
     clustered_inference(X, y, ward, n_clusters)
 zscore_cdl = zscore_from_pval(pval, one_minus_pval)
 
-# Recovering the support with ensemble clustered inference
-# To make the experiment shorter we take `n_bootstraps=5`
-# However you might benefit from randomization taking
-# `n_bootstraps=25` or `n_bootstraps=100`, also we set `n_jobs=2`
+#############################################################################
+# Below, we recover the support with an ensemble clustered inference algorithm.
+# To make the experiment shorter we take `n_bootstraps=5`.
+# However you might benefit from clutering randomization taking
+# `n_bootstraps=25` or `n_bootstraps=100`, also we set `n_jobs=2`.
 beta_hat, pval, pval_corr, one_minus_pval, one_minus_pval_corr = \
     ensemble_clustered_inference(X, y, ward, n_clusters, groups=groups,
                                  n_bootstraps=5, n_jobs=2)
