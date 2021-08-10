@@ -222,47 +222,37 @@ zscore_threshold_clust = zscore_from_pval((fwer_target / 2) * correction_clust)
 #############################################################################
 # Now, we can plot the thresholded z-score maps by translating the
 # p-value maps estimated previously into z-score maps and using the
-# suitable threshold.
+# suitable threshold. For a better readability, we make a small function
+# called `plot_map` that wraps all these steps.
 
-# Before, we just fetch the background image and choose the slices to display.
-bg_img = data.bg_img
-cut_coords = [-25, -40, -5]
-# cut_coords = None
 
-zscore_std_svr = zscore_from_pval(pval_std_svr, one_minus_pval_std_svr)
-zscore_img = masker.inverse_transform(zscore_std_svr)
-plot_stat_map(zscore_img, threshold=zscore_threshold_no_clust, bg_img=bg_img,
-              dim=-1, cut_coords=cut_coords, title='SVR parametric threshold')
+def plot_map(pval, one_minus_pval, zscore_threshold, title=None,
+             cut_coords=[-25, -40, -5], masker=masker, bg_img=data.bg_img):
+
+    zscore = zscore_from_pval(pval, one_minus_pval)
+    zscore_img = masker.inverse_transform(zscore)
+    plot_stat_map(zscore_img, threshold=zscore_threshold, bg_img=bg_img,
+                  dim=-1, cut_coords=cut_coords, title=title)
+
+    return
+
+
+plot_map(pval_std_svr, one_minus_pval_std_svr, zscore_threshold_no_clust,
+         title='SVR parametric threshold')
 
 if SVR_permutation_test_inference:
-    zscore_svr_perm_test = zscore_from_pval(pval_corr_svr_perm_test,
-                                            one_minus_pval_corr_svr_perm_test)
-    zscore_img = masker.inverse_transform(zscore_svr_perm_test)
-    plot_stat_map(zscore_img, threshold=zscore_threshold_corr, bg_img=bg_img,
-                  dim=-1, cut_coords=cut_coords,
-                  title='SVR permutation-test thresh.')
+    plot_map(pval_corr_svr_perm_test, one_minus_pval_corr_svr_perm_test,
+             zscore_threshold_corr, title='SVR permutation-test thresh.')
 
-zscore_ridge_perm_test = zscore_from_pval(pval_corr_ridge_perm_test,
-                                          one_minus_pval_corr_ridge_perm_test)
-zscore_img = masker.inverse_transform(zscore_ridge_perm_test)
-plot_stat_map(zscore_img, threshold=zscore_threshold_corr, bg_img=bg_img,
-              dim=-1, cut_coords=cut_coords,
-              title='Ridge permutation-test thresh.')
+plot_map(pval_corr_ridge_perm_test, one_minus_pval_corr_ridge_perm_test,
+         zscore_threshold_corr, title='Ridge permutation-test thresh.')
 
-zscore_gaonkar = zscore_from_pval(pval_gaonkar, one_minus_pval_gaonkar)
-zscore_img = masker.inverse_transform(zscore_gaonkar)
-plot_stat_map(zscore_img, threshold=zscore_threshold_no_clust, bg_img=bg_img,
-              dim=-1, cut_coords=cut_coords, title='Gaonkar algorithm')
+plot_map(pval_gaonkar, one_minus_pval_gaonkar, zscore_threshold_no_clust,
+         title='Gaonkar algorithm')
 
-zscore_cdl = zscore_from_pval(pval_cdl, one_minus_pval_cdl)
-zscore_img = masker.inverse_transform(zscore_cdl)
-plot_stat_map(zscore_img, threshold=zscore_threshold_clust, bg_img=bg_img,
-              dim=-1, cut_coords=cut_coords, title='CluDL')
+plot_map(pval_cdl, one_minus_pval_cdl, zscore_threshold_clust, 'CluDL')
 
-zscore_ecdl = zscore_from_pval(pval_ecdl, one_minus_pval_ecdl)
-zscore_img = masker.inverse_transform(zscore_ecdl)
-plot_stat_map(zscore_img, threshold=zscore_threshold_clust, bg_img=bg_img,
-              dim=-1, cut_coords=cut_coords, title='EnCluDL')
+plot_map(pval_ecdl, one_minus_pval_ecdl, zscore_threshold_clust, 'EnCluDL')
 
 #############################################################################
 # Analysis of the results
