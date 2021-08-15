@@ -37,19 +37,13 @@ from hidimstat.ensemble_clustered_inference import \
     ensemble_clustered_inference
 from hidimstat.stat_tools import zscore_from_pval
 
-import sklearn
-sklearn.__version__
-
-a = sklearn.utils.graph
-
 ##############################################################################
 # Specific preprocessing functions
 # --------------------------------
 # The functions below are used to load or preprocess the data or to put
 # the solution in a convenient format. If you are reading this example
 # or the first time, you should skip this section.
-
-##############################################################################
+#
 # The following function loads the data from the sample dataset.
 
 
@@ -134,7 +128,8 @@ def _load_somato(cond):
     t_step = 1.0 / 300
 
     # We must reduce the whitener since data were preprocessed for removal
-    # of environmental noise leading to an effective number of 64 samples.
+    # of environmental noise with maxwell filter leading to an effective
+    # number of 64 samples.
     pca = True
 
     return (subject, subjects_dir, noise_cov, forward, evoked,
@@ -170,21 +165,25 @@ def preprocess_meg_eeg_data(evoked, forward, noise_cov, loose=0., depth=0.,
         If loose is 1, it corresponds to free orientations.
         The default value ('auto') is set to 0.2 for surface-oriented source
         space and set to 1.0 for volumic or discrete source space.
+        See for details:
+        https://mne.tools/stable/auto_tutorials/inverse/35_dipole_orientations.html?highlight=loose
 
     depth : None or float in [0, 1]
         Depth weighting coefficients. If None, no depth weighting is performed.
 
     pca : bool, optional (default=False)
-        If True, Whitener is reduced.
-        If False, Whitener is not reduced.
+        If True, whitener is reduced.
+        If False, whitener is not reduced (square matrix).
 
     Returns
     -------
     G : array, shape (n_channels, n_dipoles)
-        The preprocessed gain matrix.
+        The preprocessed gain matrix. If pca=True then n_channels is
+        effectively equal to the rank of the data.
 
     M : array, shape (n_channels, n_times)
-        The whitened MEG/EEG measurements.
+        The whitened MEG/EEG measurements. If pca=True then n_channels is
+        effectively equal to the rank of the data.
 
     forward : instance of Forward
         The preprocessed forward solution.
@@ -193,7 +192,7 @@ def preprocess_meg_eeg_data(evoked, forward, noise_cov, loose=0., depth=0.,
     all_ch_names = evoked.ch_names
 
     # Handle depth weighting and whitening (here is no weights)
-    forward, G, gain_info, whitener, source_weighting, mask = \
+    forward, G, gain_info, whitener, _, _ = \
         _prepare_gain(forward, evoked.info, noise_cov, pca=pca, depth=depth,
                       loose=loose, weights=None, weights_min=None, rank=None)
 
@@ -207,8 +206,8 @@ def preprocess_meg_eeg_data(evoked, forward, noise_cov, loose=0., depth=0.,
 
 
 ##############################################################################
-# The next function translate the solution in a readable format for the
-# plotting functions.
+# The next function translates the solution in a readable format for the
+# MNE plotting functions that require a Source Time Course (STC) object.
 
 
 def _compute_stc(zscore_active_set, active_set, evoked, forward):
@@ -270,12 +269,10 @@ print(f"Let's process the condition: {cond}")
 
 # Load the data
 if cond in ['audio', 'visual']:
-
     sub, subs_dir, noise_cov, forward, evoked, t_min, t_max, t_step, pca = \
         _load_sample(cond)
 
 elif cond == 'somato':
-
     sub, subs_dir, noise_cov, forward, evoked, t_min, t_max, t_step, pca = \
         _load_somato(cond)
 
@@ -307,9 +304,9 @@ X, Y, forward = preprocess_meg_eeg_data(evoked, forward, noise_cov, pca=pca)
 # ---------------------------
 #
 # For MEG data ``n_clusters = 1000`` is generally a good default choice.
-# Taking ``n_clusters > 2000`` might lead to an unpowerfull inference.
+# Taking ``n_clusters > 2000`` might lead to an unpowerful inference.
 # Taking ``n_clusters < 500`` might compress too much the data leading
-# to a compress problem not close enough to the original problem.
+# to a compressed problem not close enough to the original problem.
 
 n_clusters = 1000
 
@@ -346,7 +343,7 @@ zscore_active_set = zscore[active_set]
 # Now, let us plot the thresholded statistical maps derived thanks to the
 # clustered inference algorithm referred as cd-MTLasso.
 
-# Putting the solution into the format supported by the plotting functions
+# Let's put the solution into the format supported by the plotting functions
 stc = _compute_stc(zscore_active_set, active_set, evoked, forward)
 
 # Plotting parameters
@@ -418,7 +415,7 @@ if active_set.sum() != 0:
 ##############################################################################
 # Analysis of the results
 # -----------------------
-# While the clustered inference solution always highlight the expected
+# While the clustered inference solution always highlights the expected
 # cortex (audio, visual or somato-sensory) with a universal predertemined
 # threshold, the solution derived from the sLORETA method does not enjoy
 # the same property. For the audio task the method is conservative and
@@ -429,8 +426,7 @@ if active_set.sum() != 0:
 ##############################################################################
 # Running ensemble clustered inference
 # ------------------------------------
-
-##############################################################################
+#
 # To go further it is possible to run the ensemble clustered inference
 # algorithm. It might take several minutes on standard device with
 # ``n_jobs=1`` (around 10 min). Just set
