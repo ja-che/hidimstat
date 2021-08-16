@@ -42,7 +42,7 @@ from hidimstat.stat_tools import zscore_from_pval
 # --------------------------------
 # The functions below are used to load or preprocess the data or to put
 # the solution in a convenient format. If you are reading this example
-# or the first time, you should skip this section.
+# for the first time, you should skip this section.
 #
 # The following function loads the data from the sample dataset.
 
