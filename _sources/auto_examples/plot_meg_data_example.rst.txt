@@ -18,130 +18,42 @@
 .. _sphx_glr_auto_examples_plot_meg_data_example.py:
 
 
-Support recovery on MEG data (2D)
-========================================
+Support recovery on MEG data
+============================
 
-.. GENERATED FROM PYTHON SOURCE LINES 6-217
+This example compares several methods that recover the support in the MEG/EEG
+source localization problem with statistical guarantees. Here we work
+with two datasets that study three different tasks (visual, audio, somato).
 
+We reproduce the real data experiment of Chevalier et al. (2020) [1]_,
+which shows the benefit of (ensemble) clustered inference such as
+(ensemble of) clustered desparsified Multi-Task Lasso ((e)cd-MTLasso)
+over standard approach such as sLORETA. Specifically, it retrieves
+the support using a natural threshold (not computed a posteriori)
+of the estimated parameter. The estimated support enjoys statistical
+guarantees.
 
+References
+----------
+.. [1] Chevalier, J. A., Gramfort, A., Salmon, J., & Thirion, B. (2020).
+       Statistical control for spatio-temporal MEG/EEG source imaging with
+       desparsified multi-task Lasso. In NeurIPS 2020-34h Conference on
+       Neural Information Processing Systems.
 
-.. image-sg:: /auto_examples/images/sphx_glr_plot_meg_data_example_001.png
-   :alt: Gradiometers (203 channels)
-   :srcset: /auto_examples/images/sphx_glr_plot_meg_data_example_001.png
-   :class: sphx-glr-single-img
-
-.. image-sg:: /auto_examples/images/sphx_glr_plot_meg_data_example_002.png
-   :alt: plot meg data example
-   :srcset: /auto_examples/images/sphx_glr_plot_meg_data_example_002.png
-   :class: sphx-glr-single-img
-
-
-.. rst-class:: sphx-glr-script-out
-
- Out:
-
- .. code-block:: none
-
-    Using default location ~/mne_data for sample...
-    Creating ~/mne_data
-    Downloading archive MNE-sample-data-processed.tar.gz to /home/runner/mne_data
-    Downloading https://files.osf.io/v1/resources/rxvq7/providers/osfstorage/59c0e26f9ad5a1025c4ab159?version=5&action=download&direct (1.54 GB)
-      0%|          | Downloading : 0.00/1.54G [00:00<?,        ?B/s]      0%|          | Downloading : 504k/1.54G [00:00<01:26,    19.1MB/s]      0%|          | Downloading : 2.24M/1.54G [00:00<01:23,    19.8MB/s]      0%|          | Downloading : 6.24M/1.54G [00:00<01:19,    20.8MB/s]      1%|          | Downloading : 10.2M/1.54G [00:00<01:15,    21.7MB/s]      1%|          | Downloading : 14.2M/1.54G [00:00<01:11,    22.8MB/s]      1%|1         | Downloading : 18.2M/1.54G [00:00<01:08,    23.8MB/s]      1%|1         | Downloading : 22.2M/1.54G [00:00<01:05,    24.9MB/s]      2%|1         | Downloading : 26.2M/1.54G [00:00<01:10,    23.1MB/s]      2%|1         | Downloading : 30.2M/1.54G [00:00<01:07,    24.1MB/s]      2%|2         | Downloading : 34.2M/1.54G [00:00<01:04,    25.2MB/s]      2%|2         | Downloading : 38.2M/1.54G [00:00<01:01,    26.3MB/s]      3%|2         | Downloading : 42.2M/1.54G [00:00<00:58,    27.5MB/s]      3%|2         | Downloading : 46.2M/1.54G [00:00<00:55,    28.7MB/s]      3%|3         | Downloading : 50.2M/1.54G [00:00<00:53,    30.1MB/s]      3%|3         | Downloading : 54.2M/1.54G [00:00<00:50,    31.4MB/s]      4%|3         | Downloading : 58.2M/1.54G [00:00<00:48,    32.8MB/s]      4%|3         | Downloading : 62.2M/1.54G [00:00<00:46,    34.2MB/s]      4%|4         | Downloading : 66.2M/1.54G [00:00<00:44,    35.6MB/s]      4%|4         | Downloading : 70.2M/1.54G [00:00<00:42,    37.0MB/s]      5%|4         | Downloading : 74.2M/1.54G [00:00<00:40,    38.6MB/s]      5%|4         | Downloading : 78.2M/1.54G [00:00<00:39,    40.2MB/s]      5%|5         | Downloading : 82.2M/1.54G [00:00<00:37,    41.8MB/s]      5%|5         | Downloading : 86.2M/1.54G [00:00<00:35,    43.5MB/s]      6%|5         | Downloading : 90.2M/1.54G [00:00<00:34,    45.2MB/s]      6%|5         | Downloading : 94.2M/1.54G [00:00<00:33,    47.0MB/s]      6%|6         | Downloading : 98.2M/1.54G [00:01<00:31,    48.8MB/s]      6%|6         | Downloading : 102M/1.54G [00:01<00:30,    50.7MB/s]       7%|6         | Downloading : 106M/1.54G [00:01<00:29,    52.5MB/s]      7%|6         | Downloading : 110M/1.54G [00:01<00:28,    54.3MB/s]      7%|7         | Downloading : 114M/1.54G [00:01<00:27,    56.2MB/s]      8%|7         | Downloading : 118M/1.54G [00:01<00:26,    58.2MB/s]      8%|7         | Downloading : 122M/1.54G [00:01<00:26,    57.4MB/s]      8%|8         | Downloading : 126M/1.54G [00:01<00:26,    56.7MB/s]      8%|8         | Downloading : 130M/1.54G [00:01<00:27,    55.1MB/s]      8%|8         | Downloading : 132M/1.54G [00:01<00:27,    55.5MB/s]      9%|8         | Downloading : 134M/1.54G [00:01<00:26,    56.9MB/s]      9%|8         | Downloading : 136M/1.54G [00:01<00:26,    57.3MB/s]      9%|8         | Downloading : 138M/1.54G [00:01<00:25,    58.2MB/s]      9%|9         | Downloading : 142M/1.54G [00:01<00:25,    60.1MB/s]      9%|9         | Downloading : 146M/1.54G [00:01<00:24,    61.9MB/s]     10%|9         | Downloading : 150M/1.54G [00:01<00:23,    64.0MB/s]     10%|9         | Downloading : 154M/1.54G [00:01<00:22,    65.6MB/s]     10%|#         | Downloading : 158M/1.54G [00:01<00:22,    66.8MB/s]     10%|#         | Downloading : 162M/1.54G [00:01<00:21,    68.2MB/s]     11%|#         | Downloading : 166M/1.54G [00:01<00:21,    69.7MB/s]     11%|#         | Downloading : 170M/1.54G [00:01<00:20,    71.7MB/s]     11%|#1        | Downloading : 174M/1.54G [00:01<00:20,    73.4MB/s]     11%|#1        | Downloading : 178M/1.54G [00:01<00:19,    75.3MB/s]     12%|#1        | Downloading : 182M/1.54G [00:01<00:19,    76.8MB/s]     12%|#1        | Downloading : 186M/1.54G [00:01<00:18,    77.9MB/s]     12%|#2        | Downloading : 190M/1.54G [00:01<00:18,    78.9MB/s]     12%|#2        | Downloading : 194M/1.54G [00:01<00:17,    80.6MB/s]     13%|#2        | Downloading : 198M/1.54G [00:02<00:17,    82.4MB/s]     13%|#2        | Downloading : 202M/1.54G [00:02<00:17,    83.5MB/s]     13%|#3        | Downloading : 206M/1.54G [00:02<00:16,    84.6MB/s]     13%|#3        | Downloading : 210M/1.54G [00:02<00:16,    85.1MB/s]     14%|#3        | Downloading : 214M/1.54G [00:02<00:16,    86.6MB/s]     14%|#3        | Downloading : 218M/1.54G [00:02<00:16,    88.3MB/s]     14%|#4        | Downloading : 222M/1.54G [00:02<00:16,    87.6MB/s]     14%|#4        | Downloading : 226M/1.54G [00:02<00:15,    88.9MB/s]     15%|#4        | Downloading : 230M/1.54G [00:02<00:15,    89.2MB/s]     15%|#4        | Downloading : 234M/1.54G [00:02<00:15,    90.8MB/s]     15%|#5        | Downloading : 238M/1.54G [00:02<00:15,    92.1MB/s]     15%|#5        | Downloading : 242M/1.54G [00:02<00:15,    92.5MB/s]     16%|#5        | Downloading : 246M/1.54G [00:02<00:14,    94.1MB/s]     16%|#5        | Downloading : 250M/1.54G [00:02<00:14,    95.4MB/s]     16%|#6        | Downloading : 254M/1.54G [00:02<00:14,    96.5MB/s]     16%|#6        | Downloading : 258M/1.54G [00:02<00:13,    98.8MB/s]     17%|#6        | Downloading : 262M/1.54G [00:02<00:14,    96.8MB/s]     17%|#6        | Downloading : 266M/1.54G [00:02<00:14,    96.4MB/s]     17%|#7        | Downloading : 270M/1.54G [00:02<00:13,    98.0MB/s]     17%|#7        | Downloading : 274M/1.54G [00:02<00:13,    99.7MB/s]     18%|#7        | Downloading : 278M/1.54G [00:02<00:13,     101MB/s]     18%|#7        | Downloading : 282M/1.54G [00:02<00:13,     103MB/s]     18%|#8        | Downloading : 286M/1.54G [00:02<00:13,     103MB/s]     18%|#8        | Downloading : 290M/1.54G [00:02<00:12,     106MB/s]     19%|#8        | Downloading : 294M/1.54G [00:02<00:12,     108MB/s]     19%|#8        | Downloading : 298M/1.54G [00:02<00:12,     109MB/s]     19%|#9        | Downloading : 302M/1.54G [00:02<00:11,     112MB/s]     19%|#9        | Downloading : 306M/1.54G [00:02<00:11,     113MB/s]     20%|#9        | Downloading : 310M/1.54G [00:02<00:11,     115MB/s]     20%|#9        | Downloading : 314M/1.54G [00:02<00:11,     117MB/s]     20%|##        | Downloading : 318M/1.54G [00:03<00:11,     118MB/s]     20%|##        | Downloading : 322M/1.54G [00:03<00:11,     119MB/s]     21%|##        | Downloading : 326M/1.54G [00:03<00:11,     118MB/s]     21%|##        | Downloading : 330M/1.54G [00:03<00:11,     118MB/s]     21%|##1       | Downloading : 334M/1.54G [00:03<00:10,     118MB/s]     21%|##1       | Downloading : 338M/1.54G [00:03<00:11,     118MB/s]     22%|##1       | Downloading : 342M/1.54G [00:03<00:10,     119MB/s]     22%|##1       | Downloading : 346M/1.54G [00:03<00:10,     122MB/s]     22%|##2       | Downloading : 350M/1.54G [00:03<00:10,     125MB/s]     22%|##2       | Downloading : 354M/1.54G [00:03<00:10,     124MB/s]     23%|##2       | Downloading : 358M/1.54G [00:03<00:10,     125MB/s]     23%|##2       | Downloading : 362M/1.54G [00:03<00:10,     126MB/s]     23%|##3       | Downloading : 366M/1.54G [00:03<00:10,     126MB/s]     23%|##3       | Downloading : 370M/1.54G [00:03<00:09,     127MB/s]     24%|##3       | Downloading : 374M/1.54G [00:03<00:09,     127MB/s]     24%|##3       | Downloading : 378M/1.54G [00:03<00:10,     126MB/s]     24%|##4       | Downloading : 382M/1.54G [00:03<00:09,     125MB/s]     25%|##4       | Downloading : 386M/1.54G [00:03<00:09,     126MB/s]     25%|##4       | Downloading : 390M/1.54G [00:03<00:09,     125MB/s]     25%|##5       | Downloading : 394M/1.54G [00:03<00:09,     126MB/s]     25%|##5       | Downloading : 398M/1.54G [00:03<00:10,     120MB/s]     26%|##5       | Downloading : 402M/1.54G [00:03<00:10,     117MB/s]     26%|##5       | Downloading : 406M/1.54G [00:03<00:10,     116MB/s]     26%|##6       | Downloading : 410M/1.54G [00:03<00:10,     115MB/s]     26%|##6       | Downloading : 414M/1.54G [00:03<00:10,     113MB/s]     27%|##6       | Downloading : 418M/1.54G [00:03<00:10,     114MB/s]     27%|##6       | Downloading : 422M/1.54G [00:03<00:10,     115MB/s]     27%|##7       | Downloading : 426M/1.54G [00:03<00:10,     117MB/s]     27%|##7       | Downloading : 430M/1.54G [00:04<00:10,     113MB/s]     28%|##7       | Downloading : 434M/1.54G [00:04<00:10,     115MB/s]     28%|##7       | Downloading : 438M/1.54G [00:04<00:10,     116MB/s]     28%|##8       | Downloading : 442M/1.54G [00:04<00:10,     113MB/s]     28%|##8       | Downloading : 446M/1.54G [00:04<00:10,     110MB/s]     29%|##8       | Downloading : 450M/1.54G [00:04<00:10,     108MB/s]     29%|##8       | Downloading : 454M/1.54G [00:04<00:10,     108MB/s]     29%|##9       | Downloading : 458M/1.54G [00:04<00:10,     108MB/s]     29%|##9       | Downloading : 462M/1.54G [00:04<00:10,     107MB/s]     30%|##9       | Downloading : 466M/1.54G [00:04<00:11,     105MB/s]     30%|##9       | Downloading : 470M/1.54G [00:04<00:11,     104MB/s]     30%|###       | Downloading : 474M/1.54G [00:04<00:11,     103MB/s]     30%|###       | Downloading : 478M/1.54G [00:04<00:11,     103MB/s]     31%|###       | Downloading : 482M/1.54G [00:04<00:10,     105MB/s]     31%|###       | Downloading : 486M/1.54G [00:04<00:10,     105MB/s]     31%|###1      | Downloading : 490M/1.54G [00:04<00:10,     107MB/s]     31%|###1      | Downloading : 494M/1.54G [00:04<00:10,     109MB/s]     32%|###1      | Downloading : 498M/1.54G [00:04<00:10,     112MB/s]     32%|###1      | Downloading : 502M/1.54G [00:04<00:09,     114MB/s]     32%|###2      | Downloading : 506M/1.54G [00:04<00:09,     116MB/s]     32%|###2      | Downloading : 510M/1.54G [00:04<00:09,     116MB/s]     33%|###2      | Downloading : 514M/1.54G [00:04<00:09,     116MB/s]     33%|###2      | Downloading : 518M/1.54G [00:04<00:09,     115MB/s]     33%|###3      | Downloading : 522M/1.54G [00:04<00:09,     117MB/s]     33%|###3      | Downloading : 526M/1.54G [00:04<00:09,     120MB/s]     34%|###3      | Downloading : 530M/1.54G [00:04<00:08,     122MB/s]     34%|###3      | Downloading : 534M/1.54G [00:04<00:08,     124MB/s]     34%|###4      | Downloading : 538M/1.54G [00:04<00:08,     125MB/s]     34%|###4      | Downloading : 542M/1.54G [00:04<00:08,     128MB/s]     35%|###4      | Downloading : 546M/1.54G [00:05<00:09,     120MB/s]     35%|###4      | Downloading : 550M/1.54G [00:05<00:08,     122MB/s]     35%|###5      | Downloading : 554M/1.54G [00:05<00:08,     124MB/s]     35%|###5      | Downloading : 558M/1.54G [00:05<00:08,     125MB/s]     36%|###5      | Downloading : 562M/1.54G [00:05<00:08,     127MB/s]     36%|###5      | Downloading : 566M/1.54G [00:05<00:08,     129MB/s]     36%|###6      | Downloading : 570M/1.54G [00:05<00:08,     129MB/s]     36%|###6      | Downloading : 574M/1.54G [00:05<00:08,     131MB/s]     37%|###6      | Downloading : 578M/1.54G [00:05<00:07,     132MB/s]     37%|###6      | Downloading : 582M/1.54G [00:05<00:07,     133MB/s]     37%|###7      | Downloading : 586M/1.54G [00:05<00:07,     135MB/s]     37%|###7      | Downloading : 590M/1.54G [00:05<00:07,     136MB/s]     38%|###7      | Downloading : 594M/1.54G [00:05<00:07,     132MB/s]     38%|###7      | Downloading : 598M/1.54G [00:05<00:07,     130MB/s]     38%|###8      | Downloading : 602M/1.54G [00:05<00:07,     132MB/s]     38%|###8      | Downloading : 606M/1.54G [00:05<00:07,     134MB/s]     39%|###8      | Downloading : 610M/1.54G [00:05<00:07,     136MB/s]     39%|###8      | Downloading : 614M/1.54G [00:05<00:07,     138MB/s]     39%|###9      | Downloading : 618M/1.54G [00:05<00:07,     140MB/s]     39%|###9      | Downloading : 622M/1.54G [00:05<00:07,     141MB/s]     40%|###9      | Downloading : 626M/1.54G [00:05<00:06,     144MB/s]     40%|###9      | Downloading : 630M/1.54G [00:05<00:06,     146MB/s]     40%|####      | Downloading : 634M/1.54G [00:05<00:07,     131MB/s]     40%|####      | Downloading : 638M/1.54G [00:05<00:07,     132MB/s]     41%|####      | Downloading : 642M/1.54G [00:05<00:07,     133MB/s]     41%|####      | Downloading : 646M/1.54G [00:05<00:07,     136MB/s]     41%|####1     | Downloading : 650M/1.54G [00:05<00:07,     137MB/s]     42%|####1     | Downloading : 654M/1.54G [00:05<00:06,     140MB/s]     42%|####1     | Downloading : 658M/1.54G [00:05<00:06,     142MB/s]     42%|####2     | Downloading : 662M/1.54G [00:05<00:06,     143MB/s]     42%|####2     | Downloading : 666M/1.54G [00:05<00:06,     144MB/s]     43%|####2     | Downloading : 670M/1.54G [00:05<00:06,     146MB/s]     43%|####2     | Downloading : 674M/1.54G [00:05<00:06,     144MB/s]     43%|####3     | Downloading : 678M/1.54G [00:05<00:06,     145MB/s]     43%|####3     | Downloading : 682M/1.54G [00:06<00:06,     146MB/s]     44%|####3     | Downloading : 686M/1.54G [00:06<00:06,     148MB/s]     44%|####3     | Downloading : 690M/1.54G [00:06<00:06,     150MB/s]     44%|####4     | Downloading : 694M/1.54G [00:06<00:06,     144MB/s]     44%|####4     | Downloading : 698M/1.54G [00:06<00:06,     141MB/s]     45%|####4     | Downloading : 702M/1.54G [00:06<00:07,     127MB/s]     45%|####4     | Downloading : 706M/1.54G [00:06<00:07,     123MB/s]     45%|####5     | Downloading : 710M/1.54G [00:06<00:07,     121MB/s]     45%|####5     | Downloading : 714M/1.54G [00:06<00:07,     122MB/s]     46%|####5     | Downloading : 718M/1.54G [00:06<00:07,     122MB/s]     46%|####5     | Downloading : 722M/1.54G [00:06<00:07,     124MB/s]     46%|####6     | Downloading : 726M/1.54G [00:06<00:07,     122MB/s]     46%|####6     | Downloading : 730M/1.54G [00:06<00:07,     123MB/s]     47%|####6     | Downloading : 734M/1.54G [00:06<00:07,     121MB/s]     47%|####6     | Downloading : 738M/1.54G [00:06<00:07,     119MB/s]     47%|####7     | Downloading : 742M/1.54G [00:06<00:07,     117MB/s]     47%|####7     | Downloading : 746M/1.54G [00:06<00:07,     117MB/s]     48%|####7     | Downloading : 750M/1.54G [00:06<00:07,     115MB/s]     48%|####7     | Downloading : 754M/1.54G [00:06<00:07,     115MB/s]     48%|####8     | Downloading : 758M/1.54G [00:06<00:07,     115MB/s]     48%|####8     | Downloading : 762M/1.54G [00:06<00:07,     114MB/s]     49%|####8     | Downloading : 766M/1.54G [00:06<00:07,     115MB/s]     49%|####8     | Downloading : 770M/1.54G [00:06<00:07,     116MB/s]     49%|####9     | Downloading : 774M/1.54G [00:06<00:07,     117MB/s]     49%|####9     | Downloading : 778M/1.54G [00:06<00:07,     118MB/s]     50%|####9     | Downloading : 782M/1.54G [00:06<00:07,     117MB/s]     50%|####9     | Downloading : 786M/1.54G [00:07<00:07,     114MB/s]     50%|#####     | Downloading : 790M/1.54G [00:07<00:07,     110MB/s]     50%|#####     | Downloading : 794M/1.54G [00:07<00:07,     108MB/s]     51%|#####     | Downloading : 798M/1.54G [00:07<00:07,     110MB/s]     51%|#####     | Downloading : 802M/1.54G [00:07<00:07,     112MB/s]     51%|#####1    | Downloading : 806M/1.54G [00:07<00:07,     115MB/s]     51%|#####1    | Downloading : 810M/1.54G [00:07<00:06,     118MB/s]     52%|#####1    | Downloading : 814M/1.54G [00:07<00:06,     121MB/s]     52%|#####1    | Downloading : 818M/1.54G [00:07<00:06,     124MB/s]     52%|#####2    | Downloading : 822M/1.54G [00:07<00:06,     123MB/s]     52%|#####2    | Downloading : 826M/1.54G [00:07<00:06,     125MB/s]     53%|#####2    | Downloading : 830M/1.54G [00:07<00:06,     126MB/s]     53%|#####2    | Downloading : 834M/1.54G [00:07<00:06,     128MB/s]     53%|#####3    | Downloading : 838M/1.54G [00:07<00:05,     130MB/s]     53%|#####3    | Downloading : 842M/1.54G [00:07<00:05,     129MB/s]     54%|#####3    | Downloading : 846M/1.54G [00:07<00:06,     127MB/s]     54%|#####3    | Downloading : 850M/1.54G [00:07<00:05,     129MB/s]     54%|#####4    | Downloading : 854M/1.54G [00:07<00:05,     131MB/s]     54%|#####4    | Downloading : 858M/1.54G [00:07<00:05,     133MB/s]     55%|#####4    | Downloading : 862M/1.54G [00:07<00:05,     134MB/s]     55%|#####4    | Downloading : 866M/1.54G [00:07<00:05,     133MB/s]     55%|#####5    | Downloading : 870M/1.54G [00:07<00:05,     134MB/s]     55%|#####5    | Downloading : 874M/1.54G [00:07<00:05,     131MB/s]     56%|#####5    | Downloading : 878M/1.54G [00:07<00:05,     130MB/s]     56%|#####5    | Downloading : 882M/1.54G [00:07<00:05,     130MB/s]     56%|#####6    | Downloading : 886M/1.54G [00:07<00:05,     128MB/s]     56%|#####6    | Downloading : 890M/1.54G [00:07<00:05,     129MB/s]     57%|#####6    | Downloading : 894M/1.54G [00:07<00:05,     130MB/s]     57%|#####6    | Downloading : 898M/1.54G [00:07<00:05,     132MB/s]     57%|#####7    | Downloading : 902M/1.54G [00:07<00:05,     133MB/s]     57%|#####7    | Downloading : 906M/1.54G [00:07<00:05,     135MB/s]     58%|#####7    | Downloading : 910M/1.54G [00:07<00:05,     136MB/s]     58%|#####8    | Downloading : 914M/1.54G [00:07<00:05,     137MB/s]     58%|#####8    | Downloading : 918M/1.54G [00:08<00:05,     135MB/s]     59%|#####8    | Downloading : 922M/1.54G [00:08<00:05,     134MB/s]     59%|#####8    | Downloading : 926M/1.54G [00:08<00:05,     132MB/s]     59%|#####9    | Downloading : 930M/1.54G [00:08<00:05,     128MB/s]     59%|#####9    | Downloading : 934M/1.54G [00:08<00:05,     127MB/s]     60%|#####9    | Downloading : 938M/1.54G [00:08<00:05,     123MB/s]     60%|#####9    | Downloading : 942M/1.54G [00:08<00:05,     122MB/s]     60%|######    | Downloading : 946M/1.54G [00:08<00:05,     123MB/s]     60%|######    | Downloading : 950M/1.54G [00:08<00:05,     123MB/s]     61%|######    | Downloading : 954M/1.54G [00:08<00:05,     119MB/s]     61%|######    | Downloading : 958M/1.54G [00:08<00:05,     119MB/s]     61%|######1   | Downloading : 962M/1.54G [00:08<00:05,     117MB/s]     61%|######1   | Downloading : 966M/1.54G [00:08<00:05,     110MB/s]     62%|######1   | Downloading : 970M/1.54G [00:08<00:06,     105MB/s]     62%|######1   | Downloading : 974M/1.54G [00:08<00:06,     102MB/s]     62%|######2   | Downloading : 978M/1.54G [00:08<00:06,    99.8MB/s]     62%|######2   | Downloading : 982M/1.54G [00:08<00:06,    99.9MB/s]     63%|######2   | Downloading : 986M/1.54G [00:08<00:06,     101MB/s]     63%|######2   | Downloading : 990M/1.54G [00:08<00:06,     102MB/s]     63%|######3   | Downloading : 994M/1.54G [00:08<00:05,     102MB/s]     63%|######3   | Downloading : 998M/1.54G [00:08<00:06,     101MB/s]     64%|######3   | Downloading : 0.98G/1.54G [00:09<00:05,     102MB/s]     64%|######3   | Downloading : 0.98G/1.54G [00:09<00:05,     101MB/s]     64%|######4   | Downloading : 0.99G/1.54G [00:09<00:05,     100MB/s]     64%|######4   | Downloading : 0.99G/1.54G [00:09<00:05,     100MB/s]     65%|######4   | Downloading : 0.99G/1.54G [00:09<00:05,     101MB/s]     65%|######4   | Downloading : 1.00G/1.54G [00:09<00:05,     101MB/s]     65%|######5   | Downloading : 1.00G/1.54G [00:09<00:05,     102MB/s]     65%|######5   | Downloading : 1.01G/1.54G [00:09<00:05,     105MB/s]     66%|######5   | Downloading : 1.01G/1.54G [00:09<00:05,     107MB/s]     66%|######5   | Downloading : 1.01G/1.54G [00:09<00:05,     105MB/s]     66%|######6   | Downloading : 1.02G/1.54G [00:09<00:05,     105MB/s]     66%|######6   | Downloading : 1.02G/1.54G [00:09<00:05,     105MB/s]     67%|######6   | Downloading : 1.03G/1.54G [00:09<00:05,     107MB/s]     67%|######6   | Downloading : 1.03G/1.54G [00:09<00:05,     107MB/s]     67%|######7   | Downloading : 1.03G/1.54G [00:09<00:05,     107MB/s]     67%|######7   | Downloading : 1.04G/1.54G [00:09<00:04,     108MB/s]     68%|######7   | Downloading : 1.04G/1.54G [00:09<00:04,     110MB/s]     68%|######7   | Downloading : 1.05G/1.54G [00:09<00:04,     110MB/s]     68%|######8   | Downloading : 1.05G/1.54G [00:09<00:04,     111MB/s]     68%|######8   | Downloading : 1.05G/1.54G [00:09<00:04,     109MB/s]     69%|######8   | Downloading : 1.06G/1.54G [00:09<00:04,     110MB/s]     69%|######8   | Downloading : 1.06G/1.54G [00:09<00:04,     113MB/s]     69%|######9   | Downloading : 1.06G/1.54G [00:09<00:04,     114MB/s]     69%|######9   | Downloading : 1.07G/1.54G [00:09<00:04,     114MB/s]     70%|######9   | Downloading : 1.07G/1.54G [00:09<00:04,     114MB/s]     70%|######9   | Downloading : 1.08G/1.54G [00:09<00:04,     115MB/s]     70%|#######   | Downloading : 1.08G/1.54G [00:09<00:04,     117MB/s]     70%|#######   | Downloading : 1.08G/1.54G [00:09<00:04,     118MB/s]     71%|#######   | Downloading : 1.09G/1.54G [00:09<00:04,     118MB/s]     71%|#######   | Downloading : 1.09G/1.54G [00:10<00:03,     121MB/s]     71%|#######1  | Downloading : 1.10G/1.54G [00:10<00:03,     123MB/s]     71%|#######1  | Downloading : 1.10G/1.54G [00:10<00:03,     124MB/s]     72%|#######1  | Downloading : 1.10G/1.54G [00:10<00:03,     123MB/s]     72%|#######1  | Downloading : 1.11G/1.54G [00:10<00:03,     124MB/s]     72%|#######2  | Downloading : 1.11G/1.54G [00:10<00:03,     124MB/s]     72%|#######2  | Downloading : 1.12G/1.54G [00:10<00:03,     125MB/s]     73%|#######2  | Downloading : 1.12G/1.54G [00:10<00:03,     117MB/s]     73%|#######2  | Downloading : 1.12G/1.54G [00:10<00:03,     118MB/s]     73%|#######3  | Downloading : 1.13G/1.54G [00:10<00:03,     117MB/s]     73%|#######3  | Downloading : 1.13G/1.54G [00:10<00:03,     117MB/s]     74%|#######3  | Downloading : 1.14G/1.54G [00:10<00:03,     117MB/s]     74%|#######3  | Downloading : 1.14G/1.54G [00:10<00:03,     117MB/s]     74%|#######4  | Downloading : 1.14G/1.54G [00:10<00:03,     120MB/s]     74%|#######4  | Downloading : 1.15G/1.54G [00:10<00:03,     124MB/s]     75%|#######4  | Downloading : 1.15G/1.54G [00:10<00:03,     126MB/s]     75%|#######5  | Downloading : 1.15G/1.54G [00:10<00:03,     126MB/s]     75%|#######5  | Downloading : 1.16G/1.54G [00:10<00:03,     120MB/s]     76%|#######5  | Downloading : 1.16G/1.54G [00:10<00:03,     121MB/s]     76%|#######5  | Downloading : 1.17G/1.54G [00:10<00:03,     122MB/s]     76%|#######6  | Downloading : 1.17G/1.54G [00:10<00:03,     124MB/s]     76%|#######6  | Downloading : 1.17G/1.54G [00:10<00:03,     125MB/s]     77%|#######6  | Downloading : 1.18G/1.54G [00:10<00:03,     118MB/s]     77%|#######6  | Downloading : 1.18G/1.54G [00:10<00:03,     104MB/s]     77%|#######6  | Downloading : 1.18G/1.54G [00:10<00:03,     105MB/s]     77%|#######7  | Downloading : 1.19G/1.54G [00:10<00:03,     105MB/s]     77%|#######7  | Downloading : 1.19G/1.54G [00:10<00:03,     106MB/s]     77%|#######7  | Downloading : 1.19G/1.54G [00:10<00:03,     106MB/s]     77%|#######7  | Downloading : 1.19G/1.54G [00:11<00:03,     106MB/s]     78%|#######7  | Downloading : 1.20G/1.54G [00:11<00:03,     108MB/s]     78%|#######8  | Downloading : 1.20G/1.54G [00:11<00:03,     105MB/s]     78%|#######8  | Downloading : 1.21G/1.54G [00:11<00:03,     107MB/s]     79%|#######8  | Downloading : 1.21G/1.54G [00:11<00:03,     108MB/s]     79%|#######8  | Downloading : 1.21G/1.54G [00:11<00:03,     110MB/s]     79%|#######9  | Downloading : 1.22G/1.54G [00:11<00:03,     111MB/s]     79%|#######9  | Downloading : 1.22G/1.54G [00:11<00:03,     110MB/s]     80%|#######9  | Downloading : 1.22G/1.54G [00:11<00:03,     110MB/s]     80%|#######9  | Downloading : 1.23G/1.54G [00:11<00:03,     105MB/s]     80%|########  | Downloading : 1.23G/1.54G [00:11<00:03,     101MB/s]     80%|########  | Downloading : 1.24G/1.54G [00:11<00:03,     100MB/s]     81%|########  | Downloading : 1.24G/1.54G [00:11<00:03,     100MB/s]     81%|########  | Downloading : 1.24G/1.54G [00:11<00:03,     101MB/s]     81%|########1 | Downloading : 1.25G/1.54G [00:11<00:03,     102MB/s]     81%|########1 | Downloading : 1.25G/1.54G [00:11<00:03,     100MB/s]     82%|########1 | Downloading : 1.26G/1.54G [00:11<00:02,     102MB/s]     82%|########1 | Downloading : 1.26G/1.54G [00:11<00:02,     103MB/s]     82%|########2 | Downloading : 1.26G/1.54G [00:11<00:02,     104MB/s]     82%|########2 | Downloading : 1.27G/1.54G [00:11<00:02,     106MB/s]     83%|########2 | Downloading : 1.27G/1.54G [00:11<00:02,     108MB/s]     83%|########2 | Downloading : 1.28G/1.54G [00:11<00:02,     109MB/s]     83%|########3 | Downloading : 1.28G/1.54G [00:11<00:02,     111MB/s]     83%|########3 | Downloading : 1.28G/1.54G [00:11<00:02,     113MB/s]     84%|########3 | Downloading : 1.29G/1.54G [00:11<00:02,     114MB/s]     84%|########3 | Downloading : 1.29G/1.54G [00:11<00:02,     113MB/s]     84%|########4 | Downloading : 1.30G/1.54G [00:12<00:02,     111MB/s]     84%|########4 | Downloading : 1.30G/1.54G [00:12<00:02,     111MB/s]     85%|########4 | Downloading : 1.30G/1.54G [00:12<00:02,     110MB/s]     85%|########4 | Downloading : 1.31G/1.54G [00:12<00:02,     110MB/s]     85%|########5 | Downloading : 1.31G/1.54G [00:12<00:02,     107MB/s]     85%|########5 | Downloading : 1.31G/1.54G [00:12<00:02,     105MB/s]     86%|########5 | Downloading : 1.32G/1.54G [00:12<00:02,     104MB/s]     86%|########5 | Downloading : 1.32G/1.54G [00:12<00:02,     104MB/s]     86%|########6 | Downloading : 1.33G/1.54G [00:12<00:02,     105MB/s]     86%|########6 | Downloading : 1.33G/1.54G [00:12<00:02,     103MB/s]     87%|########6 | Downloading : 1.33G/1.54G [00:12<00:02,     104MB/s]     87%|########6 | Downloading : 1.34G/1.54G [00:12<00:02,     106MB/s]     87%|########7 | Downloading : 1.34G/1.54G [00:12<00:01,     107MB/s]     87%|########7 | Downloading : 1.35G/1.54G [00:12<00:01,     108MB/s]     88%|########7 | Downloading : 1.35G/1.54G [00:12<00:01,     110MB/s]     88%|########7 | Downloading : 1.35G/1.54G [00:12<00:01,     105MB/s]     88%|########8 | Downloading : 1.36G/1.54G [00:12<00:01,     107MB/s]     88%|########8 | Downloading : 1.36G/1.54G [00:12<00:01,     108MB/s]     89%|########8 | Downloading : 1.37G/1.54G [00:12<00:01,     108MB/s]     89%|########8 | Downloading : 1.37G/1.54G [00:12<00:01,     109MB/s]     89%|########9 | Downloading : 1.37G/1.54G [00:12<00:01,     110MB/s]     89%|########9 | Downloading : 1.38G/1.54G [00:12<00:01,     110MB/s]     90%|########9 | Downloading : 1.38G/1.54G [00:12<00:01,     110MB/s]     90%|########9 | Downloading : 1.39G/1.54G [00:12<00:01,     109MB/s]     90%|######### | Downloading : 1.39G/1.54G [00:12<00:01,     110MB/s]     90%|######### | Downloading : 1.39G/1.54G [00:13<00:01,    99.9MB/s]     91%|######### | Downloading : 1.39G/1.54G [00:13<00:01,    95.7MB/s]     91%|######### | Downloading : 1.40G/1.54G [00:13<00:01,    95.4MB/s]     91%|######### | Downloading : 1.40G/1.54G [00:13<00:01,    96.0MB/s]     91%|#########1| Downloading : 1.40G/1.54G [00:13<00:01,    97.1MB/s]     91%|#########1| Downloading : 1.41G/1.54G [00:13<00:01,    98.2MB/s]     92%|#########1| Downloading : 1.41G/1.54G [00:13<00:01,    99.6MB/s]     92%|#########1| Downloading : 1.41G/1.54G [00:13<00:01,     101MB/s]     92%|#########1| Downloading : 1.41G/1.54G [00:13<00:01,     102MB/s]     92%|#########2| Downloading : 1.42G/1.54G [00:13<00:01,     102MB/s]     92%|#########2| Downloading : 1.42G/1.54G [00:13<00:01,     103MB/s]     92%|#########2| Downloading : 1.42G/1.54G [00:13<00:01,     104MB/s]     93%|#########2| Downloading : 1.42G/1.54G [00:13<00:01,     105MB/s]     93%|#########2| Downloading : 1.43G/1.54G [00:13<00:01,     105MB/s]     93%|#########2| Downloading : 1.43G/1.54G [00:13<00:01,     107MB/s]     93%|#########3| Downloading : 1.43G/1.54G [00:13<00:01,     108MB/s]     94%|#########3| Downloading : 1.44G/1.54G [00:13<00:00,     111MB/s]     94%|#########3| Downloading : 1.44G/1.54G [00:13<00:00,     114MB/s]     94%|#########4| Downloading : 1.45G/1.54G [00:13<00:00,     114MB/s]     94%|#########4| Downloading : 1.45G/1.54G [00:13<00:00,     113MB/s]     95%|#########4| Downloading : 1.46G/1.54G [00:13<00:00,     114MB/s]     95%|#########4| Downloading : 1.46G/1.54G [00:13<00:00,     112MB/s]     95%|#########5| Downloading : 1.46G/1.54G [00:13<00:00,     113MB/s]     95%|#########5| Downloading : 1.47G/1.54G [00:13<00:00,     114MB/s]     96%|#########5| Downloading : 1.47G/1.54G [00:13<00:00,     114MB/s]     96%|#########5| Downloading : 1.47G/1.54G [00:13<00:00,     112MB/s]     96%|#########6| Downloading : 1.48G/1.54G [00:13<00:00,     112MB/s]     96%|#########6| Downloading : 1.48G/1.54G [00:13<00:00,     113MB/s]     97%|#########6| Downloading : 1.49G/1.54G [00:14<00:00,    99.2MB/s]     97%|#########6| Downloading : 1.49G/1.54G [00:14<00:00,    99.9MB/s]     97%|#########6| Downloading : 1.49G/1.54G [00:14<00:00,    98.4MB/s]     97%|#########6| Downloading : 1.49G/1.54G [00:14<00:00,    91.9MB/s]     97%|#########7| Downloading : 1.49G/1.54G [00:14<00:00,    91.8MB/s]     97%|#########7| Downloading : 1.50G/1.54G [00:14<00:00,    90.4MB/s]     98%|#########7| Downloading : 1.50G/1.54G [00:14<00:00,    90.1MB/s]     98%|#########7| Downloading : 1.51G/1.54G [00:14<00:00,    91.0MB/s]     98%|#########8| Downloading : 1.51G/1.54G [00:14<00:00,    92.9MB/s]     98%|#########8| Downloading : 1.52G/1.54G [00:14<00:00,    94.9MB/s]     99%|#########8| Downloading : 1.52G/1.54G [00:14<00:00,    97.0MB/s]     99%|#########8| Downloading : 1.52G/1.54G [00:14<00:00,    99.0MB/s]     99%|#########9| Downloading : 1.53G/1.54G [00:14<00:00,     101MB/s]     99%|#########9| Downloading : 1.53G/1.54G [00:14<00:00,    91.8MB/s]    100%|#########9| Downloading : 1.53G/1.54G [00:14<00:00,    92.5MB/s]    100%|#########9| Downloading : 1.54G/1.54G [00:14<00:00,    92.9MB/s]    100%|##########| Downloading : 1.54G/1.54G [00:14<00:00,    94.5MB/s]    100%|##########| Downloading : 1.54G/1.54G [00:14<00:00,     113MB/s]
-    Verifying hash 12b75d1cb7df9dfb4ad73ed82f61094f.
-    Decompressing the archive: /home/runner/mne_data/MNE-sample-data-processed.tar.gz
-    (please be patient, this can take some time)
-    Successfully extracted to: ['/home/runner/mne_data/MNE-sample-data']
-    Attempting to create new mne-python configuration file:
-    /home/runner/.mne/mne-python.json
-        365 x 365 full covariance (kind = 1) found.
-        Read a total of 4 projection items:
-            PCA-v1 (1 x 102) active
-            PCA-v2 (1 x 102) active
-            PCA-v3 (1 x 102) active
-            Average EEG reference (1 x 59) active
-    Reading /home/runner/mne_data/MNE-sample-data/MEG/sample/sample_audvis-ave.fif ...
-        Read a total of 4 projection items:
-            PCA-v1 (1 x 102) active
-            PCA-v2 (1 x 102) active
-            PCA-v3 (1 x 102) active
-            Average EEG reference (1 x 60) active
-        Found the data of interest:
-            t =    -199.80 ...     499.49 ms (Left Auditory)
-            0 CTF compensation matrices available
-            nave = 55 - aspect type = 100
-    Projections have already been applied. Setting proj attribute to True.
-    Applying baseline correction (mode: mean)
-    Removing projector <Projection | PCA-v1, active : True, n_channels : 102>
-    Removing projector <Projection | PCA-v2, active : True, n_channels : 102>
-    Removing projector <Projection | PCA-v3, active : True, n_channels : 102>
-    Removing projector <Projection | Average EEG reference, active : True, n_channels : 60>
-    Reading forward solution from /home/runner/mne_data/MNE-sample-data/MEG/sample/sample_audvis-meg-eeg-oct-6-fwd.fif...
-        Reading a source space...
-        Computing patch statistics...
-        Patch information added...
-        Distance information added...
-        [done]
-        Reading a source space...
-        Computing patch statistics...
-        Patch information added...
-        Distance information added...
-        [done]
-        2 source spaces read
-        Desired named matrix (kind = 3523) not available
-        Read MEG forward solution (7498 sources, 306 channels, free orientations)
-        Desired named matrix (kind = 3523) not available
-        Read EEG forward solution (7498 sources, 60 channels, free orientations)
-        MEG and EEG forward solutions combined
-        Source spaces transformed to the forward solution coordinate frame
-    -- number of adjacent vertices : 8196
-    /home/runner/work/hidimstat/hidimstat/examples/plot_meg_data_example.py:119: RuntimeWarning: 8.5% of original source space vertices have been omitted, tri-based adjacency will have holes.
-    Consider using distance-based adjacency or morphing data to all source space vertices.
-      connectivity = mne.source_estimate.spatial_src_adjacency(forward['src'])
-    /home/runner/work/hidimstat/hidimstat/examples/plot_meg_data_example.py:125: RuntimeWarning: The measurement information indicates a low-pass frequency of 40 Hz. The decim=6 parameter will result in a sampling frequency of 100.102 Hz, which can cause aliasing artifacts.
-      evoked.decimate(step)
-    Converting forward solution to fixed orietnation
-        Average patch normals will be employed in the rotation to the local surface coordinates....
-        Converting to surface-based source orientations...
-        [done]
-    info["bads"] and noise_cov["bads"] do not match, excluding bad channels from both
-    Computing inverse operator with 203 channels.
-        203 out of 366 channels remain after picking
-    Selected 203 channels
-    Whitening the forward solution.
-    Computing rank from covariance with rank=None
-        Using tolerance 1.9e-13 (2.2e-16 eps * 203 dim * 4.2  max singular value)
-        Estimated rank (grad): 203
-        GRAD: rank 203 computed from 203 data channels with 0 projectors
-        Setting small GRAD eigenvalues to zero (without PCA)
-    Creating the source covariance matrix
-    Adjusting source covariance matrix.
-    /home/runner/work/hidimstat/hidimstat/examples/plot_meg_data_example.py:144: UserWarning: the number of connected components of the connectivity matrix is 2 > 1. Completing it to avoid stopping the tree early.
-      _fix_connectivity(X.T, connectivity, affinity="euclidean")
-    Clustered inference: n_clusters = 1000, inference method = desparsified-group-lasso, seed = 0
-    /home/runner/.local/lib/python3.8/site-packages/sklearn/cluster/_agglomerative.py:245: UserWarning: the number of connected components of the connectivity matrix is 2 > 1. Completing it to avoid stopping the tree early.
-      connectivity, n_connected_components = _fix_connectivity(
-    /home/runner/work/hidimstat/hidimstat/hidimstat/desparsified_lasso.py:32: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
-      results = np.asarray(results)
-    Group reid: AR1 cov estimation
-    Using pyvista 3d backend.
-
-
-
-
-
-
-
-|
+.. GENERATED FROM PYTHON SOURCE LINES 24-40
 
 .. code-block:: default
 
 
+    import os
     import numpy as np
     import mne
-    from mne.datasets import sample
+    from scipy.sparse.csgraph import connected_components
+    from mne.datasets import sample, somato
     from mne.inverse_sparse.mxne_inverse import _prepare_gain, _make_sparse_stc
+    from mne.minimum_norm import make_inverse_operator, apply_inverse
     from sklearn.cluster import FeatureAgglomeration
-    from sklearn.cluster._agglomerative import _fix_connectivity
+    from sklearn.metrics.pairwise import pairwise_distances
 
     from hidimstat.clustered_inference import clustered_inference
     from hidimstat.ensemble_clustered_inference import \
@@ -149,8 +61,150 @@ Support recovery on MEG data (2D)
     from hidimstat.stat_tools import zscore_from_pval
 
 
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 41-48
+
+Specific preprocessing functions
+--------------------------------
+The functions below are used to load or preprocess the data or to put
+the solution in a convenient format. If you are reading this example
+for the first time, you should skip this section.
+
+The following function loads the data from the sample dataset.
+
+.. GENERATED FROM PYTHON SOURCE LINES 48-91
+
+.. code-block:: default
+
+
+
+    def _load_sample(cond):
+        '''Load data from the sample dataset'''
+
+        # Get data paths
+        subject = 'sample'
+        data_path = sample.data_path()
+        fwd_fname_suffix = 'MEG/sample/sample_audvis-meg-eeg-oct-6-fwd.fif'
+        fwd_fname = os.path.join(data_path, fwd_fname_suffix)
+        ave_fname = os.path.join(data_path, 'MEG/sample/sample_audvis-ave.fif')
+        cov_fname_suffix = 'MEG/sample/sample_audvis-shrunk-cov.fif'
+        cov_fname = os.path.join(data_path, cov_fname_suffix)
+        cov_fname = data_path + '/' + cov_fname_suffix
+        subjects_dir = os.path.join(data_path, 'subjects')
+
+        if cond == 'audio':
+            condition = 'Left Auditory'
+        elif cond == 'visual':
+            condition = 'Left visual'
+
+        # Read noise covariance matrix
+        noise_cov = mne.read_cov(cov_fname)
+
+        # Read forward matrix
+        forward = mne.read_forward_solution(fwd_fname)
+
+        # Handling average file
+        evoked = mne.read_evokeds(ave_fname, condition=condition,
+                                  baseline=(None, 0))
+        evoked = evoked.pick_types('grad')
+
+        # Selecting relevant time window
+        evoked.plot()
+        t_min, t_max = 0.05, 0.1
+        t_step = 0.01
+
+        pca = False
+
+        return (subject, subjects_dir, noise_cov, forward, evoked,
+                t_min, t_max, t_step, pca)
+
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 92-93
+
+The next function loads the data from the somato dataset.
+
+.. GENERATED FROM PYTHON SOURCE LINES 93-139
+
+.. code-block:: default
+
+
+
+    def _load_somato(cond):
+        '''Load data from the somato dataset'''
+
+        # Get data paths
+        data_path = somato.data_path()
+        subject = '01'
+        subjects_dir = data_path + '/derivatives/freesurfer/subjects'
+        raw_fname = os.path.join(data_path, f'sub-{subject}', 'meg',
+                                 f'sub-{subject}_task-{cond}_meg.fif')
+        fwd_fname = os.path.join(data_path, 'derivatives', f'sub-{subject}',
+                                 f'sub-{subject}_task-{cond}-fwd.fif')
+
+        # Read evoked
+        raw = mne.io.read_raw_fif(raw_fname)
+        events = mne.find_events(raw, stim_channel='STI 014')
+        reject = dict(grad=4000e-13, eog=350e-6)
+        picks = mne.pick_types(raw.info, meg=True, eeg=True, eog=True)
+
+        event_id, tmin, tmax = 1, -.2, .25
+        epochs = mne.Epochs(raw, events, event_id, tmin, tmax, picks=picks,
+                            reject=reject, preload=True)
+        evoked = epochs.average()
+        evoked = evoked.pick_types('grad')
+
+        # Compute noise covariance matrix
+        noise_cov = mne.compute_covariance(epochs, rank='info', tmax=0.)
+
+        # Read forward matrix
+        forward = mne.read_forward_solution(fwd_fname)
+
+        # Selecting relevant time window: focusing on early signal
+        evoked.plot()
+        t_min, t_max = 0.03, 0.05
+        t_step = 1.0 / 300
+
+        # We must reduce the whitener since data were preprocessed for removal
+        # of environmental noise with maxwell filter leading to an effective
+        # number of 64 samples.
+        pca = True
+
+        return (subject, subjects_dir, noise_cov, forward, evoked,
+                t_min, t_max, t_step, pca)
+
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 140-142
+
+The function below preprocess the raw M/EEG data, it notably computes the
+whitened MEG/EEG measurements and prepares the gain matrix.
+
+.. GENERATED FROM PYTHON SOURCE LINES 142-208
+
+.. code-block:: default
+
+
+
     def preprocess_meg_eeg_data(evoked, forward, noise_cov, loose=0., depth=0.,
-                                pca=False, rank=None):
+                                pca=False):
         """Preprocess MEG or EEG data to produce the whitened MEG/EEG measurements
         (target) and the preprocessed gain matrix (design matrix). This function
         is mainly wrapping the `_prepare_gain` MNE function.
@@ -173,24 +227,25 @@ Support recovery on MEG data (2D)
             If loose is 1, it corresponds to free orientations.
             The default value ('auto') is set to 0.2 for surface-oriented source
             space and set to 1.0 for volumic or discrete source space.
+            See for details:
+            https://mne.tools/stable/auto_tutorials/inverse/35_dipole_orientations.html?highlight=loose
 
         depth : None or float in [0, 1]
             Depth weighting coefficients. If None, no depth weighting is performed.
 
         pca : bool, optional (default=False)
-            If True, Whitener is reduced.
-            If False, Whitener is not reduced.
-
-        rank : None or int
-            Rank reduction of the whitener. If None rank is estimated from data.
+            If True, whitener is reduced.
+            If False, whitener is not reduced (square matrix).
 
         Returns
         -------
         G : array, shape (n_channels, n_dipoles)
-            The preprocessed gain matrix.
+            The preprocessed gain matrix. If pca=True then n_channels is
+            effectively equal to the rank of the data.
 
         M : array, shape (n_channels, n_times)
-            The whitened MEG/EEG measurements.
+            The whitened MEG/EEG measurements. If pca=True then n_channels is
+            effectively equal to the rank of the data.
 
         forward : instance of Forward
             The preprocessed forward solution.
@@ -199,9 +254,9 @@ Support recovery on MEG data (2D)
         all_ch_names = evoked.ch_names
 
         # Handle depth weighting and whitening (here is no weights)
-        forward, G, gain_info, whitener, source_weighting, mask = \
+        forward, G, gain_info, whitener, _, _ = \
             _prepare_gain(forward, evoked.info, noise_cov, pca=pca, depth=depth,
-                          loose=loose, weights=None, weights_min=None, rank=rank)
+                          loose=loose, weights=None, weights_min=None, rank=None)
 
         # Select channels of interest
         sel = [all_ch_names.index(name) for name in gain_info['ch_names']]
@@ -210,6 +265,24 @@ Support recovery on MEG data (2D)
         M = np.dot(whitener, M)
 
         return G, M, forward
+
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 209-211
+
+The next function translates the solution in a readable format for the
+MNE plotting functions that require a Source Time Course (STC) object.
+
+.. GENERATED FROM PYTHON SOURCE LINES 211-226
+
+.. code-block:: default
+
 
 
     def _compute_stc(zscore_active_set, active_set, evoked, forward):
@@ -225,51 +298,231 @@ Support recovery on MEG data (2D)
         return stc
 
 
-    # Downloading data
-    subject = 'sample'
-    data_path = sample.data_path()
-    fwd_fname = data_path + '/MEG/sample/sample_audvis-meg-eeg-oct-6-fwd.fif'
-    ave_fname = data_path + '/MEG/sample/sample_audvis-ave.fif'
-    raw_fname = data_path + '/MEG/sample/sample_audvis_raw.fif'
-    cov_fname = data_path + '/MEG/sample/sample_audvis-shrunk-cov.fif'
-    subjects_dir = data_path + '/subjects'
-    condition = 'Left Auditory'
 
-    # Read noise covariance matrix
-    noise_cov = mne.read_cov(cov_fname)
 
-    # Handling average file
-    evoked = mne.read_evokeds(ave_fname, condition=condition, baseline=(None, 0))
-    evoked = evoked.pick_types('grad')
-    # Selecting relevant time window
-    evoked.plot()
-    evoked.crop(tmin=0.05, tmax=0.1)
 
-    # Handling forward solution:
-    forward = mne.read_forward_solution(fwd_fname)
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 227-229
+
+The function below will be used to modify the connectivity matrix
+to avoid multiple warnings when we run the clustering algorithm.
+
+.. GENERATED FROM PYTHON SOURCE LINES 229-258
+
+.. code-block:: default
+
+
+
+    def _fix_connectivity(X, connectivity, affinity):
+        """Complete the connectivity matrix if necessary"""
+
+        # Convert connectivity matrix into LIL format
+        connectivity = connectivity.tolil()
+
+        # Compute the number of nodes
+        n_connected_components, labels = connected_components(connectivity)
+
+        if n_connected_components > 1:
+
+            for i in range(n_connected_components):
+                idx_i = np.where(labels == i)[0]
+                Xi = X[idx_i]
+                for j in range(i):
+                    idx_j = np.where(labels == j)[0]
+                    Xj = X[idx_j]
+                    D = pairwise_distances(Xi, Xj, metric=affinity)
+                    ii, jj = np.where(D == np.min(D))
+                    ii = ii[0]
+                    jj = jj[0]
+                    connectivity[idx_i[ii], idx_j[jj]] = True
+                    connectivity[idx_j[jj], idx_i[ii]] = True
+
+        return connectivity, n_connected_components
+
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 259-264
+
+Downloading data
+----------------
+
+After choosing a task, we run the function that loads the data to get
+the corresponding evoked, forward and noise covariance matrices.
+
+.. GENERATED FROM PYTHON SOURCE LINES 264-279
+
+.. code-block:: default
+
+
+    # Choose the experiment (task)
+    list_cond = ['audio', 'visual', 'somato']
+    cond = list_cond[2]
+    print(f"Let's process the condition: {cond}")
+
+    # Load the data
+    if cond in ['audio', 'visual']:
+        sub, subs_dir, noise_cov, forward, evoked, t_min, t_max, t_step, pca = \
+            _load_sample(cond)
+
+    elif cond == 'somato':
+        sub, subs_dir, noise_cov, forward, evoked, t_min, t_max, t_step, pca = \
+            _load_somato(cond)
+
+
+
+
+.. image-sg:: /auto_examples/images/sphx_glr_plot_meg_data_example_001.png
+   :alt: Gradiometers (204 channels)
+   :srcset: /auto_examples/images/sphx_glr_plot_meg_data_example_001.png
+   :class: sphx-glr-single-img
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    Let's process the condition: somato
+    Using default location ~/mne_data for somato...
+    Creating ~/mne_data
+    Downloading archive MNE-somato-data.tar.gz to /home/runner/mne_data
+    Downloading https://files.osf.io/v1/resources/rxvq7/providers/osfstorage/59c0e2849ad5a1025d4b7346?version=7&action=download&direct (582.2 MB)
+      0%|          | Downloading : 0.00/582M [00:00<?,        ?B/s]      0%|          | Downloading : 312k/582M [00:00<00:35,    17.3MB/s]      0%|          | Downloading : 2.05M/582M [00:00<00:33,    18.0MB/s]      1%|1         | Downloading : 6.05M/582M [00:00<00:32,    18.8MB/s]      1%|1         | Downloading : 8.05M/582M [00:00<00:30,    19.6MB/s]      2%|1         | Downloading : 10.1M/582M [00:00<00:29,    20.5MB/s]      2%|2         | Downloading : 12.1M/582M [00:00<00:28,    21.3MB/s]      2%|2         | Downloading : 14.1M/582M [00:00<00:26,    22.2MB/s]      3%|3         | Downloading : 18.1M/582M [00:00<00:25,    23.2MB/s]      4%|3         | Downloading : 22.1M/582M [00:00<00:24,    24.2MB/s]      4%|4         | Downloading : 24.1M/582M [00:00<00:23,    24.9MB/s]      4%|4         | Downloading : 26.1M/582M [00:00<00:22,    25.8MB/s]      5%|4         | Downloading : 28.1M/582M [00:00<00:21,    26.7MB/s]      5%|5         | Downloading : 30.1M/582M [00:00<00:21,    27.4MB/s]      6%|5         | Downloading : 32.1M/582M [00:00<00:20,    28.4MB/s]      6%|5         | Downloading : 34.1M/582M [00:00<00:19,    29.4MB/s]      6%|6         | Downloading : 36.1M/582M [00:00<00:18,    30.6MB/s]      7%|6         | Downloading : 38.1M/582M [00:00<00:18,    31.6MB/s]      7%|6         | Downloading : 40.1M/582M [00:00<00:17,    32.6MB/s]      7%|7         | Downloading : 42.1M/582M [00:00<00:16,    33.7MB/s]      8%|7         | Downloading : 44.1M/582M [00:00<00:16,    34.9MB/s]      8%|7         | Downloading : 46.1M/582M [00:00<00:15,    35.9MB/s]      8%|8         | Downloading : 48.1M/582M [00:00<00:15,    37.0MB/s]      9%|8         | Downloading : 50.1M/582M [00:00<00:14,    38.3MB/s]      9%|9         | Downloading : 54.1M/582M [00:00<00:13,    39.8MB/s]     10%|9         | Downloading : 56.1M/582M [00:00<00:13,    41.1MB/s]     10%|#         | Downloading : 60.1M/582M [00:00<00:12,    42.6MB/s]     11%|#         | Downloading : 62.1M/582M [00:00<00:12,    42.3MB/s]     11%|#1        | Downloading : 64.1M/582M [00:00<00:12,    43.5MB/s]     12%|#2        | Downloading : 70.1M/582M [00:00<00:11,    45.3MB/s]     13%|#2        | Downloading : 74.1M/582M [00:00<00:11,    47.1MB/s]     13%|#3        | Downloading : 78.1M/582M [00:00<00:10,    48.9MB/s]     14%|#4        | Downloading : 82.1M/582M [00:00<00:10,    50.1MB/s]     15%|#4        | Downloading : 86.1M/582M [00:00<00:10,    51.2MB/s]     15%|#5        | Downloading : 90.1M/582M [00:00<00:09,    52.8MB/s]     16%|#6        | Downloading : 94.1M/582M [00:00<00:09,    54.8MB/s]     17%|#6        | Downloading : 98.1M/582M [00:00<00:08,    56.5MB/s]     18%|#7        | Downloading : 102M/582M [00:00<00:08,    58.3MB/s]      18%|#8        | Downloading : 106M/582M [00:01<00:08,    60.1MB/s]     19%|#8        | Downloading : 110M/582M [00:01<00:08,    61.4MB/s]     20%|#9        | Downloading : 114M/582M [00:01<00:07,    63.2MB/s]     20%|##        | Downloading : 118M/582M [00:01<00:07,    64.8MB/s]     21%|##        | Downloading : 122M/582M [00:01<00:07,    66.6MB/s]     22%|##1       | Downloading : 126M/582M [00:01<00:06,    68.4MB/s]     22%|##2       | Downloading : 130M/582M [00:01<00:06,    70.3MB/s]     23%|##3       | Downloading : 134M/582M [00:01<00:06,    72.1MB/s]     24%|##3       | Downloading : 138M/582M [00:01<00:06,    73.9MB/s]     24%|##4       | Downloading : 142M/582M [00:01<00:06,    75.3MB/s]     25%|##5       | Downloading : 146M/582M [00:01<00:05,    77.1MB/s]     26%|##5       | Downloading : 150M/582M [00:01<00:05,    79.1MB/s]     26%|##6       | Downloading : 154M/582M [00:01<00:05,    79.8MB/s]     27%|##7       | Downloading : 158M/582M [00:01<00:05,    78.9MB/s]     28%|##7       | Downloading : 162M/582M [00:01<00:05,    78.6MB/s]     29%|##8       | Downloading : 166M/582M [00:01<00:05,    80.8MB/s]     29%|##9       | Downloading : 170M/582M [00:01<00:05,    82.5MB/s]     30%|##9       | Downloading : 174M/582M [00:01<00:05,    84.3MB/s]     31%|###       | Downloading : 178M/582M [00:01<00:05,    84.6MB/s]     31%|###1      | Downloading : 182M/582M [00:01<00:04,    85.7MB/s]     32%|###1      | Downloading : 186M/582M [00:01<00:04,    87.2MB/s]     33%|###2      | Downloading : 190M/582M [00:01<00:04,    89.0MB/s]     33%|###3      | Downloading : 194M/582M [00:01<00:04,    90.5MB/s]     34%|###4      | Downloading : 198M/582M [00:01<00:04,    91.8MB/s]     35%|###4      | Downloading : 202M/582M [00:01<00:04,    93.2MB/s]     35%|###5      | Downloading : 206M/582M [00:01<00:04,    94.0MB/s]     36%|###6      | Downloading : 210M/582M [00:01<00:04,    95.1MB/s]     37%|###6      | Downloading : 214M/582M [00:01<00:04,    96.4MB/s]     37%|###7      | Downloading : 218M/582M [00:01<00:03,    98.1MB/s]     38%|###8      | Downloading : 222M/582M [00:02<00:03,    99.7MB/s]     39%|###8      | Downloading : 226M/582M [00:02<00:03,     101MB/s]     40%|###9      | Downloading : 230M/582M [00:02<00:03,     102MB/s]     40%|####      | Downloading : 234M/582M [00:02<00:03,     102MB/s]     41%|####      | Downloading : 238M/582M [00:02<00:03,     104MB/s]     42%|####1     | Downloading : 242M/582M [00:02<00:03,     106MB/s]     42%|####2     | Downloading : 246M/582M [00:02<00:03,     108MB/s]     43%|####2     | Downloading : 250M/582M [00:02<00:03,     104MB/s]     44%|####3     | Downloading : 254M/582M [00:02<00:03,     102MB/s]     44%|####4     | Downloading : 258M/582M [00:02<00:03,     103MB/s]     45%|####5     | Downloading : 262M/582M [00:02<00:03,     104MB/s]     46%|####5     | Downloading : 266M/582M [00:02<00:03,     107MB/s]     46%|####6     | Downloading : 270M/582M [00:02<00:03,     106MB/s]     47%|####7     | Downloading : 274M/582M [00:02<00:03,     102MB/s]     48%|####7     | Downloading : 278M/582M [00:02<00:03,     101MB/s]     48%|####8     | Downloading : 282M/582M [00:02<00:03,     101MB/s]     49%|####9     | Downloading : 286M/582M [00:02<00:03,     100MB/s]     50%|####9     | Downloading : 290M/582M [00:02<00:02,     102MB/s]     51%|#####     | Downloading : 294M/582M [00:02<00:02,     104MB/s]     51%|#####1    | Downloading : 298M/582M [00:02<00:02,     104MB/s]     52%|#####1    | Downloading : 302M/582M [00:02<00:02,     104MB/s]     53%|#####2    | Downloading : 306M/582M [00:02<00:02,     101MB/s]     53%|#####3    | Downloading : 310M/582M [00:02<00:02,     100MB/s]     54%|#####3    | Downloading : 314M/582M [00:02<00:02,    98.5MB/s]     55%|#####4    | Downloading : 318M/582M [00:03<00:02,    97.0MB/s]     55%|#####5    | Downloading : 322M/582M [00:03<00:02,    95.8MB/s]     56%|#####6    | Downloading : 326M/582M [00:03<00:02,    94.9MB/s]     57%|#####6    | Downloading : 330M/582M [00:03<00:02,    93.1MB/s]     57%|#####7    | Downloading : 334M/582M [00:03<00:02,    87.7MB/s]     58%|#####8    | Downloading : 338M/582M [00:03<00:02,    89.5MB/s]     59%|#####8    | Downloading : 342M/582M [00:03<00:02,    89.4MB/s]     59%|#####9    | Downloading : 346M/582M [00:03<00:02,    89.5MB/s]     60%|######    | Downloading : 350M/582M [00:03<00:02,    89.3MB/s]     61%|######    | Downloading : 354M/582M [00:03<00:02,    89.8MB/s]     61%|######1   | Downloading : 358M/582M [00:03<00:02,    87.9MB/s]     62%|######2   | Downloading : 362M/582M [00:03<00:02,    89.5MB/s]     63%|######2   | Downloading : 366M/582M [00:03<00:02,    91.0MB/s]     64%|######3   | Downloading : 370M/582M [00:03<00:02,    93.8MB/s]     64%|######4   | Downloading : 374M/582M [00:03<00:02,    94.0MB/s]     65%|######4   | Downloading : 378M/582M [00:03<00:02,    93.4MB/s]     66%|######5   | Downloading : 382M/582M [00:03<00:02,    92.2MB/s]     66%|######6   | Downloading : 386M/582M [00:03<00:02,    91.3MB/s]     67%|######6   | Downloading : 390M/582M [00:03<00:02,    91.2MB/s]     68%|######7   | Downloading : 394M/582M [00:03<00:02,    90.6MB/s]     68%|######8   | Downloading : 398M/582M [00:04<00:02,    89.6MB/s]     69%|######9   | Downloading : 402M/582M [00:04<00:02,    90.3MB/s]     70%|######9   | Downloading : 406M/582M [00:04<00:02,    90.9MB/s]     70%|#######   | Downloading : 410M/582M [00:04<00:01,    92.7MB/s]     71%|#######1  | Downloading : 414M/582M [00:04<00:01,    95.4MB/s]     72%|#######1  | Downloading : 418M/582M [00:04<00:01,    97.5MB/s]     72%|#######2  | Downloading : 422M/582M [00:04<00:01,    97.7MB/s]     73%|#######3  | Downloading : 426M/582M [00:04<00:01,    97.4MB/s]     74%|#######3  | Downloading : 430M/582M [00:04<00:01,    96.6MB/s]     75%|#######4  | Downloading : 434M/582M [00:04<00:01,    96.5MB/s]     75%|#######5  | Downloading : 438M/582M [00:04<00:01,    96.8MB/s]     76%|#######5  | Downloading : 442M/582M [00:04<00:01,    95.8MB/s]     77%|#######6  | Downloading : 446M/582M [00:04<00:01,    94.9MB/s]     77%|#######7  | Downloading : 450M/582M [00:04<00:01,    93.7MB/s]     78%|#######7  | Downloading : 454M/582M [00:04<00:01,    93.5MB/s]     79%|#######8  | Downloading : 458M/582M [00:04<00:01,    93.3MB/s]     79%|#######9  | Downloading : 462M/582M [00:04<00:01,    93.2MB/s]     80%|########  | Downloading : 466M/582M [00:04<00:01,    94.1MB/s]     81%|########  | Downloading : 470M/582M [00:04<00:01,    96.0MB/s]     81%|########1 | Downloading : 474M/582M [00:04<00:01,    98.6MB/s]     82%|########2 | Downloading : 478M/582M [00:04<00:01,    97.9MB/s]     83%|########2 | Downloading : 482M/582M [00:04<00:01,    96.3MB/s]     83%|########3 | Downloading : 486M/582M [00:04<00:01,    95.2MB/s]     84%|########4 | Downloading : 490M/582M [00:04<00:01,    95.9MB/s]     85%|########4 | Downloading : 494M/582M [00:05<00:00,    96.1MB/s]     86%|########5 | Downloading : 498M/582M [00:05<00:00,    94.0MB/s]     86%|########6 | Downloading : 502M/582M [00:05<00:00,    87.8MB/s]     87%|########6 | Downloading : 504M/582M [00:05<00:01,    72.0MB/s]     87%|########6 | Downloading : 505M/582M [00:05<00:01,    64.2MB/s]     87%|########6 | Downloading : 506M/582M [00:05<00:01,    63.1MB/s]     87%|########7 | Downloading : 508M/582M [00:05<00:01,    64.0MB/s]     88%|########7 | Downloading : 511M/582M [00:05<00:01,    65.4MB/s]     88%|########8 | Downloading : 515M/582M [00:05<00:01,    67.4MB/s]     89%|########9 | Downloading : 521M/582M [00:05<00:00,    69.6MB/s]     90%|######### | Downloading : 525M/582M [00:05<00:00,    72.1MB/s]     91%|######### | Downloading : 529M/582M [00:05<00:00,    74.7MB/s]     92%|#########1| Downloading : 533M/582M [00:05<00:00,    77.4MB/s]     92%|#########2| Downloading : 537M/582M [00:05<00:00,    79.9MB/s]     93%|#########2| Downloading : 541M/582M [00:05<00:00,    81.0MB/s]     94%|#########3| Downloading : 545M/582M [00:05<00:00,    81.7MB/s]     94%|#########4| Downloading : 549M/582M [00:05<00:00,    83.0MB/s]     95%|#########4| Downloading : 553M/582M [00:05<00:00,    84.1MB/s]     96%|#########5| Downloading : 557M/582M [00:05<00:00,    86.1MB/s]     96%|#########6| Downloading : 561M/582M [00:05<00:00,    87.1MB/s]     97%|#########7| Downloading : 565M/582M [00:05<00:00,    86.6MB/s]     98%|#########7| Downloading : 569M/582M [00:05<00:00,    88.3MB/s]     98%|#########8| Downloading : 573M/582M [00:05<00:00,    91.0MB/s]     99%|#########9| Downloading : 577M/582M [00:05<00:00,    92.9MB/s]    100%|#########9| Downloading : 581M/582M [00:05<00:00,    94.5MB/s]    100%|##########| Downloading : 582M/582M [00:05<00:00,     103MB/s]
+    Verifying hash 32fd2f6c8c7eb0784a1de6435273c48b.
+    Decompressing the archive: /home/runner/mne_data/MNE-somato-data.tar.gz
+    (please be patient, this can take some time)
+    Successfully extracted to: ['/home/runner/mne_data/MNE-somato-data']
+    Attempting to create new mne-python configuration file:
+    /home/runner/.mne/mne-python.json
+    Opening raw data file /home/runner/mne_data/MNE-somato-data/sub-01/meg/sub-01_task-somato_meg.fif...
+        Range : 237600 ... 506999 =    791.189 ...  1688.266 secs
+    Ready.
+    111 events found
+    Event IDs: [1]
+    Not setting metadata
+    Not setting metadata
+    111 matching events found
+    Setting baseline interval to [-0.19979521315838786, 0.0] sec
+    Applying baseline correction (mode: mean)
+    0 projection items activated
+    Loading data for 111 events and 136 original time points ...
+    0 bad epochs dropped
+    Computing rank from data with rank='info'
+        MEG: rank 64 after 0 projectors applied to 306 channels
+        Setting small MEG eigenvalues to zero (without PCA)
+    Reducing data rank from 306 -> 64
+    Estimating covariance using EMPIRICAL
+    Done.
+    Number of samples used : 6771
+    [done]
+    Reading forward solution from /home/runner/mne_data/MNE-somato-data/derivatives/sub-01/sub-01_task-somato-fwd.fif...
+        Reading a source space...
+        [done]
+        Reading a source space...
+        [done]
+        2 source spaces read
+        Desired named matrix (kind = 3523) not available
+        Read MEG forward solution (8155 sources, 306 channels, free orientations)
+        Source spaces transformed to the forward solution coordinate frame
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 280-285
+
+Preparing data for clustered inference
+--------------------------------------
+
+For clustered inference we need the targets ``Y``, the design matrix ``X``
+and the ``connectivity`` matrix, which is a sparse adjacency matrix.
+
+.. GENERATED FROM PYTHON SOURCE LINES 285-302
+
+.. code-block:: default
+
+
     # Collecting features' connectivity
     connectivity = mne.source_estimate.spatial_src_adjacency(forward['src'])
 
+    # Croping evoked according to relevant time window
+    evoked.crop(tmin=t_min, tmax=t_max)
+
     # Choosing frequency and number of clusters used for compression.
     # Reducing the frequency to 100Hz to make inference faster
-    t_step = 0.01
     step = int(t_step * evoked.info['sfreq'])
     evoked.decimate(step)
     t_min = evoked.times[0]
     t_step = 1. / evoked.info['sfreq']
-    # Taking n_clusters > 2000 might lead to an unpowerfull inference.
-    # Taking n_clusters < 500 might compress too much the data leading
-    # to a compress problem not close enough to the original problem.
-    # For MEG data n_clusters = 1000 is generally a good default choice.
-    n_clusters = 1000
-    # Setting theoretical FWER target
-    fwer_target = 0.1
-    correction_clust_inf = 1. / n_clusters
-    zscore_target = zscore_from_pval((fwer_target / 2) * correction_clust_inf)
-
 
     # Preprocessing MEG data
-    X, Y, forward = preprocess_meg_eeg_data(evoked, forward, noise_cov)
+    X, Y, forward = preprocess_meg_eeg_data(evoked, forward, noise_cov, pca=pca)
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    -- number of adjacent vertices : 8196
+    /home/runner/work/hidimstat/hidimstat/examples/plot_meg_data_example.py:287: RuntimeWarning: 0.5% of original source space vertices have been omitted, tri-based adjacency will have holes.
+    Consider using distance-based adjacency or morphing data to all source space vertices.
+      connectivity = mne.source_estimate.spatial_src_adjacency(forward['src'])
+    Converting forward solution to fixed orietnation
+        No patch info available. The standard source space normals will be employed in the rotation to the local surface coordinates....
+        Changing to fixed-orientation forward solution with surface-based source orientations...
+        [done]
+    Computing inverse operator with 204 channels.
+        204 out of 306 channels remain after picking
+    Selected 204 channels
+    Whitening the forward solution.
+    Computing rank from covariance with rank=None
+        Using tolerance 2.1e-12 (2.2e-16 eps * 204 dim * 46  max singular value)
+        Estimated rank (grad): 64
+        GRAD: rank 64 computed from 204 data channels with 0 projectors
+        Setting small GRAD eigenvalues to zero (without PCA)
+    Creating the source covariance matrix
+    Adjusting source covariance matrix.
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 303-310
+
+Running clustered inference
+---------------------------
+
+For MEG data ``n_clusters = 1000`` is generally a good default choice.
+Taking ``n_clusters > 2000`` might lead to an unpowerful inference.
+Taking ``n_clusters < 500`` might compress too much the data leading
+to a compressed problem not close enough to the original problem.
+
+.. GENERATED FROM PYTHON SOURCE LINES 310-340
+
+.. code-block:: default
+
+
+    n_clusters = 1000
+
+    # Setting theoretical FWER target
+    fwer_target = 0.1
+
+    # Computing threshold taking into account for Bonferroni correction
+    correction_clust_inf = 1. / n_clusters
+    zscore_threshold = zscore_from_pval((fwer_target / 2) * correction_clust_inf)
 
     # Initializing FeatureAgglomeration object used for the clustering step
     connectivity_fixed, _ = \
@@ -287,33 +540,214 @@ Support recovery on MEG data (2D)
     active_set_full = np.copy(active_set)
     active_set_full[:] = True
 
-    # Computing z-scores
+    # Translating p-vals into z-scores for nicer visualization
     zscore = zscore_from_pval(pval, one_minus_pval)
     zscore_active_set = zscore[active_set]
 
-    # Building mne.SourceEstimate object
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    Clustered inference: n_clusters = 1000, inference method = desparsified-group-lasso, seed = 0
+    /home/runner/.local/lib/python3.8/site-packages/sklearn/cluster/_agglomerative.py:245: UserWarning: the number of connected components of the connectivity matrix is 2 > 1. Completing it to avoid stopping the tree early.
+      connectivity, n_connected_components = _fix_connectivity(
+    /home/runner/work/hidimstat/hidimstat/hidimstat/desparsified_lasso.py:32: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
+      results = np.asarray(results)
+    Group reid: AR1 cov estimation
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 341-345
+
+Visualization
+-------------
+Now, let us plot the thresholded statistical maps derived thanks to the
+clustered inference algorithm referred as cd-MTLasso.
+
+.. GENERATED FROM PYTHON SOURCE LINES 345-380
+
+.. code-block:: default
+
+
+    # Let's put the solution into the format supported by the plotting functions
     stc = _compute_stc(zscore_active_set, active_set, evoked, forward)
 
-    # Plotting
+    # Plotting parameters
+    if cond == 'audio':
+        hemi = 'lh'
+        view = 'lateral'
+    elif cond == 'visual':
+        hemi = 'rh'
+        view = 'medial'
+    elif cond == 'somato':
+        hemi = 'rh'
+        view = 'lateral'
+
+    # Plotting clustered inference solution
     mne.viz.set_3d_backend("pyvista")
-    max_stc = np.max(np.abs(stc._data))
-    clim = dict(pos_lims=(3, zscore_target, max_stc), kind='value')
-    brain = stc.plot(subject=subject, hemi='lh', clim=clim,
-                     subjects_dir=subjects_dir)
-    brain.show_view('lat')
-    brain.add_text(0.05, 0.9, 'audio - cd-MTLasso (AR1)', 'title', font_size=30)
-    brain.save_image('figures/meg_audio_cd-MTLasso.png')
+
+    if active_set.sum() != 0:
+        max_stc = np.max(np.abs(stc.data))
+        clim = dict(pos_lims=(3, zscore_threshold, max_stc), kind='value')
+        brain = stc.plot(subject=sub, hemi=hemi, clim=clim, subjects_dir=subs_dir)
+        brain.show_view(view)
+        brain.add_text(0.05, 0.9, f'{cond} - cd-MTLasso (AR1)', 'title',
+                       font_size=30)
+
+    save_fig = False
+    if save_fig:
+        brain.save_image('figures/meg_audio_cd-MTLasso.png')
 
     interactive_plot = False
     if interactive_plot:
-        brain = stc.plot(subject=subject, hemi='both',
-                         subjects_dir=subjects_dir, clim=clim)
+        brain = \
+            stc.plot(subject=sub, hemi='both', subjects_dir=subs_dir, clim=clim)
 
-    # Runing the ensmeble clustered inference algorithm on temporal data
-    # might take several minutes on standard device with `n_jobs=1` (around 10 mn)
+
+
+
+.. image-sg:: /auto_examples/images/sphx_glr_plot_meg_data_example_002.png
+   :alt: plot meg data example
+   :srcset: /auto_examples/images/sphx_glr_plot_meg_data_example_002.png
+   :class: sphx-glr-single-img
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    Using pyvista 3d backend.
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 381-385
+
+Comparision with sLORETA
+------------------------
+Now, we compare the results derived from cd-MTLasso with the solution
+obtained from the one of the most standard approach: sLORETA.
+
+.. GENERATED FROM PYTHON SOURCE LINES 385-415
+
+.. code-block:: default
+
+
+    # Running sLORETA with standard hyper-parameter
+    lambda2 = 1. / 9
+    inv = make_inverse_operator(evoked.info, forward, noise_cov, loose=0.,
+                                depth=0., fixed=True)
+    stc_full = apply_inverse(evoked, inv, lambda2=lambda2, method='sLORETA')
+    stc_full = stc_full.mean()
+
+    # Computing threshold taking into account for Bonferroni correction
+    n_features = stc_full.data.size
+    correction = 1. / n_features
+    zscore_threshold_no_clust = zscore_from_pval((fwer_target / 2) * correction)
+
+    # Computing estimated support by sLORETA
+    active_set = np.abs(stc_full.data) > zscore_threshold_no_clust
+    active_set = active_set.flatten()
+
+    # Putting the solution into the format supported by the plotting functions
+    sLORETA_solution = np.atleast_2d(stc_full.data[active_set]).flatten()
+    stc = _make_sparse_stc(sLORETA_solution, active_set, forward, stc_full.tmin,
+                           tstep=stc_full.tstep)
+
+    # Plotting sLORETA solution
+    if active_set.sum() != 0:
+        max_stc = np.max(np.abs(stc.data))
+        clim = dict(pos_lims=(3, zscore_threshold_no_clust, max_stc), kind='value')
+        brain = stc.plot(subject=sub, hemi=hemi, clim=clim, subjects_dir=subs_dir)
+        brain.show_view(view)
+        brain.add_text(0.05, 0.9, f'{cond} - sLORETA', 'title', font_size=30)
+
+
+
+
+.. image-sg:: /auto_examples/images/sphx_glr_plot_meg_data_example_003.png
+   :alt: plot meg data example
+   :srcset: /auto_examples/images/sphx_glr_plot_meg_data_example_003.png
+   :class: sphx-glr-single-img
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    Computing inverse operator with 204 channels.
+        204 out of 204 channels remain after picking
+    Selected 204 channels
+    Whitening the forward solution.
+    Computing rank from covariance with rank=None
+        Using tolerance 2.1e-12 (2.2e-16 eps * 204 dim * 46  max singular value)
+        Estimated rank (grad): 64
+        GRAD: rank 64 computed from 204 data channels with 0 projectors
+        Setting small GRAD eigenvalues to zero (without PCA)
+    Creating the source covariance matrix
+    Adjusting source covariance matrix.
+    Computing SVD of whitened and weighted lead field matrix.
+        largest singular value = 2.06293
+        scaling factor to adjust the trace = 2.84039e+19 (nchan = 204 nzero = 140)
+    Preparing the inverse operator for use...
+        Scaled noise and source covariance from nave = 1 to nave = 111
+        Created the regularized inverter
+        The projection vectors do not apply to these channels.
+        Created the whitener using a noise covariance matrix with rank 64 (140 small eigenvalues omitted)
+        Computing noise-normalization factors (sLORETA)...
+    [done]
+    Applying inverse operator to "1"...
+        Picked 204 channels from the data
+        Computing inverse...
+        Eigenleads need to be weighted ...
+        Computing residual...
+        Explained  95.4% variance
+        sLORETA...
+    [done]
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 416-424
+
+Analysis of the results
+-----------------------
+While the clustered inference solution always highlights the expected
+cortex (audio, visual or somato-sensory) with a universal predertemined
+threshold, the solution derived from the sLORETA method does not enjoy
+the same property. For the audio task the method is conservative and
+for the somato task the method makes false discoveries (then it seems
+anti-conservative).
+
+.. GENERATED FROM PYTHON SOURCE LINES 427-434
+
+Running ensemble clustered inference
+------------------------------------
+
+To go further it is possible to run the ensemble clustered inference
+algorithm. It might take several minutes on standard device with
+``n_jobs=1`` (around 10 min). Just set
+``run_ensemble_clustered_inference=True`` below.
+
+.. GENERATED FROM PYTHON SOURCE LINES 434-469
+
+.. code-block:: default
+
     run_ensemble_clustered_inference = False
-    if run_ensemble_clustered_inference:
 
+    if run_ensemble_clustered_inference:
         # Making the inference with the ensembled clustered inference algorithm
         beta_hat, pval, pval_corr, one_minus_pval, one_minus_pval_corr = \
             ensemble_clustered_inference(X, Y, ward, n_clusters,
@@ -325,32 +759,38 @@ Support recovery on MEG data (2D)
         active_set_full = np.copy(active_set)
         active_set_full[:] = True
 
-        # Computing z-scores
+        # Translating p-vals into z-scores for nicer visualization
         zscore = zscore_from_pval(pval, one_minus_pval)
         zscore_active_set = zscore[active_set]
 
-        # Building mne.SourceEstimate object
+        # Putting the solution into the format supported by the plotting functions
         stc = _compute_stc(zscore_active_set, active_set, evoked, forward)
 
-        # Plotting
-        mne.viz.set_3d_backend("pyvista")
-        max_stc = np.max(np.abs(stc._data))
-        clim = dict(pos_lims=(3, zscore_target, max_stc), kind='value')
-        brain = stc.plot(subject=subject, hemi='lh', clim=clim,
-                         subjects_dir=subjects_dir)
-        brain.show_view('lat')
-        brain.add_text(0.05, 0.9, 'audio - ecd-MTLasso (AR1)',
-                       'title', font_size=30)
+        # Plotting ensemble clustered inference solution
+        if active_set.sum() != 0:
+            max_stc = np.max(np.abs(stc._data))
+            clim = dict(pos_lims=(3, zscore_threshold, max_stc), kind='value')
+            brain = \
+                stc.plot(subject=sub, hemi=hemi, clim=clim, subjects_dir=subs_dir)
+            brain.show_view(view)
+            brain.add_text(0.05, 0.9, f'{cond} - ecd-MTLasso (AR1)',
+                           'title', font_size=30)
 
-        interactive_plot = False
-        if interactive_plot:
-            brain = stc.plot(subject=subject, hemi='both',
-                             subjects_dir=subjects_dir, clim=clim)
+            interactive_plot = False
+            if interactive_plot:
+                brain = stc.plot(subject=sub, hemi='both',
+                                 subjects_dir=subs_dir, clim=clim)
+
+
+
+
+
+
 
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 1 minutes  30.755 seconds)
+   **Total running time of the script:** ( 0 minutes  44.307 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plot_meg_data_example.py:
