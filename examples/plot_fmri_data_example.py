@@ -12,19 +12,19 @@ discriminative pattern that makes the decoding of the two conditions.
 
 In this example, we show that standard statistical methods (i.e., method
 such as thresholding by permutation test the SVR or Ridge decoder or the
-algorithm proposed by Gaonkar [1]_) are not powerfull when applied on the
-uncompressed problem (i.e., the orignal problem in which the activation maps
-are not reduced using compression techniques such as parcelization).
+algorithm proposed by Gaonkar et al. [1]_) are not powerful when applied on
+the uncompressed problem (i.e., the orignal problem in which the activation
+maps are not reduced using compression techniques such as parcellation).
 This is notably due to the high dimensionality (too many voxels) and
 structure of the data (too much correlation between neighboring voxels).
 We also present two methods that offer statistical guarantees but
 with a (small) spatial tolerance on the shape of the support:
-clustered desparsified lasso (CLuDL) combines clustering (parcelization)
+clustered desparsified lasso (CLuDL) combines clustering (parcellation)
 and statistical inference ; ensemble of clustered desparsified lasso (EnCluDL)
 adds a randomization step over the choice of clustering.
 
-EnCluDL is powerfull and does not depend on a unique clustering choice.
-As shown in Chevalier et al. (2021) [2]_, for several task the estimated
+EnCluDL is powerful and does not depend on a unique clustering choice.
+As shown in Chevalier et al. (2021) [2]_, for several tasks the estimated
 support (predictive regions) looks relevant.
 
 References
@@ -57,7 +57,7 @@ from nilearn.plotting import plot_stat_map, show
 from hidimstat.stat_tools import zscore_from_pval, pval_from_scale
 from hidimstat.standardized_svr import standardized_svr
 from hidimstat.permutation_test import permutation_test, permutation_test_cv
-from hidimstat.gaonkar import gaonkar
+from hidimstat.gaonkar import ada_svr
 from hidimstat.clustered_inference import clustered_inference
 from hidimstat.ensemble_clustered_inference import ensemble_clustered_inference
 
@@ -105,7 +105,7 @@ def preprocess_haxby(subject=2, memory=None):
 #############################################################################
 # Gathering and preprocessing Haxby dataset for a given subject
 # -------------------------------------------------------------
-# The `preprocess_haxby` fucntion make the preprocessing of the Haxby dataset,
+# The `preprocess_haxby` function make the preprocessing of the Haxby dataset,
 # it outputs the preprocessed activation maps for the two conditions
 # 'face' or 'house' (contained in `X`), the conditions (in `y`),
 # the session labels (in `groups`) and the mask (in `masker`).
@@ -146,7 +146,7 @@ pval_std_svr, _, one_minus_pval_std_svr, _ = pval_from_scale(beta_hat, scale)
 # 1/the weights of the SVR decoder or 2/the weights of the Ridge decoder.
 
 # To derive the p-values from the SVR decoder, you may change the next line by
-# `SVR_permutation_test_inference = True`. It should takes around 15 minutes.
+# `SVR_permutation_test_inference = True`. It should take around 15 minutes.
 
 SVR_permutation_test_inference = False
 if SVR_permutation_test_inference:
@@ -154,8 +154,9 @@ if SVR_permutation_test_inference:
     pval_corr_svr_perm_test, one_minus_pval_corr_svr_perm_test = \
         permutation_test_cv(X, y, n_permutations=50, C=0.1)
 
-# A faster solution is to compute the p-values by permutation test from the
-# Ridge decoder. The computation time is much shorter: around 20 seconds.
+# Another method is to compute the p-values by permutation test from the
+# Ridge decoder. The solution provided by this method should be very close to
+# the previous one and the computation time is much shorter: around 20 seconds.
 
 estimator = Ridge()
 pval_corr_ridge_perm_test, one_minus_pval_corr_ridge_perm_test = \
@@ -163,11 +164,14 @@ pval_corr_ridge_perm_test, one_minus_pval_corr_ridge_perm_test = \
 
 #############################################################################
 # Now, let us run the Gaonkar algorithm (c.f. References).
-beta_hat, scale = gaonkar(X, y)
-pval_gaonkar, _, one_minus_pval_gaonkar, _ = pval_from_scale(beta_hat, scale)
+# Since the estimator they derive is obtained by approximating the hard margin
+# SVM formulation, we referred to this method as "ada-SVR" which stands for
+# "Adaptive Permutation Threshold SVR". The function is ``ada_svr``.
+beta_hat, scale = ada_svr(X, y)
+pval_ada_svr, _, one_minus_pval_ada_svr, _ = pval_from_scale(beta_hat, scale)
 
 #############################################################################
-# Now, the clustered inference algorithm which combines parcelization
+# Now, the clustered inference algorithm which combines parcellation
 # and high-dimensional inference (c.f. References).
 beta_hat, pval_cdl, _, one_minus_pval_cdl, _ = \
     clustered_inference(X, y, ward, n_clusters)
@@ -176,7 +180,7 @@ beta_hat, pval_cdl, _, one_minus_pval_cdl, _ = \
 # Below, we run the ensemble clustered inference algorithm which adds a
 # randomization step over the clustered inference algorithm (c.f. References).
 # To make the example as short as possible we take `n_bootstraps=5`
-# which means that 5 different parcelizations are considered and
+# which means that 5 different parcellations are considered and
 # then 5 statistical maps are produced and aggregated into one.
 # However you might benefit from clustering randomization taking
 # `n_bootstraps=25` or `n_bootstraps=100`, also we set `n_jobs=2`.
@@ -195,14 +199,14 @@ beta_hat, pval_ecdl, _, one_minus_pval_ecdl, _ = \
 # First, we set theoretical FWER target at 10%.
 
 n_samples, n_features = X.shape
-fwer_target = 0.1
+target_fwer = 0.1
 
 #############################################################################
 # We now translate the FWER target into a z-score target.
 # For the permutation test methods we do not need any additional correction
 # since the p-values are already adjusted for multiple testing.
 
-zscore_threshold_corr = zscore_from_pval((fwer_target / 2))
+zscore_threshold_corr = zscore_from_pval((target_fwer / 2))
 
 #############################################################################
 # Other methods need to be corrected. We consider the Bonferroni correction.
@@ -210,14 +214,14 @@ zscore_threshold_corr = zscore_from_pval((fwer_target / 2))
 # consists in dividing by the number of features.
 
 correction = 1. / n_features
-zscore_threshold_no_clust = zscore_from_pval((fwer_target / 2) * correction)
+zscore_threshold_no_clust = zscore_from_pval((target_fwer / 2) * correction)
 
 #############################################################################
-# For methods that parcelizes the brain into groups of voxels, the correction
+# For methods that parcelates the brain into groups of voxels, the correction
 # consists in dividing by the number of parcels (or clusters).
 
 correction_clust = 1. / n_clusters
-zscore_threshold_clust = zscore_from_pval((fwer_target / 2) * correction_clust)
+zscore_threshold_clust = zscore_from_pval((target_fwer / 2) * correction_clust)
 
 #############################################################################
 # Now, we can plot the thresholded z-score maps by translating the
@@ -234,8 +238,6 @@ def plot_map(pval, one_minus_pval, zscore_threshold, title=None,
     plot_stat_map(zscore_img, threshold=zscore_threshold, bg_img=bg_img,
                   dim=-1, cut_coords=cut_coords, title=title)
 
-    return
-
 
 plot_map(pval_std_svr, one_minus_pval_std_svr, zscore_threshold_no_clust,
          title='SVR parametric threshold')
@@ -247,7 +249,7 @@ if SVR_permutation_test_inference:
 plot_map(pval_corr_ridge_perm_test, one_minus_pval_corr_ridge_perm_test,
          zscore_threshold_corr, title='Ridge permutation-test thresh.')
 
-plot_map(pval_gaonkar, one_minus_pval_gaonkar, zscore_threshold_no_clust,
+plot_map(pval_ada_svr, one_minus_pval_ada_svr, zscore_threshold_no_clust,
          title='Gaonkar algorithm')
 
 plot_map(pval_cdl, one_minus_pval_cdl, zscore_threshold_clust, 'CluDL')
@@ -262,12 +264,12 @@ plot_map(pval_ecdl, one_minus_pval_ecdl, zscore_threshold_clust, 'EnCluDL')
 # Among those methods, the only one that makes discoveries is the one that
 # threshold the SVR decoder using a parametric approximation.
 # However this method has no statistical guarantees and we can see that some
-# isolated voxels are discovered and it seems quite unrealistic.
+# isolated voxels are discovered, which seems quite spurious.
 # The discriminative pattern derived from the clustered inference algorithm
 # (CluDL) show that the method is less conservative.
-# However, some unrealistic paterns are also included in this solution.
+# However, some reasonable paterns are also included in this solution.
 # Finally, the solution provided by the ensemble clustered inference algorithm
 # (EnCluDL) seems realistic as we recover the visual cortex and do not make
-# some dubious discoveries.
+# spurious discoveries.
 
 show()
