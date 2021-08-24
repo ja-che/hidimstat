@@ -1,7 +1,7 @@
 from .clustered_inference import clustered_inference, hd_inference
 from .desparsified_lasso import desparsified_lasso, desparsified_group_lasso
 from .ensemble_clustered_inference import ensemble_clustered_inference
-from .gaonkar import gaonkar
+from .gaonkar import ada_svr
 from .multi_sample_split import aggregate_quantiles
 from .noise_std import reid, group_reid
 from .permutation_test import permutation_test_cv
@@ -16,7 +16,7 @@ __all__ = [
     'desparsified_lasso',
     'desparsified_group_lasso',
     'ensemble_clustered_inference',
-    'gaonkar',
+    'ada_svr',
     'group_reid',
     'hd_inference',
     'multivariate_1D_simulation',

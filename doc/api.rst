@@ -15,11 +15,11 @@ Functions
 .. autosummary::
    :toctree: generated/
 
+   ada_svr
    aggregate_quantiles
    clustered_inference
    desparsified_lasso
    ensemble_clustered_inference
-   gaonkar
    group_reid
    hd_inference
    multivariate_1D_simulation
