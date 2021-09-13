@@ -32,27 +32,9 @@ To reduce the script runtime it is desirable to increase n_jobs parameter.
 
 
 
-.. image-sg:: /auto_examples/images/sphx_glr_plot_fig_1_nguyen_et_al_001.png
-   :alt: plot fig 1 nguyen et al
-   :srcset: /auto_examples/images/sphx_glr_plot_fig_1_nguyen_et_al_001.png
-   :class: sphx-glr-single-img
-
-
-.. rst-class:: sphx-glr-script-out
-
- Out:
-
- .. code-block:: none
-
-    Save figure to figures/histogram_ko_vs_ako.png
-    Done!
 
 
 
-
-
-
-|
 
 .. code-block:: default
 
@@ -156,13 +138,10 @@ To reduce the script runtime it is desirable to increase n_jobs parameter.
         print('Done!')
 
 
-    if __name__ == '__main__':
-        main()
+    # if __name__ == '__main__':
+    #     main()
 
-
-.. rst-class:: sphx-glr-timing
-
-   **Total running time of the script:** ( 0 minutes  33.959 seconds)
+**Estimated memory usage:**  9 MB
 
 
 .. _sphx_glr_download_auto_examples_plot_fig_1_nguyen_et_al.py:
