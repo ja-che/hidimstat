@@ -1,7 +1,7 @@
 # Authors: Jerome-Alexis Chevalier <jerome-alexis.chevalier@inria.fr>
 """
-Support recovery on structured data (2D)
-========================================
+Support recovery on simulated data (2D)
+=======================================
 
 """
 

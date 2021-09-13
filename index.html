@@ -115,19 +115,23 @@ run the following from terminal:</p>
 <span class="n">scikit</span><span class="o">-</span><span class="n">learn</span>
 </pre></div>
 </div>
-<p>To run examples it is neccessary to install <code class="docutils literal notranslate"><span class="pre">`matplotlib</span></code>, and to run tests it
+<p>To run examples it is neccessary to install <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code>, and to run tests it
 is also needed to install <code class="docutils literal notranslate"><span class="pre">pytest</span></code>.</p>
 </section>
 <section id="documentation-examples">
 <h2>Documentation &amp; Examples<a class="headerlink" href="#documentation-examples" title="Permalink to this headline">¶</a></h2>
-<p>As of now in the <cite>examples</cite> folder there is a Python script to reproduce Figure
-1 in Nguyen et al. 2020 (see References below).</p>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>this scrip should take quite a long time to run.</p>
-</div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Run this command in terminal</span>
-<span class="n">python</span> <span class="n">plot_fig_1_nguyen_et_al</span><span class="o">.</span><span class="n">py</span>
+<p>The HiDimStat package aims at addressing the problem of support recovery
+in the context of high dimensional and structured data.
+As of now in the <cite>examples</cite> folder there are three Python scripts that
+illustrate how to use the main HiDimStat functions.
+In each script we handle a different kind of dataset:
+<code class="docutils literal notranslate"><span class="pre">plot_2D_simulation_example.py</span></code> handles a simulated dataset with a 2D
+spatial structure,
+<code class="docutils literal notranslate"><span class="pre">plot_fmri_data_example.py</span></code> solves the decoding problem on Haxby fMRI dataset,
+<code class="docutils literal notranslate"><span class="pre">plot_meg_data_example.py</span></code> tackles the source localization problem on several
+MEG/EEG datasets.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># For example run the following command in terminal</span>
+<span class="n">python</span> <span class="n">plot_2D_simulation_example</span><span class="o">.</span><span class="n">py</span>
 </pre></div>
 </div>
 </section>
@@ -141,6 +145,9 @@ is also needed to install <code class="docutils literal notranslate"><span class
 with ensemble of clustered desparsified lasso. In International Conference
 on Medical Image Computing and Computer-Assisted Intervention
 (pp. 638-646). Springer, Cham.</p></li>
+<li><p>Chevalier, J. A., Nguyen, T. B., Thirion, B., &amp; Salmon, J. (2021).
+Spatially relaxed inference on high-dimensional linear models.
+arXiv preprint arXiv:2106.02590.</p></li>
 </ul>
 <p>Aggregation of multiple Knockoffs (AKO):</p>
 <ul class="simple">
@@ -148,7 +155,21 @@ on Medical Image Computing and Computer-Assisted Intervention
 of Multiple Knockoffs. In Proceedings of the 37th International Conference on
 Machine Learning, Vienna, Austria, PMLR 119.</p></li>
 </ul>
-<p>If you use our packages, we would appreciate citations to the aforementioned papers.</p>
+<p>Application to decoding (fMRI data):</p>
+<ul class="simple">
+<li><p>Chevalier, J. A., Nguyen T.-B., Salmon, J., Varoquaux, G. &amp; Thirion, B.
+(2021). Decoding with confidence: Statistical control on decoder maps.
+In NeuroImage, 234, 117921.</p></li>
+</ul>
+<p>Application to source localization (MEG/EEG data):</p>
+<ul class="simple">
+<li><p>Chevalier, J. A., Gramfort, A., Salmon, J., &amp; Thirion, B. (2020).
+Statistical control for spatio-temporal MEG/EEG source imaging with
+desparsified multi-task Lasso. In Proceedings of the 34th Conference on
+Neural Information Processing Systems (NeurIPS 2020), Vancouver, Canada.</p></li>
+</ul>
+<p>If you use our packages, we would appreciate citations to the relevant
+aforementioned papers.</p>
 </section>
 <section id="other-useful-references">
 <h3>Other useful references<a class="headerlink" href="#other-useful-references" title="Permalink to this headline">¶</a></h3>
