@@ -13,3 +13,4 @@ pyvista
 pyvistaqt
 PyQt5
 nilearn
+memory_profiler
