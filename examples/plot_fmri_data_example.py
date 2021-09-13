@@ -12,7 +12,7 @@ discriminative pattern that makes the decoding of the two conditions.
 
 In this example, we show that standard statistical methods (i.e., method
 such as thresholding by permutation test the SVR or Ridge decoder or the
-algorithm proposed by Gaonkar et al. [1]_) are not powerful when applied on
+algorithm introduced by Gaonkar et al. [1]_) are not powerful when applied on
 the uncompressed problem (i.e., the orignal problem in which the activation
 maps are not reduced using compression techniques such as parcellation).
 This is notably due to the high dimensionality (too many voxels) and
@@ -57,7 +57,7 @@ from nilearn.plotting import plot_stat_map, show
 from hidimstat.stat_tools import zscore_from_pval, pval_from_scale
 from hidimstat.standardized_svr import standardized_svr
 from hidimstat.permutation_test import permutation_test, permutation_test_cv
-from hidimstat.gaonkar import ada_svr
+from hidimstat.adaptive_permutation_threshold import ada_svr
 from hidimstat.clustered_inference import clustered_inference
 from hidimstat.ensemble_clustered_inference import ensemble_clustered_inference
 
@@ -163,7 +163,7 @@ pval_corr_ridge_perm_test, one_minus_pval_corr_ridge_perm_test = \
     permutation_test(X, y, estimator=estimator, n_permutations=200)
 
 #############################################################################
-# Now, let us run the Gaonkar algorithm (c.f. References).
+# Now, let us run the algorithm introduced by Gaonkar et al. (c.f. References).
 # Since the estimator they derive is obtained by approximating the hard margin
 # SVM formulation, we referred to this method as "ada-SVR" which stands for
 # "Adaptive Permutation Threshold SVR". The function is ``ada_svr``.
@@ -250,7 +250,7 @@ plot_map(pval_corr_ridge_perm_test, one_minus_pval_corr_ridge_perm_test,
          zscore_threshold_corr, title='Ridge permutation-test thresh.')
 
 plot_map(pval_ada_svr, one_minus_pval_ada_svr, zscore_threshold_no_clust,
-         title='Gaonkar algorithm')
+         title='SVR adaptive perm. tresh.')
 
 plot_map(pval_cdl, one_minus_pval_cdl, zscore_threshold_clust, 'CluDL')
 
