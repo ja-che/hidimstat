@@ -139,7 +139,7 @@ def ensemble_clustered_inference(X_init, y, ward, n_clusters,
                          "to the path of the caching directory.")
 
     # Clustered inference algorithms
-    results = Parallel(n_jobs=n_jobs)(
+    results = Parallel(n_jobs=n_jobs, verbose=verbose)(
         delayed(clustered_inference)(X_init, y, ward, n_clusters,
                                      train_size=train_size, groups=groups,
                                      method=inference_method, seed=i,

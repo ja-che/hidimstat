@@ -12,3 +12,4 @@ mne
 pyvista
 pyvistaqt
 PyQt5
+nilearn

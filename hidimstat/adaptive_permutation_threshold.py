@@ -1,8 +1,8 @@
 import numpy as np
 
 
-def gaonkar(X, y, rcond=1e-3):
-    """Gaonkar 2013 procedure
+def ada_svr(X, y, rcond=1e-3):
+    """Statistical inference procedure presented in Gaonkar et al. [1]_.
 
     Parameters
     -----------
