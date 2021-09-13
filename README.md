@@ -28,19 +28,22 @@ is also needed to install `pytest`.
 
 All the documentation of HiDimStat is available at https://ja-che.github.io/hidimstat/.
 
-As of now in the `examples` folder there is a Python script to reproduce Figure
-1 in Nguyen et al. 2020 (see References below). __Warning__: this script
-should take quite a long time to run.
+The HiDimStat package aims at addressing the problem of support recovery
+in the context of high dimensional and structured data.
+As of now in the `examples` folder there are three Python scripts that
+illustrate how to use the main HiDimStat functions.
+In each script we handle a different kind of dataset:
+``plot_2D_simulation_example.py`` handles a simulated dataset with a 2D
+spatial structure,
+``plot_fmri_data_example.py`` solves the decoding problem on Haxby fMRI dataset,
+``plot_meg_data_example.py`` tackles the source localization problem on several
+MEG/EEG datasets.
+
 
 ```bash
-# Run this command in terminal
-python plot_fig_1_nguyen_et_al.py
+# For example run the following command in terminal
+python plot_2D_simulation_example.py
 ```
-
-<p align="center">
-  <img src="./examples/figures/fig1_nguyen_et_al.png"  alt="Histogram of FDP & Power for KO vs. AKO" width="450">
-</p>
-
 
 ## References
 
@@ -53,13 +56,23 @@ Ensemble of Clustered desparsified Lasso (ECDL):
   on Medical Image Computing and Computer-Assisted Intervention_
   (pp. 638-646). Springer, Cham.
 
+* Chevalier, J. A., Nguyen, T. B., Thirion, B., & Salmon, J. (2021). __Spatially relaxed inference on high-dimensional linear models__. arXiv preprint arXiv:2106.02590.
+
 Aggregation of multiple Knockoffs (AKO):
 
 * Nguyen T.-B., Chevalier J.-A., Thirion B., & Arlot S. (2020). __Aggregation
   of Multiple Knockoffs__. In _Proceedings of the 37th International Conference on
   Machine Learning_, Vienna, Austria, PMLR 119.
 
-If you use our packages, we would appreciate citations to the aforementioned papers.
+Application to decoding (fMRI data):
+
+* Chevalier, J. A., Nguyen T.-B., Salmon, J., Varoquaux, G. & Thirion, B. (2021). __Decoding with confidence: Statistical control on decoder maps__. In _NeuroImage_, 234, 117921.
+
+Application to source localization (MEG/EEG data):
+
+* Chevalier, J. A., Gramfort, A., Salmon, J., & Thirion, B. (2020). __Statistical control for spatio-temporal MEG/EEG source imaging with desparsified multi-task Lasso__. In _Proceedings of the 34th Conference on Neural Information Processing Systems (NeurIPS 2020)_, Vancouver, Canada.
+
+If you use our packages, we would appreciate citations to the relevant aforementioned papers.
 
 #### Other useful references:
 
