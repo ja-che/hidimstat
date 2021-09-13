@@ -70,7 +70,7 @@ Application to decoding (fMRI data):
 
 Application to source localization (MEG/EEG data):
 
-* Chevalier, J. A., Gramfort, A., Salmon, J., & Thirion, B. (2020). __Statistical control for spatio-temporal MEG/EEG source imaging with desparsified multi-task Lasso__. In _Proceedings of the 34th Conference on Neural Information Processing Systems (NeurIPS 2020)_, Vancouver, Canada_.
+* Chevalier, J. A., Gramfort, A., Salmon, J., & Thirion, B. (2020). __Statistical control for spatio-temporal MEG/EEG source imaging with desparsified multi-task Lasso__. In _Proceedings of the 34th Conference on Neural Information Processing Systems (NeurIPS 2020)_, Vancouver, Canada.
 
 If you use our packages, we would appreciate citations to the relevant aforementioned papers.
 
