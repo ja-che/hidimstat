@@ -10,6 +10,7 @@ recursive-include doc *.txt
 recursive-include doc Makefile
 recursive-include examples *.py
 recursive-include examples *.txt
+recursive-include examples_not_exhibited *.py
 recursive-include hidimstat *.py
 
 recursive-exclude doc/_build *
