@@ -11,15 +11,15 @@ data. For more details about the inference algorithms presented in this
 example or about the generative process used to simulate the data,
 please refer to Chevalier et al. (2021) [1]_.
 
-This example corresponds exactly to the experiment thorougly described in
+This example corresponds to the experiment described in details in
 Chevalier et al. (2021) [1]_. Shortly, to simulate the data, we draw
 ``n_samples`` i.i.d Gaussian vectors of size ``n_features`` and reshape them
 into squares (edges are equal to ``n_features ** (1/2)``). Then, to introduce
 some spatial structure, we apply a Gaussian filter that correlates features
 that are nearby. The 2D data are then flattened into a design matrix ``X`` to
-recover the standard machine learning quantity and to ease the computation of
-the simulated target ``y`` (see below). Then, we construct the weight map ``w``
-which displays the same shape as the 2D data, it contains four predictive
+represent it as a regression setting and to ease the computation of the
+simulated target ``y`` (see below). Then, we construct the weight map ``w``
+which has the same shape as the 2D data, as it contains four predictive
 regions in every corner of the square. Similarly as for the construction
 of ``X``, the map ``w`` is finally flattened into a vector ``beta``. Lastly,
 to derive the target ``y``, we draw a white Gaussian noise ``epsilon`` and
@@ -30,10 +30,10 @@ structure of the data are relevant. More precisely, we show that clustered
 inference algorithms (e.g., CluDL) and ensembled clustered inference algorithms
 (e.g., EnCluDL) are more powerful than the standard inference methods (see also
 Chevalier et al. (2021) [1]_). Indeed, when the number of features is much
-greater than the number of samples, the standard statistical methods are
+greater than the number of samples, standard statistical methods are
 unlikely to recover the support. Then, the idea of clustered inference is to
 compress the data without breaking the spatial structure, leading to a
-compressed problem (very) close to the original problem. This enables a
+compressed problem  close to the original problem. This leads to a
 powerful spatially relaxed inference. Indeed, thanks to the dimension reduction
 the support recovery is feasible. However, due to the spatial compression,
 there is a limited (and quantifiable) spatial uncertainty concerning the shape
@@ -42,6 +42,7 @@ spatial compression, ensembled clustered inference algorithms reduce
 significantly the spatial uncertainty compared to clustered inference
 algorithms which consider only one spatial compression.
 
+.. _References:
 
 References
 ----------
@@ -155,7 +156,8 @@ def plot(maps, titles, save_fig=False):
 # -------------------
 #
 # After setting the simulation parameters, we run the function that generates
-# the 2D scenario presented in introduction.
+# the 2D scenario that we have briefly described in the first section of this
+# example.
 
 # simulation parameters
 n_samples = 100
@@ -181,14 +183,14 @@ X_init, y, beta, epsilon, _, _ = \
 # the required spatial tolerance (small clusters lead to limited spatial
 # uncertainty). Formally, "spatial tolerance" is defined by the largest
 # distance from the true support for which the occurence of a false discovery
-# is not statistically controlled (c.f. References).
+# is not statistically controlled (c.f. :ref:`References`).
 # Theoretically, the spatial tolerance ``delta`` is equal to the largest
 # cluster diameter. However this choice is conservative, notably in the case
 # of ensembled clustered inference. For these algorithms, we recommend to take
 # the average cluster radius. In this example, we choose ``n_clusters = 200``,
-# leading to a theoretical spatial tolerance ``delta = 6``. However
-# following our pratical guidance ``delta = 2`` would have sufficient
-# for ensembled clustered inference algorithms (see Results).
+# leading to a theoretical spatial tolerance ``delta = 6``. However, it
+# turns out that ``delta = 2``, the average cluster radius, would have been
+# sufficient for ensembled clustered inference algorithms (see Results).
 
 # hyper-parameters
 n_clusters = 200
@@ -206,7 +208,7 @@ n_jobs = 1
 #
 # Below, we translate the FWER target into z-score targets.
 # To compute the z-score targets we also take into account for the multiple
-# testing correction, to do so we consider the Bonferroni correction.
+# testing correction. To do so, we consider the Bonferroni correction.
 # For methods that do not reduce the feature space, the correction
 # consists in dividing the FWER target by the number of features.
 # For methods that group features into clusters, the correction
@@ -222,8 +224,7 @@ thr_nc = zscore_from_pval((fwer_target / 2) * correction_no_cluster)
 #############################################################################
 # Inference with several algorithms
 # ---------------------------------
-
-#############################################################################
+#
 # First, we compute a reference map that exhibits the true support and
 # the theoretical tolerance region.
 
@@ -253,10 +254,11 @@ selected_dl = np.logical_or(pval_corr < fwer_target / 2,
 
 #############################################################################
 # Now, we compute the support estimated using a clustered inference algorithm
-# (c.f. References) called Clustered Desparsified Lasso (CluDL) since it
+# (c.f. :ref:`References`) called Clustered Desparsified Lasso (CluDL) since it
 # uses the Desparsified Lasso technique after clustering the data.
 
-# define the FeatureAgglomeration object that performs the clustering
+# Define the FeatureAgglomeration object that performs the clustering.
+# This object is necessary to run the current algorithm and the following one.
 connectivity = image.grid_to_graph(n_x=shape[0],
                                    n_y=shape[1])
 ward = FeatureAgglomeration(n_clusters=n_clusters,
@@ -277,17 +279,10 @@ selected_cdl = np.logical_or(pval_corr < fwer_target / 2,
 
 #############################################################################
 # Finally, we compute the support estimated by an ensembled clustered
-# inference algorithm (c.f. References). This algorithm is called EnCluDL
+# inference algorithm (c.f. :ref:`References`). This algorithm is called
 # Ensemble of Clustered Desparsified Lasso (EnCluDL) since it runs several
 # CluDL algorithms with different clustering choices. The different CluDL
 # solutions are then aggregated into one.
-
-# define the FeatureAgglomeration object that performs the clustering
-connectivity = image.grid_to_graph(n_x=shape[0],
-                                   n_y=shape[1])
-ward = FeatureAgglomeration(n_clusters=n_clusters,
-                            connectivity=connectivity,
-                            linkage='ward')
 
 # ensemble of clustered desparsified lasso (EnCluDL)
 beta_hat, pval, pval_corr, one_minus_pval, one_minus_pval_corr = \
@@ -331,8 +326,8 @@ plot(maps, titles)
 #############################################################################
 # Analysis of the results
 # -----------------------
-# As advocated in introduction, the standard method that do not compress the
-# problem is not relevant as it dramatically lacks power.
+# As argued at in the first section of this example, the standard method that
+# do not compress the problem is not relevant as it dramatically lacks power.
 # The support estimated from CluDL provides a more reasonable solution
 # since we recover the four regions. However the shape of the estimated support
 # is a bit rough.
