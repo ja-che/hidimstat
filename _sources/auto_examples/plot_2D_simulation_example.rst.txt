@@ -538,7 +538,7 @@ solutions are then aggregated into one.
     Clustered inference: n_clusters = 200, inference method = desparsified-lasso, seed = 24
     /home/runner/work/hidimstat/hidimstat/hidimstat/desparsified_lasso.py:32: VisibleDeprecationWarning: Creating an ndarray from ragged nested sequences (which is a list-or-tuple of lists-or-tuples-or ndarrays with different lengths or shapes) is deprecated. If you meant to do this, you must specify 'dtype=object' when creating the ndarray.
       results = np.asarray(results)
-    [Parallel(n_jobs=1)]: Done  25 out of  25 | elapsed:   25.0s finished
+    [Parallel(n_jobs=1)]: Done  25 out of  25 | elapsed:   25.3s finished
 
 
 
@@ -609,9 +609,9 @@ for a lower spatial tolerance thanks to the clustering randomization.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 1 minutes  14.827 seconds)
+   **Total running time of the script:** ( 1 minutes  14.927 seconds)
 
-**Estimated memory usage:**  44 MB
+**Estimated memory usage:**  69 MB
 
 
 .. _sphx_glr_download_auto_examples_plot_2D_simulation_example.py:
