@@ -38,7 +38,7 @@ Examples Gallery
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="Support recovery on simulated data (2D)">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example shows the advantages of spatially relaxed inference when dealing with high-dimensi...">
 
 .. only:: html
 
