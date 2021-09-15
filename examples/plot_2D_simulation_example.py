@@ -326,7 +326,7 @@ plot(maps, titles)
 #############################################################################
 # Analysis of the results
 # -----------------------
-# As argued at in the first section of this example, the standard method that
+# As argued in the first section of this example, the standard method that
 # do not compress the problem is not relevant as it dramatically lacks power.
 # The support estimated from CluDL provides a more reasonable solution
 # since we recover the four regions. However the shape of the estimated support
