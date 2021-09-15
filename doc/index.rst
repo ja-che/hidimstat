@@ -106,6 +106,10 @@ For de-sparsified(or de-biased) Lasso:
   parameters in high dimensional linear models. Journal of the Royal
   Statistical Society: Series B: Statistical Methodology, 217-242.
 
+* Van de Geer, S., Bühlmann, P., Ritov, Y. A., & Dezeure, R. (2014). On
+  asymptotically optimal confidence regions and tests for high-dimensional
+  models. The Annals of Statistics, 42(3), 1166-1202.
+
 For Knockoffs Inference:
 
 * Barber, R. F; Candès, E. J. (2015). Controlling the false discovery rate
