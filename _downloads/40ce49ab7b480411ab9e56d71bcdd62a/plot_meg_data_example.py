@@ -117,6 +117,7 @@ def _load_somato(cond):
                         reject=reject, preload=True)
     evoked = epochs.average()
     evoked = evoked.pick_types('grad')
+    # evoked.plot()
 
     # Compute noise covariance matrix
     noise_cov = mne.compute_covariance(epochs, rank='info', tmax=0.)
@@ -125,7 +126,6 @@ def _load_somato(cond):
     forward = mne.read_forward_solution(fwd_fname)
 
     # Selecting relevant time window: focusing on early signal
-    evoked.plot()
     t_min, t_max = 0.03, 0.05
     t_step = 1.0 / 300
 
