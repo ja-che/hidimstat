@@ -363,7 +363,8 @@ mne.viz.set_3d_backend("pyvista")
 if active_set.sum() != 0:
     max_stc = np.max(np.abs(stc.data))
     clim = dict(pos_lims=(3, zscore_threshold, max_stc), kind='value')
-    brain = stc.plot(subject=sub, hemi=hemi, clim=clim, subjects_dir=subs_dir)
+    brain = stc.plot(subject=sub, hemi=hemi, clim=clim, subjects_dir=subs_dir,
+                     time_viewer=False)
     brain.show_view(view)
     brain.add_text(0.05, 0.9, f'{cond} - cd-MTLasso (AR1)', 'title',
                    font_size=30)
@@ -408,7 +409,8 @@ stc = _make_sparse_stc(sLORETA_solution, active_set, forward, stc_full.tmin,
 if active_set.sum() != 0:
     max_stc = np.max(np.abs(stc.data))
     clim = dict(pos_lims=(3, zscore_threshold_no_clust, max_stc), kind='value')
-    brain = stc.plot(subject=sub, hemi=hemi, clim=clim, subjects_dir=subs_dir)
+    brain = stc.plot(subject=sub, hemi=hemi, clim=clim, subjects_dir=subs_dir,
+                     time_viewer=False)
     brain.show_view(view)
     brain.add_text(0.05, 0.9, f'{cond} - sLORETA', 'title', font_size=30)
 
@@ -456,8 +458,8 @@ if run_ensemble_clustered_inference:
     if active_set.sum() != 0:
         max_stc = np.max(np.abs(stc._data))
         clim = dict(pos_lims=(3, zscore_threshold, max_stc), kind='value')
-        brain = \
-            stc.plot(subject=sub, hemi=hemi, clim=clim, subjects_dir=subs_dir)
+        brain = stc.plot(subject=sub, hemi=hemi, clim=clim,
+                         subjects_dir=subs_dir, time_viewer=False)
         brain.show_view(view)
         brain.add_text(0.05, 0.9, f'{cond} - ecd-MTLasso (AR1)',
                        'title', font_size=30)
