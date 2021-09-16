@@ -370,9 +370,12 @@ if active_set.sum() != 0:
     brain.add_text(0.05, 0.9, f'{cond} - cd-MTLasso', 'title',
                    font_size=20)
 
-save_fig = True
+# Hack for nice figures on HiDimStat website
+save_fig = False
+plot_saved_fig = True
 if save_fig:
     brain.save_image(f'figures/meg_{cond}_cd-MTLasso.png')
+if plot_saved_fig:
     brain.close()
     img = mpimg.imread(f'figures/meg_{cond}_cd-MTLasso.png')
     plt.imshow(img)
@@ -418,12 +421,14 @@ if active_set.sum() != 0:
                      views=view, time_viewer=False)
     brain.add_text(0.05, 0.9, f'{cond} - sLORETA', 'title', font_size=20)
 
-if save_fig:
-    brain.save_image(f'figures/meg_{cond}_sLORETA.png')
-    brain.close()
-    img = mpimg.imread(f'figures/meg_{cond}_sLORETA.png')
-    plt.imshow(img)
-    plt.axis('off')
+    # Hack for nice figures on HiDimStat website
+    if save_fig:
+        brain.save_image(f'figures/meg_{cond}_sLORETA.png')
+    if plot_saved_fig:
+        brain.close()
+        img = mpimg.imread(f'figures/meg_{cond}_sLORETA.png')
+        plt.imshow(img)
+        plt.axis('off')
 
 ##############################################################################
 # Analysis of the results
@@ -475,8 +480,10 @@ if run_ensemble_clustered_inference:
         brain.add_text(0.05, 0.9, f'{cond} - ecd-MTLasso',
                        'title', font_size=20)
 
+        # Hack for nice figures on HiDimStat website
         if save_fig:
             brain.save_image(f'figures/meg_{cond}_ecd-MTLasso.png')
+        if plot_saved_fig:
             brain.close()
             img = mpimg.imread(f'figures/meg_{cond}_ecd-MTLasso.png')
             plt.imshow(img)
