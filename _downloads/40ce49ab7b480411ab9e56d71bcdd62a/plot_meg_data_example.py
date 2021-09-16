@@ -24,6 +24,8 @@ References
 
 import os
 import numpy as np
+import matplotlib.image as mpimg
+import matplotlib.pyplot as plt
 import mne
 from scipy.sparse.csgraph import connected_components
 from mne.datasets import sample, somato
@@ -364,14 +366,17 @@ if active_set.sum() != 0:
     max_stc = np.max(np.abs(stc.data))
     clim = dict(pos_lims=(3, zscore_threshold, max_stc), kind='value')
     brain = stc.plot(subject=sub, hemi=hemi, clim=clim, subjects_dir=subs_dir,
-                     time_viewer=False)
-    brain.show_view(view)
-    brain.add_text(0.05, 0.9, f'{cond} - cd-MTLasso (AR1)', 'title',
-                   font_size=30)
+                     views=view, time_viewer=False)
+    brain.add_text(0.05, 0.9, f'{cond} - cd-MTLasso', 'title',
+                   font_size=20)
 
-save_fig = False
+save_fig = True
 if save_fig:
-    brain.save_image('figures/meg_audio_cd-MTLasso.png')
+    brain.save_image(f'figures/meg_{cond}_cd-MTLasso.png')
+    brain.close()
+    img = mpimg.imread(f'figures/meg_{cond}_cd-MTLasso.png')
+    plt.imshow(img)
+    plt.axis('off')
 
 interactive_plot = False
 if interactive_plot:
@@ -410,9 +415,15 @@ if active_set.sum() != 0:
     max_stc = np.max(np.abs(stc.data))
     clim = dict(pos_lims=(3, zscore_threshold_no_clust, max_stc), kind='value')
     brain = stc.plot(subject=sub, hemi=hemi, clim=clim, subjects_dir=subs_dir,
-                     time_viewer=False)
-    brain.show_view(view)
-    brain.add_text(0.05, 0.9, f'{cond} - sLORETA', 'title', font_size=30)
+                     views=view, time_viewer=False)
+    brain.add_text(0.05, 0.9, f'{cond} - sLORETA', 'title', font_size=20)
+
+if save_fig:
+    brain.save_image(f'figures/meg_{cond}_sLORETA.png')
+    brain.close()
+    img = mpimg.imread(f'figures/meg_{cond}_sLORETA.png')
+    plt.imshow(img)
+    plt.axis('off')
 
 ##############################################################################
 # Analysis of the results
@@ -459,12 +470,18 @@ if run_ensemble_clustered_inference:
         max_stc = np.max(np.abs(stc._data))
         clim = dict(pos_lims=(3, zscore_threshold, max_stc), kind='value')
         brain = stc.plot(subject=sub, hemi=hemi, clim=clim,
-                         subjects_dir=subs_dir, time_viewer=False)
-        brain.show_view(view)
-        brain.add_text(0.05, 0.9, f'{cond} - ecd-MTLasso (AR1)',
-                       'title', font_size=30)
+                         subjects_dir=subs_dir, views=view,
+                         time_viewer=False)
+        brain.add_text(0.05, 0.9, f'{cond} - ecd-MTLasso',
+                       'title', font_size=20)
 
-        interactive_plot = False
+        if save_fig:
+            brain.save_image(f'figures/meg_{cond}_ecd-MTLasso.png')
+            brain.close()
+            img = mpimg.imread(f'figures/meg_{cond}_ecd-MTLasso.png')
+            plt.imshow(img)
+            plt.axis('off')
+
         if interactive_plot:
             brain = stc.plot(subject=sub, hemi='both',
                              subjects_dir=subs_dir, clim=clim)
