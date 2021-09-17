@@ -95,20 +95,27 @@
   <section id="hidimstat-high-dimensional-statistical-inference-tool-for-python">
 <h1>HiDimStat: High-dimensional statistical inference tool for Python<a class="headerlink" href="#hidimstat-high-dimensional-statistical-inference-tool-for-python" title="Permalink to this headline">¶</a></h1>
 <p><a class="reference external" href="https://codecov.io/gh/ja-che/hidimstat"><img alt="Build Status" src="https://travis-ci.com/ja-che/hidimstat.svg?branch=main" /></a> <a class="reference external" href="https://codecov.io/gh/ja-che/hidimstat"><img alt="codecov" src="https://codecov.io/gh/ja-che/hidimstat/branch/main/graph/badge.svg" /></a></p>
+<p>The HiDimStat package provides statistical inference methods to solve the
+problem of support recovery in the context of high-dimensional and
+spatially structured data.</p>
 <section id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
 <p>HiDimStat working only with Python 3, ideally Python 3.6+. For installation,
 run the following from terminal:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">hidimstat</span>
+</pre></div>
+</div>
+<p>Or if you want the latest version available (for example to contribute to
+the development of this project):</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">ja</span><span class="o">-</span><span class="n">che</span><span class="o">/</span><span class="n">hidimstat</span><span class="o">.</span><span class="n">git</span>
 <span class="n">cd</span> <span class="n">hidimstat</span>
 <span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">e</span> <span class="o">.</span>
-<span class="c1"># or python setup.py install</span>
 </pre></div>
 </div>
 </section>
 <section id="dependencies">
 <h2>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this headline">¶</a></h2>
-<p>hidimstat depends on the following packages:</p>
+<p>HiDimStat depends on the following packages:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">joblib</span>
 <span class="n">numpy</span>
 <span class="n">scipy</span>
@@ -120,11 +127,11 @@ is also needed to install <code class="docutils literal notranslate"><span class
 </section>
 <section id="documentation-examples">
 <h2>Documentation &amp; Examples<a class="headerlink" href="#documentation-examples" title="Permalink to this headline">¶</a></h2>
-<p>The HiDimStat package aims at addressing the problem of support recovery
-in the context of high dimensional and structured data.
-As of now in the <cite>examples</cite> folder there are three Python scripts that
+<p>Documentation about the main HiDimStat functions is available
+<a class="reference external" href="api.html">here</a> and examples are available <a class="reference external" href="auto_examples/index.html">here</a>.</p>
+<p>As of now, there are three different examples (Python scripts) that
 illustrate how to use the main HiDimStat functions.
-In each script we handle a different kind of dataset:
+In each example we handle a different kind of dataset:
 <code class="docutils literal notranslate"><span class="pre">plot_2D_simulation_example.py</span></code> handles a simulated dataset with a 2D
 spatial structure,
 <code class="docutils literal notranslate"><span class="pre">plot_fmri_data_example.py</span></code> solves the decoding problem on Haxby fMRI dataset,
@@ -135,8 +142,20 @@ MEG/EEG datasets.</p>
 </pre></div>
 </div>
 </section>
+<section id="build-the-documentation">
+<h2>Build the documentation<a class="headerlink" href="#build-the-documentation" title="Permalink to this headline">¶</a></h2>
+<p>To build the documentation you will need to run:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">U</span> <span class="n">sphinx_gallery</span> <span class="n">sphinx_bootstrap_theme</span>
+<span class="n">cd</span> <span class="n">doc</span>
+<span class="n">make</span> <span class="n">html</span>
+</pre></div>
+</div>
+</section>
 <section id="references">
 <h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
+<p>The algorithms developed in this package have been detailed in several
+conference/journal articles that can be downloaded at
+<a class="reference external" href="https://ja-che.github.io/research.html">https://ja-che.github.io/</a>.</p>
 <section id="main-references">
 <h3>Main references<a class="headerlink" href="#main-references" title="Permalink to this headline">¶</a></h3>
 <p>Ensemble of Clustered desparsified Lasso (ECDL):</p>
@@ -195,15 +214,6 @@ knockoffs for high dimensional controlled variable selection. Journal of the
 Royal Statistical Society Series B, 80(3), 551-577.</p></li>
 </ul>
 </section>
-</section>
-<section id="build-the-documentation">
-<h2>Build the documentation<a class="headerlink" href="#build-the-documentation" title="Permalink to this headline">¶</a></h2>
-<p>To build the documentation you will need to run:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">U</span> <span class="n">sphinx_gallery</span> <span class="n">sphinx_bootstrap_theme</span>
-<span class="n">cd</span> <span class="n">doc</span>
-<span class="n">make</span> <span class="n">html</span>
-</pre></div>
-</div>
 </section>
 <section id="api">
 <h2>API<a class="headerlink" href="#api" title="Permalink to this headline">¶</a></h2>

@@ -380,6 +380,7 @@ if plot_saved_fig:
     img = mpimg.imread(f'figures/meg_{cond}_cd-MTLasso.png')
     plt.imshow(img)
     plt.axis('off')
+    plt.show()
 
 interactive_plot = False
 if interactive_plot:
@@ -429,6 +430,7 @@ if active_set.sum() != 0:
         img = mpimg.imread(f'figures/meg_{cond}_sLORETA.png')
         plt.imshow(img)
         plt.axis('off')
+        plt.show()
 
 ##############################################################################
 # Analysis of the results
@@ -488,6 +490,7 @@ if run_ensemble_clustered_inference:
             img = mpimg.imread(f'figures/meg_{cond}_ecd-MTLasso.png')
             plt.imshow(img)
             plt.axis('off')
+            plt.show()
 
         if interactive_plot:
             brain = stc.plot(subject=sub, hemi='both',
