@@ -1,7 +1,7 @@
 include .circleci/config.yml
+include build_package.sh
 include *.txt
 include *.yml
-include *.sh
 include LICENSE
 
 recursive-include doc *.css
