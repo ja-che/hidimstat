@@ -1,4 +1,6 @@
 # Cache directories and files
+build
+dist
 doc
 examples/figures
 joblib
