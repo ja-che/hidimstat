@@ -5,12 +5,12 @@
 
 Computation times
 =================
-**04:12.626** total execution time for **auto_examples** files:
+**03:53.875** total execution time for **auto_examples** files:
 
 +-------------------------------------------------------------------------------------------------+-----------+-----------+
-| :ref:`sphx_glr_auto_examples_plot_fmri_data_example.py` (``plot_fmri_data_example.py``)         | 01:52.482 | 2288.2 MB |
+| :ref:`sphx_glr_auto_examples_plot_fmri_data_example.py` (``plot_fmri_data_example.py``)         | 01:54.961 | 2332.4 MB |
 +-------------------------------------------------------------------------------------------------+-----------+-----------+
-| :ref:`sphx_glr_auto_examples_plot_2D_simulation_example.py` (``plot_2D_simulation_example.py``) | 01:12.791 | 109.9 MB  |
+| :ref:`sphx_glr_auto_examples_plot_2D_simulation_example.py` (``plot_2D_simulation_example.py``) | 01:14.783 | 46.6 MB   |
 +-------------------------------------------------------------------------------------------------+-----------+-----------+
-| :ref:`sphx_glr_auto_examples_plot_meg_data_example.py` (``plot_meg_data_example.py``)           | 01:07.353 | 373.0 MB  |
+| :ref:`sphx_glr_auto_examples_plot_meg_data_example.py` (``plot_meg_data_example.py``)           | 00:44.131 | 381.8 MB  |
 +-------------------------------------------------------------------------------------------------+-----------+-----------+
