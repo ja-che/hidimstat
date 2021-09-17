@@ -9,7 +9,7 @@ PKG = 'hidimstat'
 DESCRIPTION = "High-dimensional statistical inference tools for Python"
 LONG_DESCRIPTION = open('README.md').read()
 MAINTAINER = 'Chevalier (ja-che) and Nguyen (tbng)'
-# MAINTAINER_EMAIL = ''
+MAINTAINER_EMAIL = 'jerome-alexis_chevalier@hotmail.fr'
 URL = 'https://github.com/ja-che/hidimstat'
 DOWNLOAD_URL = 'https://github.com/ja-che/hidimstat'
 LICENSE = 'BSD'
@@ -39,13 +39,14 @@ def setup_package(version):
     setup(
         packages=find_packages(exclude=['contrib', 'docs', 'tests']),
         name=PKG,
-        # maintainer=MAINTAINER,
+        maintainer=MAINTAINER,
         include_package_data=True,
-        # maintainer_email=MAINTAINER_EMAIL,
+        maintainer_email=MAINTAINER_EMAIL,
         description=DESCRIPTION,
         long_description=LONG_DESCRIPTION,
+        long_description_content_type='text/markdown',
         license=LICENSE,
-        # url=URL,
+        url=URL,
         version=version,
         # download_url=DOWNLOAD_URL,
         zip_safe=False,  # the package can run out of an .egg file
