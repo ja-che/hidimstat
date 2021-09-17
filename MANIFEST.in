@@ -16,3 +16,4 @@ recursive-include hidimstat *.py
 recursive-exclude doc/_build *
 recursive-exclude doc/generated *
 recursive-exclude doc/auto_examples *
+recursive-exclude examples/figures *.png
