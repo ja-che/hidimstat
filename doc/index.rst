@@ -7,22 +7,31 @@ HiDimStat: High-dimensional statistical inference tool for Python
 =================================================================
 |Build Status| |codecov|
 
+The HiDimStat package provides statistical inference methods to solve the
+problem of support recovery in the context of high-dimensional and
+spatially structured data.
+
+
 Installation
 ------------
 
 HiDimStat working only with Python 3, ideally Python 3.6+. For installation,
 run the following from terminal::
 
+  pip install hidimstat
+
+Or if you want the latest version available (for example to contribute to
+the development of this project)::
+
   git clone https://github.com/ja-che/hidimstat.git
   cd hidimstat
   pip install -e .
-  # or python setup.py install
 
 
 Dependencies
 ------------
 
-hidimstat depends on the following packages::
+HiDimStat depends on the following packages::
 
   joblib
   numpy
@@ -37,11 +46,12 @@ is also needed to install ``pytest``.
 Documentation & Examples
 ------------------------
 
-The HiDimStat package aims at addressing the problem of support recovery
-in the context of high dimensional and structured data.
-As of now in the `examples` folder there are three Python scripts that
+Documentation about the main HiDimStat functions is available
+`here <api.html>`_ and examples are available `here <auto_examples/index.html>`_.
+
+As of now, there are three different examples (Python scripts) that
 illustrate how to use the main HiDimStat functions.
-In each script we handle a different kind of dataset:
+In each example we handle a different kind of dataset:
 ``plot_2D_simulation_example.py`` handles a simulated dataset with a 2D
 spatial structure,
 ``plot_fmri_data_example.py`` solves the decoding problem on Haxby fMRI dataset,
@@ -54,8 +64,24 @@ MEG/EEG datasets.
   python plot_2D_simulation_example.py
 
 
+Build the documentation
+-----------------------
+
+To build the documentation you will need to run:
+
+.. code-block::
+
+    pip install -U sphinx_gallery sphinx_bootstrap_theme
+    cd doc
+    make html
+
+
 References
 ----------
+
+The algorithms developed in this package have been detailed in several
+conference/journal articles that can be downloaded at
+`https://ja-che.github.io/ <https://ja-che.github.io/research.html>`_.
 
 Main references
 ~~~~~~~~~~~~~~~
@@ -126,17 +152,6 @@ For Knockoffs Inference:
 .. |codecov| image:: https://codecov.io/gh/ja-che/hidimstat/branch/main/graph/badge.svg
    :target: https://codecov.io/gh/ja-che/hidimstat
 
-
-Build the documentation
------------------------
-
-To build the documentation you will need to run:
-
-.. code-block::
-
-    pip install -U sphinx_gallery sphinx_bootstrap_theme
-    cd doc
-    make html
 
 API
 ---

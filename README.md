@@ -1,10 +1,21 @@
 # HiDimStat: High-dimensional statistical inference tool for Python
 [![build][TravisCI]][travis]  [![coverage][CodeCov]][cov]
 
+The HiDimStat package provides statistical inference methods to solve the
+problem of support recovery in the context of high-dimensional and
+spatially structured data.
+
 ## Installation
 
 HiDimStat working only with Python 3, ideally Python 3.6+. For installation,
 run the following from terminal
+
+```bash
+pip install hidimstat
+```
+
+Or if you want the latest version available (for example to contribute to
+the development of this project:
 
 ```bash
 git clone https://github.com/ja-che/hidimstat.git
@@ -28,8 +39,6 @@ is also needed to install `pytest`.
 
 All the documentation of HiDimStat is available at https://ja-che.github.io/hidimstat/.
 
-The HiDimStat package aims at addressing the problem of support recovery
-in the context of high dimensional and structured data.
 As of now in the `examples` folder there are three Python scripts that
 illustrate how to use the main HiDimStat functions.
 In each script we handle a different kind of dataset:
@@ -46,6 +55,10 @@ python plot_2D_simulation_example.py
 ```
 
 ## References
+
+The algorithms developed in this package have been detailed in several
+conference/journal articles that can be downloaded at
+https://ja-che.github.io/research.html.
 
 #### Main references:
 
@@ -99,6 +112,19 @@ For Knockoffs Inference:
 * Candès, E., Fan, Y., Janson, L., & Lv, J. (2018). __Panning for gold: Model-X
   knockoffs for high dimensional controlled variable selection__. _Journal of the
   Royal Statistical Society Series B_, 80(3), 551-577.
+
+## License
+
+This project is licensed under the BSD 2-Clause License.
+
+## Acknowledgments
+
+This project has been funded by Labex DigiCosme (ANR-11-LABEX-0045-DIGICOSME)
+as part of the program "Investissement d’Avenir" (ANR-11-IDEX-0003-02), by the
+Fast Big project (ANR-17-CE23-0011) and the KARAIB AI Chair
+(ANR-20-CHIA-0025-01). This study has also been supported by the European
+Union’s Horizon 2020 research and innovation program
+(Grant Agreement No. 945539, Human Brain Project SGA3).
 
 
 [TravisCI]: https://travis-ci.com/ja-che/hidimstat.svg?branch=main "travisCI status"
