@@ -69,7 +69,7 @@ def knockoff_aggregation(X, y, centered=True, shrink=False,
                         for i in range(n_bootstraps)])
 
         aggregated_eval = np.mean(evals, axis=0)
-        threshold = fdr_threshold_evalues()
+        threshold = fdr_threshold(aggregated_eval, fdr=fdr, method='ebh')
         selected = np.where(aggregated_eval >= threshold)[0]
 
         if verbose:
