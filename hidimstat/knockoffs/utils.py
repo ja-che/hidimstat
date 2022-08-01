@@ -16,6 +16,8 @@ def fdr_threshold(pvals, fdr=0.1, method='bhq', reshaping_function=None):
     elif method == 'bhy':
         return _bhy_threshold(
             pvals, fdr=fdr, reshaping_function=reshaping_function)
+    elif method == 'ebh':
+        return _ebh_threshold(pvals, fdr=fdr)
     else:
         raise ValueError(
             '{} is not support FDR control method'.format(method))
@@ -68,6 +70,21 @@ def _bhq_threshold(pvals, fdr=0.1):
         return pvals_sorted[selected_index]
     else:
         return -1.0
+
+def _ebh_threshold(evals, fdr=0.1):
+    """e-BH procedure for FDR control (see Wang and Ramdas 2021)
+    """
+    n_features = len(evals)
+    evals_sorted = -np.sort(-evals)  # sort in descending order
+    selected_index = 2 * n_features
+    for i in range(n_features - 1, -1, -1):
+        if evals_sorted[i] >= n_features / (fdr * (i + 1)):
+            selected_index = i
+            break
+    if selected_index <= n_features:
+        return evals_sorted[selected_index]
+    else:
+        return np.infty
 
 
 def _bhy_threshold(pvals, reshaping_function=None, fdr=0.1):
