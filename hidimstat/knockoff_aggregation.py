@@ -14,7 +14,7 @@ from .utils import fdr_threshold, quantile_aggregation
 
 def knockoff_aggregation(X, y, centered=True, shrink=False,
                          construct_method='equi', fdr=0.1, fdr_control='bhq',
-                         use_evalues=False, reshaping_function=None, offset=1,
+                         method='quantile', reshaping_function=None, offset=1,
                          statistic='lasso_cv', cov_estimator='ledoit_wolf',
                          joblib_verbose=0, n_bootstraps=25, n_jobs=1,
                          adaptive_aggregation=False, gamma=0.5, gamma_min=0.05,
@@ -64,8 +64,8 @@ def knockoff_aggregation(X, y, centered=True, shrink=False,
     ko_stats = parallel(delayed(stat_coef_diff_cached)(
         X, X_tildes[i], y, method=statistic) for i in range(n_bootstraps))
 
-    if use_evalues:
-        evals = np.array([_empirical_eval(ko_stats[i], fdr, offset)
+    if method == 'e-values':
+        evals = np.array([_empirical_eval(ko_stats[i], fdr/2, offset)
                         for i in range(n_bootstraps)])
 
         aggregated_eval = np.mean(evals, axis=0)
@@ -77,7 +77,7 @@ def knockoff_aggregation(X, y, centered=True, shrink=False,
 
         return selected
 
-    else:
+    if method == 'quantile':
         pvals = np.array([_empirical_pval(ko_stats[i], offset)
                         for i in range(n_bootstraps)])
 
