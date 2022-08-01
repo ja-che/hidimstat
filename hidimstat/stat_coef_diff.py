@@ -65,15 +65,14 @@ def stat_coef_diff(X, X_tilde, y, method='lasso_cv', n_splits=5, n_jobs=1,
     cv = KFold(n_splits=5, shuffle=True, random_state=seed)
 
     estimator = {
-        'lasso_cv': LassoCV(
-            alphas=lambdas, n_jobs=n_jobs, verbose=joblib_verbose,
-            max_iter=n_iter, cv=cv),
+        'lasso_cv': LassoCV(alphas=lambdas, n_jobs=n_jobs,
+                            verbose=joblib_verbose, max_iter=int(1e4), cv=cv),
         'logistic_l1': LogisticRegressionCV(
-            penalty='l1', max_iter=n_iter,
+            penalty='l1', max_iter=int(1e4),
             solver=solver, cv=cv,
             n_jobs=n_jobs, tol=1e-8),
         'logistic_l2': LogisticRegressionCV(
-            penalty='l2', max_iter=n_iter, n_jobs=n_jobs,
+            penalty='l2', max_iter=int(1e4), n_jobs=n_jobs,
             verbose=joblib_verbose, cv=cv, tol=1e-8),
     }
 
