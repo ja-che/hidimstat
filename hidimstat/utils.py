@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Author: Binh Nguyen <tuan-binh.nguyen@inria.fr> & Jerome-Alexis Chevalier
 import numpy as np
+from sklearn.metrics import confusion_matrix
 
 
 def quantile_aggregation(pvals, gamma=0.5, gamma_min=0.05, adaptive=False):
@@ -48,13 +49,17 @@ def cal_fdp_power(selected, non_zero_index, r_index=False):
     if selected.size == 0:
         return 0.0, 0.0
 
+    n_positives = len(non_zero_index)
+    
     if r_index:
         selected = selected - 1
 
-    true_positive = [i for i in selected if i in non_zero_index]
-    false_positive = [i for i in selected if i not in non_zero_index]
+    true_positive = np.intersect1d(selected, non_zero_index)
+    false_positive = np.setdiff1d(selected, true_positive)
+
     fdp = len(false_positive) / max(1, len(selected))
-    power = len(true_positive) / len(non_zero_index)
+    power = min(len(true_positive), n_positives) / n_positives
+
 
     return fdp, power
 
