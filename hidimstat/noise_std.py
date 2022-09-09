@@ -5,7 +5,7 @@ from sklearn.linear_model import LassoCV, MultiTaskLassoCV
 from sklearn.model_selection import KFold
 
 
-def reid(X, y, eps=1e-2, tol=1e-4, max_iter=1e4, n_jobs=1, seed=0):
+def reid(X, y, eps=1e-2, tol=1e-4, max_iter=10000, n_jobs=1, seed=0):
     """Estimation of noise standard deviation using Reid procedure
 
     Parameters

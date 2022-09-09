@@ -9,9 +9,8 @@ from sklearn.model_selection import KFold
 
 
 def stat_coef_diff(X, X_tilde, y, method='lasso_cv', n_splits=5, n_jobs=1,
-                   n_lambdas=10, n_iter=1000, group_reg=1e-3, l1_reg=1e-3,
-                   joblib_verbose=0, return_coef=False, solver='liblinear',
-                   seed=0):
+                   n_lambdas=10, n_iter=1000, joblib_verbose=0,
+                   return_coef=False, solver='liblinear', seed=0):
     """Calculate test statistic by doing estimation with Cross-validation on
     concatenated design matrix [X X_tilde] to find coefficients [beta
     beta_tilda]. The test statistic is then:
@@ -66,21 +65,22 @@ def stat_coef_diff(X, X_tilde, y, method='lasso_cv', n_splits=5, n_jobs=1,
     cv = KFold(n_splits=5, shuffle=True, random_state=seed)
 
     estimator = {
-        'lasso_cv': LassoCV(alphas=lambdas, n_jobs=n_jobs,
-                            verbose=joblib_verbose, max_iter=1e4, cv=cv),
+        'lasso_cv': LassoCV(
+            alphas=lambdas, n_jobs=n_jobs, verbose=joblib_verbose,
+            max_iter=n_iter, cv=cv),
         'logistic_l1': LogisticRegressionCV(
-            penalty='l1', max_iter=1e4,
+            penalty='l1', max_iter=n_iter,
             solver=solver, cv=cv,
             n_jobs=n_jobs, tol=1e-8),
         'logistic_l2': LogisticRegressionCV(
-            penalty='l2', max_iter=1e4, n_jobs=n_jobs,
+            penalty='l2', max_iter=n_iter, n_jobs=n_jobs,
             verbose=joblib_verbose, cv=cv, tol=1e-8),
     }
 
     try:
         clf = estimator[method]
     except KeyError:
-        print('{} is not a valid estimator'.format(method))
+        print(f'{method} is not a valid estimator')
 
     clf.fit(X_ko, y)
 

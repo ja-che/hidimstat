@@ -1,7 +1,7 @@
 import numpy as np
-from hidimstat.knockoffs import knockoff_aggregation, model_x_knockoff
-from hidimstat.knockoffs.data_simulation import simu_data
-from hidimstat.knockoffs.utils import cal_fdp_power
+from hidimstat import knockoff_aggregation, model_x_knockoff
+from hidimstat.data_simulation import simu_data
+from hidimstat.utils import cal_fdp_power
 
 n = 500
 p = 100

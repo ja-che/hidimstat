@@ -51,6 +51,14 @@ jobs:
                python -c "import numpy; numpy.show_config()"
                LIBGL_DEBUG=verbose python -c "import pyvistaqt; pyvistaqt.BackgroundPlotter(show=True)"
         - run:
+            name: run test
+            no_output_timeout: 30m
+            command: |
+              pip pytest coverage -yq
+              coverage run -m pytest;
+              coverage report;
+              coverage html;
+        - run:
             name: make html
             no_output_timeout: 30m
             command: |
