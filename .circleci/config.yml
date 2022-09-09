@@ -38,6 +38,7 @@ jobs:
             command: |
               python -m pip install --progress-bar off --upgrade pip setuptools wheel
               python -m pip install --progress-bar off -r doc/doc-requirements.txt
+              python -m pip install --progress-bar off --upgrade pytest coverage -yq
               python -m pip install -e .
               echo "localhost slots=50">hostfile
         - run:
@@ -54,7 +55,6 @@ jobs:
             name: run test
             no_output_timeout: 30m
             command: |
-              pip pytest coverage -yq
               coverage run -m pytest;
               coverage report;
               coverage html;
