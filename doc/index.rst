@@ -23,7 +23,7 @@ run the following from terminal::
 Or if you want the latest version available (for example to contribute to
 the development of this project)::
 
-  git clone https://github.com/ja-che/hidimstat.git
+  git clone https://github.com/Parietal-INRIA/hidimstat.git
   cd hidimstat
   pip install -e .
 
@@ -81,7 +81,7 @@ References
 
 The algorithms developed in this package have been detailed in several
 conference/journal articles that can be downloaded at
-`https://ja-che.github.io/ <https://ja-che.github.io/research.html>`_.
+`https://Parietal-INRIA.github.io/ <https://Parietal-INRIA.github.io/research.html>`_.
 
 Main references
 ~~~~~~~~~~~~~~~
@@ -146,11 +146,11 @@ For Knockoffs Inference:
   knockoffs for high dimensional controlled variable selection. Journal of the
   Royal Statistical Society Series B, 80(3), 551-577.
 
-.. |Build Status| image:: https://travis-ci.com/ja-che/hidimstat.svg?branch=main
-   :target: https://codecov.io/gh/ja-che/hidimstat
+.. |Build Status| image:: https://travis-ci.com/Parietal-INRIA/hidimstat.svg?branch=main
+   :target: https://codecov.io/gh/Parietal-INRIA/hidimstat
 
-.. |codecov| image:: https://codecov.io/gh/ja-che/hidimstat/branch/main/graph/badge.svg
-   :target: https://codecov.io/gh/ja-che/hidimstat
+.. |codecov| image:: https://codecov.io/gh/Parietal-INRIA/hidimstat/branch/main/graph/badge.svg
+   :target: https://codecov.io/gh/Parietal-INRIA/hidimstat
 
 
 API
