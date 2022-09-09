@@ -1,5 +1,5 @@
 """
-Support recovery on simulated data
+Knockoff aggregation on simulated data
 =============================
 
 In this example, we show an example of variable selection using
