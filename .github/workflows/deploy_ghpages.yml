@@ -17,14 +17,13 @@ jobs:
       - uses: actions/checkout@v2
       - run: |
           sudo apt-get update
-          sudo apt-get install -y libgl1-mesa-glx
+          sudo apt-get install -y libgl1-mesa-glx qt5-default
           sudo apt-get install -yqq libxkbcommon-x11-0 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-randr0 libxcb-render-util0 libxcb-xinerama0 libxcb-xfixes0 libopengl0
           /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -screen 0 1400x900x24 -ac +extension GLX +render -noreset
         name: 'Setup xvfb'
       - run: |
           sudo apt-get install -y git libopenmpi-dev openmpi-bin
           pip install -r doc/doc-requirements.txt
-          pip install --progress-bar off vtk==9.0.20210612.dev0
           pip install --progress-bar off https://github.com/sphinx-gallery/sphinx-gallery/zipball/master
           pip install -e .
           echo "localhost slots=50">hostfile
@@ -36,7 +35,7 @@ jobs:
           which python
           QT_DEBUG_PLUGINS=1 mne sys_info
           python -c "import numpy; numpy.show_config()"
-          LIBGL_DEBUG=verbose python -c "import pyvistaqt; pyvistaqt.BackgroundPlotter(show=True)"
+          LD_DEBUG=libs python -c "from PyQt5.QtWidgets import QApplication, QWidget; app = QApplication([])"
         name: 'Check installation'
       - run: sphinx-build -b html doc doc/_build/html
         name: 'Generate HTML docs'
