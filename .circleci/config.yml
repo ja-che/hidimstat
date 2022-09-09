@@ -38,7 +38,7 @@ jobs:
             command: |
               python -m pip install --progress-bar off --upgrade pip setuptools wheel
               python -m pip install --progress-bar off -r doc/doc-requirements.txt
-              python -m pip install --progress-bar off --upgrade pytest coverage -yq
+              python -m pip install --progress-bar off --upgrade pytest coverage
               python -m pip install -e .
               echo "localhost slots=50">hostfile
         - run:
