@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Author: Binh Nguyen <tuan-binh.nguyen@inria.fr> & Jerome-Alexis Chevalier
 import numpy as np
-from sklearn.metrics import confusion_matrix
 
 
 def quantile_aggregation(pvals, gamma=0.5, gamma_min=0.05, adaptive=False):
