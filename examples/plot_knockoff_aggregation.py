@@ -34,10 +34,10 @@ References
 # ------------------------------
 
 import numpy as np
-from hidimstat.knockoffs.data_simulation import simu_data
-from hidimstat.knockoffs.knockoffs import model_x_knockoff
-from hidimstat.knockoffs.knockoff_aggregation import knockoff_aggregation
-from hidimstat.knockoffs.utils import cal_fdp_power
+from hidimstat.data_simulation import simu_data
+from hidimstat.knockoffs import model_x_knockoff
+from hidimstat.knockoff_aggregation import knockoff_aggregation
+from hidimstat.utils import cal_fdp_power
 from sklearn.utils import check_random_state
 import matplotlib.pyplot as plt
 
