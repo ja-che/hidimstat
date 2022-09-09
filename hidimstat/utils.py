@@ -4,6 +4,9 @@ import numpy as np
 
 
 def quantile_aggregation(pvals, gamma=0.5, gamma_min=0.05, adaptive=False):
+    # if pvalues are one-dimensional, do nothing
+    if pvals.shape[0] == 1:
+        return pvals[0]
     if adaptive:
         return _adaptive_quantile_aggregation(pvals, gamma_min)
     else:
