@@ -122,7 +122,7 @@ html_theme_options = {
     'navbar_links': [
         ("Examples", "auto_examples/index"),
         ("API", "api"),
-        ("GitHub", "https://github.com/ja-che/hidimstat", True)
+        ("GitHub", "https://github.com/Parietal-INRIA/hidimstat", True)
     ],
     'bootswatch_theme': "flatly",
     'bootstrap_version': "3",

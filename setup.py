@@ -8,10 +8,10 @@ from setuptools import find_packages
 PKG = 'hidimstat'
 DESCRIPTION = "High-dimensional statistical inference tools for Python"
 LONG_DESCRIPTION = open('README.md').read()
-MAINTAINER = 'Chevalier (ja-che) and Nguyen (tbng)'
-MAINTAINER_EMAIL = 'jerome-alexis_chevalier@hotmail.fr'
-URL = 'https://github.com/ja-che/hidimstat'
-DOWNLOAD_URL = 'https://github.com/ja-che/hidimstat'
+MAINTAINER = 'Chevalier (ja-che), Nguyen (tbng), Alexandre Blain (alexblnn), Ahmad Chamma and Bertrand Thirion (bthirion)'
+MAINTAINER_EMAIL = 'bertrand.thirion@inria.fr'
+URL = 'https://github.com/Parietal-INRIA/hidimstat'
+DOWNLOAD_URL = 'https://github.com/Parietal-INRIA/hidimstat'
 LICENSE = 'BSD'
 
 

@@ -1,4 +1,4 @@
-from hidimstat.knockoffs.data_simulation import simu_data
+from hidimstat.data_simulation import simu_data
 
 n = 100
 p = 200
