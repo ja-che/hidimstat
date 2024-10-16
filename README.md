@@ -5,6 +5,9 @@ The HiDimStat package provides statistical inference methods to solve the
 problem of support recovery in the context of high-dimensional and
 spatially structured data.
 
+**Update on Oct 2024: this repository is no longer maintained.** Please refer to the new up-to-date github repo at https://github.com/mind-INRIA/hidimstat.
+
+
 ## Installation
 
 HiDimStat working only with Python 3, ideally Python 3.6+. For installation,
